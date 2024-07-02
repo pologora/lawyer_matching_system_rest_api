@@ -1,3 +1,3 @@
 export const getAllUsersQuery = `
-SELECT name, email from users
+SELECT name, email from users;
 `;

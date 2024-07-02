@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { exit } from 'process';
 import pool from '../config/db.config';
 import { createUsersTable } from './tables.sql';
