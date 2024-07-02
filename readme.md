@@ -3,9 +3,10 @@
 ## Content
 
 1. [Description](#description)
-2. [Technical requirements](#technical-requirements)
-3. [Base URL](#base-url)
-4. [API Documentation](#api-documentation)
+2. [Project Management](#project-management)
+3. [Technical requirements](#technical-requirements)
+4. [Base URL](#base-url)
+5. [API Documentation](#api-documentation)
 
    - [Authentication](#authentication)
      - [Login](#login)
@@ -37,6 +38,10 @@
 ## Description
 
 Platform to match clients with lawyers. When a client has a legal issue, the system suggests available lawyers based on the nature of the case and the client's budget. Ratings and reviews help the client choose a lawyer.
+
+## Project Management
+
+GitHub projects used to track tasks and progress. Please visit [Project Board](https://github.com/users/pologora/projects/5/views/1)
 
 ## Core Features:
 
