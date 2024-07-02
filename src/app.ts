@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import express, { NextFunction, Request, Response } from 'express';
 
 process.on('uncaughtException', (err) => {
