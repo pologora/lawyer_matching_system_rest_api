@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import express, { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
-import { router as usersRouter } from './entities/users/user.routes';
+import { router as usersRouter } from './entities/users/users.routes';
 
 process.on('uncaughtException', (err) => {
   console.error(err.name, err.message);
