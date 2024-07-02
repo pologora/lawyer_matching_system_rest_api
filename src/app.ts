@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 import express, { NextFunction, Request, Response } from 'express';
+import morgan from 'morgan';
+import { router as usersRouter } from './entities/users/user.routes';
 
 process.on('uncaughtException', (err) => {
   console.error(err.name, err.message);
@@ -9,6 +11,12 @@ process.on('uncaughtException', (err) => {
 });
 
 const app = express();
+
+app.use(morgan('dev'));
+
+app.use(express.json());
+
+app.use('/api/v1', usersRouter);
 
 app.use('*', (req: Request, res: Response, next: NextFunction) => {
   //   const error = new AppError(`Can't find ${req.originalUrl} on this server!`, 404);
