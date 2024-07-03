@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { User } from './users.model';
 import { CreateUser } from './dto/createUser.dto';
 import { patchQueryBuilder } from '../../helpers/patchQueryBuilder';
+import { statusCodes } from '../../utils/statusCodes';
 
 export const getAllUsers = async (req: Request, res: Response) => {
   const users = await User.getAllUsers();
@@ -28,7 +29,7 @@ export const createUser = async (req: Request, res: Response) => {
 
   const result = await User.createUser({ name, email, password });
 
-  res.json({
+  res.status(statusCodes.created).json({
     status: 'success',
     data: result,
   });
@@ -39,7 +40,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 
   const user = await User.deleteUserQuery(Number(id));
 
-  res.json({
+  res.status(statusCodes.noContent).json({
     status: 'success',
     data: user,
   });

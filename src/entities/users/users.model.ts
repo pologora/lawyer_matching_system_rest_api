@@ -14,7 +14,7 @@ class User {
   static async createUser({ name, email, password }: CreateUser) {
     const result = await pool.query(createUserQuery, [name, email, password]);
 
-    return result;
+    return result[0];
   }
 
   static async getUser(id: number) {
@@ -32,13 +32,13 @@ class User {
   static async deleteUserQuery(id: number) {
     const result = await pool.query(deleteUserQuery, [id]);
 
-    return result;
+    return result[0];
   }
 
   static async updateUser(query: string, values: (string | undefined)[], id: number) {
     const result = await pool.query(query, [...values, id]);
 
-    return result;
+    return result[0];
   }
 }
 

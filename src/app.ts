@@ -3,7 +3,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import 'dotenv/config';
 
-import { usersRouter } from './entities/users/user.routes';
+import { usersRouter } from './entities/users/users.routes';
 
 process.on('uncaughtException', (err) => {
   console.error(err.name, err.message);
