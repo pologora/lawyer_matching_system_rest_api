@@ -7,35 +7,35 @@ import { getUserByIdQuery } from './sql/getUserById.sql';
 type CreateUser = {
   name: string;
   email: string;
-  password: string;
+  hashedPassword: string;
 };
 
 class User {
-  static async createUser({ name, email, password }: CreateUser) {
-    const result = await pool.query(createUserQuery, [name, email, password]);
+  static async create({ name, email, hashedPassword }: CreateUser) {
+    const result = await pool.query(createUserQuery, [name, email, hashedPassword]);
 
     return result[0];
   }
 
-  static async getUser(id: number) {
+  static async get(id: number) {
     const result = await pool.query(getUserByIdQuery, [id]);
 
     return result[0];
   }
 
-  static async getAllUsers() {
+  static async getAll() {
     const result = await pool.query(getAllUsersQuery);
 
     return result[0];
   }
 
-  static async deleteUserQuery(id: number) {
+  static async remove(id: number) {
     const result = await pool.query(deleteUserQuery, [id]);
 
     return result[0];
   }
 
-  static async updateUser(query: string, values: (string | undefined)[], id: number) {
+  static async update(query: string, values: (string | undefined)[], id: number) {
     const result = await pool.query(query, [...values, id]);
 
     return result[0];
