@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
-import { User } from './users.model';
-import { CreateUser } from './dto/createUser.dto';
-import { patchQueryBuilder } from '../../helpers/patchQueryBuilder';
+import { statusCodes } from '../../utils/statusCodes';
+import { createUser, getAllUsers, getUser, removeUser, updateUser } from './users.service';
 
-export const getAllUsers = async (req: Request, res: Response) => {
-  const users = await User.getAllUsers();
+export const getAll = async (req: Request, res: Response) => {
+  const users = await getAllUsers();
 
   res.json({
     status: 'success',
@@ -12,10 +11,10 @@ export const getAllUsers = async (req: Request, res: Response) => {
   });
 };
 
-export const getUserById = async (req: Request, res: Response) => {
+export const get = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const user = await User.getUser(Number(id));
+  const user = await getUser(id);
 
   res.json({
     status: 'success',
@@ -23,38 +22,30 @@ export const getUserById = async (req: Request, res: Response) => {
   });
 };
 
-export const createUser = async (req: Request, res: Response) => {
-  const { name, email, password, confirmPassword }: CreateUser = req.body;
+export const create = async (req: Request, res: Response) => {
+  const result = createUser(req.body);
 
-  const result = await User.createUser({ name, email, password });
-
-  res.json({
+  res.status(statusCodes.created).json({
     status: 'success',
     data: result,
   });
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const remove = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const user = await User.deleteUserQuery(Number(id));
+  await removeUser(id);
 
-  res.json({
-    status: 'success',
-    data: user,
-  });
+  res.status(statusCodes.noContent).end();
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const update = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const data = req.body;
 
-  const { query, values } = patchQueryBuilder('users', data, new Set(['name', 'email']));
-
-  const user = await User.updateUser(query, values, Number(id));
+  const result = await updateUser(id, req.body);
 
   res.json({
     status: 'success',
-    data: user,
+    data: result,
   });
 };

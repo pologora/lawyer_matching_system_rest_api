@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import 'dotenv/config';
 import { app } from './app';
 
 const PORT = process.env.PORT || 8000;
@@ -10,7 +9,7 @@ const server = app.listen(PORT, () => {
 
 process.on('unhandledRejection', (err: Error) => {
   console.error(err.name, err.message);
-  console.log('UNHANDLER REJECTION! Shutting down...');
+  console.log('UNHANDLED REJECTION! Shutting down...');
 
   server.close(() => {
     process.exit(1);
