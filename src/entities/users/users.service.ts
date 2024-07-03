@@ -15,9 +15,9 @@ export const createUser = async (data: CreateUser) => {
 
 export const updateUser = async (id: string, data: UpdateUser) => {
   const allowedKeys = new Set(['name', 'email']);
-  const tableToUpdate = 'users';
+  const tableName = 'users';
 
-  const { query, values } = patchQueryBuilder(tableToUpdate, data, allowedKeys);
+  const { query, values } = patchQueryBuilder(tableName, data, allowedKeys);
 
   const result = await User.update(query, values, Number(id));
 
