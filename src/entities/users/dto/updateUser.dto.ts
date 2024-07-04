@@ -1,5 +1,7 @@
 export interface UpdateUser {
-  name?: string;
+  username?: string;
   email?: string;
   password?: string;
 }
+
+export type UpdateUserKey = keyof UpdateUser;

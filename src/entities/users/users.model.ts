@@ -6,14 +6,14 @@ import { getAllUsersQuery } from './sql/getAllUsers.sql';
 import { getUserByIdQuery } from './sql/getUserById.sql';
 
 type CreateUser = {
-  name: string;
+  username: string;
   email: string;
   hashedPassword: string;
 };
 
 class User {
-  static async create({ name, email, hashedPassword }: CreateUser) {
-    const result = await pool.query(createUserQuery, [name, email, hashedPassword]);
+  static async create({ username, email, hashedPassword }: CreateUser) {
+    const result = await pool.query(createUserQuery, [username, email, hashedPassword]);
 
     return result[0];
   }

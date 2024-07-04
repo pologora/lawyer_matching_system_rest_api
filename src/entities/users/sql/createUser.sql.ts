@@ -1,4 +1,4 @@
 export const createUserQuery = `
-INSERT INTO users (name, email, password)
+INSERT INTO users (username, email, password)
 VALUES (?, ?, ?);
 `;

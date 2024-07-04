@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import { createUser, getAllUsers, getUser, removeUser, updateUser } from './users.service';
+import { userCreateSchema, userUpdateSchema } from './users.validation';
+import { AppError } from '../../utils/AppError';
 
 export const getAll = async (_req: Request, res: Response, _next: NextFunction) => {
   const users = await getAllUsers();
@@ -25,7 +27,14 @@ export const get = async (req: Request, res: Response, _next: NextFunction) => {
 };
 
 export const create = async (req: Request, res: Response, _next: NextFunction) => {
-  const result = await createUser(req.body);
+  const { email, password, confirmPassword } = req.body;
+  const { error, value } = userCreateSchema.validate({ email, password, confirmPassword });
+
+  if (error) {
+    throw new AppError(error.message);
+  }
+
+  const result = await createUser(value);
 
   res.status(HTTP_STATUS_CODES.CREATED_201).json({
     status: 'success',
@@ -44,8 +53,15 @@ export const remove = async (req: Request, res: Response, _next: NextFunction) =
 
 export const update = async (req: Request, res: Response, _next: NextFunction) => {
   const { id } = req.params;
+  const { email, username } = req.body;
 
-  const result = await updateUser(id, req.body);
+  const { error, value } = userUpdateSchema.validate({ email, username });
+
+  if (error) {
+    throw new AppError(error.message);
+  }
+
+  const result = await updateUser(id, value);
 
   res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
     status: 'success',
