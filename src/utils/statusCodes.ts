@@ -1,13 +1,13 @@
-export const statusCodes = {
-  success: 200,
-  created: 201,
-  noContent: 204,
-  badRequest: 400,
-  unauthorized: 401,
-  forbidden: 403,
-  notFound: 404,
-  toManyRequests: 429,
-  internalServerError: 500,
+export const HTTP_STATUS_CODES = {
+  SUCCESS_200: 200,
+  CREATED_201: 201,
+  NO_CONTENT_204: 204,
+  BAD_REQUEST_400: 400,
+  UNAUTHORIZED_401: 401,
+  FORBIDDEN_403: 403,
+  NOT_FOUND_404: 404,
+  TOO_MANY_REQUESTS_429: 429,
+  INTERNAL_SERVER_ERROR_500: 500,
 } as const;
 
-export type StatusCodes = (typeof statusCodes)[keyof typeof statusCodes];
+export type StatusCodes = (typeof HTTP_STATUS_CODES)[keyof typeof HTTP_STATUS_CODES];
