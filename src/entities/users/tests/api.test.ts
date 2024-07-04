@@ -2,14 +2,15 @@ import supertest from 'supertest';
 import { app } from '../../../app';
 import { HTTP_STATUS_CODES } from '../../../utils/statusCodes';
 import pool from '../../../config/db.config';
+import { runTablesSetup } from '../../../config/databaseTables/createTables';
 
 let userId: number;
 
 const postData = {
   name: 'test',
   email: 'test@test.test',
-  password: 'test',
-  confirmPassword: 'test',
+  password: 'test12345',
+  confirmPassword: 'test12345',
 };
 
 const patchData = { name: 'test updated' };
@@ -18,17 +19,8 @@ afterAll(async () => {
   await pool.end();
 });
 
-beforeEach(async () => {
-  // Create a user before each test
-  const response = await supertest(app).post('/api/v1/users').send(postData).expect(HTTP_STATUS_CODES.CREATED_201);
-  userId = response.body.data.insertId;
-});
-
-afterEach(async () => {
-  // Delete the user after each test
-  if (userId) {
-    await supertest(app).delete(`/api/v1/users/${userId}`).expect(HTTP_STATUS_CODES.NO_CONTENT_204);
-  }
+beforeAll(async () => {
+  runTablesSetup();
 });
 
 describe('Test GET /users', () => {
@@ -67,7 +59,7 @@ describe('Test GET /users/:id', () => {
     const response = await supertest(app).get(`/api/v1/users/${userId}`).expect(HTTP_STATUS_CODES.SUCCESS_200);
 
     expect(response.body.data[0]).toHaveProperty('id', userId);
-    expect(response.body.data[0]).toHaveProperty('name', postData.name);
+    expect(response.body.data[0]).toHaveProperty('name', patchData.name);
     expect(response.body.data[0]).toHaveProperty('email', postData.email);
   });
 });

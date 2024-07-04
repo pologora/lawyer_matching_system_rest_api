@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { exit } from 'process';
-import pool from '../config/db.config';
 import { createUsersTable } from './tables.sql';
+import pool from '../db.config';
 
 const createDatabaseTablesIfNotExists = async (connection: typeof pool, query: string) => {
   try {
@@ -10,8 +10,14 @@ const createDatabaseTablesIfNotExists = async (connection: typeof pool, query: s
   } catch (error) {
     console.error('Error creating table:', error);
   } finally {
-    exit(1);
+    if (process.env.NODE_ENV !== 'test') {
+      exit(1);
+    }
   }
 };
 
 createDatabaseTablesIfNotExists(pool, createUsersTable);
+
+export const runTablesSetup = () => {
+  createDatabaseTablesIfNotExists(pool, createUsersTable);
+};
