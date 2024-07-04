@@ -7,6 +7,8 @@ const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
 dotenv.config({ path: envFile });
 
 import { usersRouter } from './entities/users/users.routes';
+import { globalErrorHandler } from './middleware/globalErrorHandler';
+import { AppError } from './utils/AppError';
 
 process.on('uncaughtException', (err) => {
   console.error(err.name, err.message);
@@ -26,11 +28,11 @@ app.use(express.json());
 app.use('/api/v1', usersRouter);
 
 app.use('*', (req: Request, res: Response, next: NextFunction) => {
-  //   const error = new AppError(`Can't find ${req.originalUrl} on this server!`, 404);
-  //   next(error);
+  const error = new AppError(`Can't find ${req.originalUrl} on this server!`, 404);
 
-  console.log(`Can't find ${req.originalUrl} on this server!`);
-  next();
+  next(error);
 });
+
+app.use(globalErrorHandler);
 
 export { app };
