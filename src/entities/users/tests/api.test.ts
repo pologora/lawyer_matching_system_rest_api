@@ -49,8 +49,8 @@ describe('Test PATCH /users/:id', () => {
       .send(patchData)
       .expect(HTTP_STATUS_CODES.SUCCESS_200);
 
-    expect(response.body.data).toHaveProperty('affectedRows', 1);
-    expect(response.body.data).toHaveProperty('changedRows', 1);
+    expect(response.body.data).toHaveProperty('id', userId);
+    expect(response.body.data).toHaveProperty('name', patchData.name);
   });
 });
 
@@ -58,9 +58,19 @@ describe('Test GET /users/:id', () => {
   test('Should respond with 200 success', async () => {
     const response = await supertest(app).get(`/api/v1/users/${userId}`).expect(HTTP_STATUS_CODES.SUCCESS_200);
 
-    expect(response.body.data[0]).toHaveProperty('id', userId);
-    expect(response.body.data[0]).toHaveProperty('name', patchData.name);
-    expect(response.body.data[0]).toHaveProperty('email', postData.email);
+    expect(response.body.data).toHaveProperty('id', userId);
+    expect(response.body.data).toHaveProperty('name', patchData.name);
+    expect(response.body.data).toHaveProperty('email', postData.email);
+  });
+
+  test('Should respond with 404 status if no user found', async () => {
+    const notExistingUserId = 9999999999;
+
+    const response = await supertest(app)
+      .get(`/api/v1/users/${notExistingUserId}`)
+      .expect(HTTP_STATUS_CODES.NOT_FOUND_404);
+
+    expect(response.body).toHaveProperty('status', 'error');
   });
 });
 
