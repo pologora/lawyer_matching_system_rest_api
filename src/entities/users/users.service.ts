@@ -1,22 +1,24 @@
 import { patchQueryBuilder } from '../../helpers/patchQueryBuilder';
-import { AppError } from '../../utils/AppError';
-import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import { CreateUser } from './dto/createUser.dto';
-import { UpdateUser } from './dto/updateUser.dto';
+import { UpdateUser, UpdateUserKey } from './dto/updateUser.dto';
 import { User } from './users.model';
 
 export const createUser = async (data: CreateUser) => {
-  const { name, email, password } = data;
+  const { email, password } = data;
+
+  const idxOfEmailSymbol = email.indexOf('@');
+  const zeroIdx = 0;
+  const username = email.substring(zeroIdx, idxOfEmailSymbol);
 
   const hashedPassword = password;
 
-  const result = await User.create({ name, email, hashedPassword });
+  const result = await User.create({ username, email, hashedPassword });
 
   return result;
 };
 
 export const updateUser = async (id: string, data: UpdateUser) => {
-  const allowedKeys = new Set(['name', 'email']);
+  const allowedKeys: Set<UpdateUserKey> = new Set(['username', 'email']);
   const tableName = 'users';
 
   const { query, values } = patchQueryBuilder(tableName, data, allowedKeys);

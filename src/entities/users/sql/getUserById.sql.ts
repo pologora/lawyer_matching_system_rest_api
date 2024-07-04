@@ -1,3 +1,3 @@
 export const getUserByIdQuery = `
-SELECT id, name, email FROM users where id = ?;
+SELECT id, username, email FROM users where id = ?;
 `;

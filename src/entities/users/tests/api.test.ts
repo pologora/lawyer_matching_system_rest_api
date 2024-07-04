@@ -7,13 +7,12 @@ import { runTablesSetup } from '../../../config/databaseTables/createTables';
 let userId: number;
 
 const postData = {
-  name: 'test',
-  email: 'test@test.test',
+  email: 'test@mail.com',
   password: 'test12345',
   confirmPassword: 'test12345',
 };
 
-const patchData = { name: 'test updated' };
+const patchData = { username: 'test updated' };
 
 afterAll(async () => {
   await pool.end();
@@ -35,6 +34,7 @@ describe('Test POST /users', () => {
 
     expect(response.body.data).toHaveProperty('affectedRows', 1);
     expect(response.body.data).toHaveProperty('insertId');
+
     userId = response.body.data.insertId;
   });
 
@@ -50,7 +50,7 @@ describe('Test PATCH /users/:id', () => {
       .expect(HTTP_STATUS_CODES.SUCCESS_200);
 
     expect(response.body.data).toHaveProperty('id', userId);
-    expect(response.body.data).toHaveProperty('name', patchData.name);
+    expect(response.body.data).toHaveProperty('username', patchData.username);
   });
 });
 
@@ -59,7 +59,7 @@ describe('Test GET /users/:id', () => {
     const response = await supertest(app).get(`/api/v1/users/${userId}`).expect(HTTP_STATUS_CODES.SUCCESS_200);
 
     expect(response.body.data).toHaveProperty('id', userId);
-    expect(response.body.data).toHaveProperty('name', patchData.name);
+    expect(response.body.data).toHaveProperty('username', patchData.username);
     expect(response.body.data).toHaveProperty('email', postData.email);
   });
 
