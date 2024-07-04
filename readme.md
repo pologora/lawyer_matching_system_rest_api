@@ -5,8 +5,9 @@
 1. [Description](#description)
 2. [Project Management](#project-management)
 3. [Technical requirements](#technical-requirements)
-4. [Base URL](#base-url)
-5. [API Documentation](#api-documentation)
+4. [Database Schema](#database-schema-design)
+5. [Base URL](#base-url)
+6. [API Documentation](#api-documentation)
 
    - [Authentication](#authentication)
      - [Login](#login)
@@ -68,6 +69,8 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
   - Component Library - `Chakra UI`
 
 ## Database Schema Design
+
+![Screenshot](public/database_schema.png)
 
 - Users:
   - id, name, email, password, role, created_at, updated_at
