@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { statusCodes } from '../../utils/statusCodes';
+import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import { createUser, getAllUsers, getUser, removeUser, updateUser } from './users.service';
 
 export const getAll = async (req: Request, res: Response) => {
   const users = await getAllUsers();
 
-  res.json({
+  res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
     status: 'success',
     data: users,
   });
@@ -23,9 +23,9 @@ export const get = async (req: Request, res: Response) => {
 };
 
 export const create = async (req: Request, res: Response) => {
-  const result = createUser(req.body);
+  const result = await createUser(req.body);
 
-  res.status(statusCodes.created).json({
+  res.status(HTTP_STATUS_CODES.CREATED_201).json({
     status: 'success',
     data: result,
   });
@@ -36,7 +36,7 @@ export const remove = async (req: Request, res: Response) => {
 
   await removeUser(id);
 
-  res.status(statusCodes.noContent).end();
+  res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
 };
 
 export const update = async (req: Request, res: Response) => {
