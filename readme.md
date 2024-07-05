@@ -6,8 +6,9 @@
 2. [Project Management](#project-management)
 3. [Technical requirements](#technical-requirements)
 4. [Database Schema](#database-schema-design)
-5. [Base URL](#base-url)
-6. [API Documentation](#api-documentation)
+5. [JWT](#jwt)
+6. [Base URL](#base-url)
+7. [API Documentation](#api-documentation)
 
    - [Authentication](#authentication)
      - [Login](#login)
@@ -83,7 +84,67 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
 - Reviews:
   - id, client_id, lawyer_id, rating, review, created_at, updated_at
 - Messages:
+
   - id, sender_id, receiver_id, message, created_at
+
+## JWT
+
+Functions:
+
+- `sign`
+
+Creates a JSON Web Token (JWT) with the given payload, secret, and options.
+
+**Parameters**:
+
+- payload (object): The payload data to be included in the token.
+- secret (string): The secret key used for signing the token.
+- options (object): Options for the token. Currently supports expiresIn to specify token expiration.
+
+`expiresIn` possible formats are `string` or `number`. As a number, it represents milliseconds. As a string, the last character can be:
+
+- 's' - seconds
+- 'm' - minutes
+- 'h' - hours
+- 'd' - days
+
+**Returns**:
+
+(string): The signed JWT.
+
+**Usage**:
+
+```JavaScript
+
+const options = {expiresIn:'2d'};
+
+const token = sign({payload, secret, options});
+```
+
+`verify`
+
+Verifies the authenticity and validity of a JWT.
+
+Parameters:
+
+- `token` (string): The JWT to verify.
+- `secret` (string): The secret key used to sign the token.
+
+Returns:
+
+`(object|null)`: The decoded payload if the token is valid and not expired, null otherwise.
+
+**Usage:**
+
+```JavaScript
+const decoded = verify({ token, secret });
+if (decoded) {
+  console.log('Token is valid:', decoded);
+} else {
+  console.log('Token is invalid or expired.');
+}
+
+```
 
 ## Base URL
 
