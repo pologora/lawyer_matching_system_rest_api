@@ -1,4 +1,5 @@
 import { patchQueryBuilder } from '../../helpers/patchQueryBuilder';
+import { hashPassword } from '../../utils/hashPassword';
 import { CreateUser } from './dto/createUser.dto';
 import { UpdateUser, UpdateUserKey } from './dto/updateUser.dto';
 import { User } from './users.model';
@@ -10,7 +11,7 @@ export const createUser = async (data: CreateUser) => {
   const zeroIdx = 0;
   const username = email.substring(zeroIdx, idxOfEmailSymbol);
 
-  const hashedPassword = password;
+  const hashedPassword = await hashPassword(password);
 
   const result = await User.create({ username, email, hashedPassword });
 
