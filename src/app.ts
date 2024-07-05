@@ -9,6 +9,8 @@ dotenv.config({ path: envFile });
 import { usersRouter } from './entities/users/users.routes';
 import { globalErrorHandler } from './middleware/globalErrorHandler';
 import { AppError } from './utils/AppError';
+import { HTTP_STATUS_CODES } from './utils/statusCodes';
+import { authRouter } from './entities/auth/auth.routes';
 
 process.on('uncaughtException', (err) => {
   console.error(err.name, err.message);
@@ -26,9 +28,10 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json());
 
 app.use('/api/v1', usersRouter);
+app.use('/api/v1', authRouter);
 
 app.use('*', (req: Request, res: Response, next: NextFunction) => {
-  const error = new AppError(`Can't find ${req.originalUrl} on this server!`, 404);
+  const error = new AppError(`Can't find ${req.originalUrl} on this server!`, HTTP_STATUS_CODES.NOT_FOUND_404);
 
   next(error);
 });

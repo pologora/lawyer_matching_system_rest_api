@@ -1,10 +1,10 @@
-import express from 'express';
+import { Router } from 'express';
 
 import { create, remove, getAll, get, update } from './users.controller';
 import { asyncErrorCatch } from '../../utils/asyncErrorCatch';
 import { verifyAndValidateRecordById } from '../../middleware/verifyAndValidateRecordById';
 
-export const usersRouter = express.Router();
+export const usersRouter = Router();
 
 usersRouter.route('/users').get(asyncErrorCatch(getAll)).post(asyncErrorCatch(create));
 usersRouter

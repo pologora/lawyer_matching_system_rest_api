@@ -1,4 +1,4 @@
-import { RowDataPacket } from 'mysql2';
+import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import pool from '../../config/db.config';
 import { createUserQuery } from './sql/createUser.sql';
 import { deleteUserQuery } from './sql/deleteUser.sql';
@@ -13,7 +13,7 @@ type CreateUser = {
 
 class User {
   static async create({ username, email, hashedPassword }: CreateUser) {
-    const result = await pool.query(createUserQuery, [username, email, hashedPassword]);
+    const result = await pool.query<ResultSetHeader>(createUserQuery, [username, email, hashedPassword]);
 
     return result[0];
   }
