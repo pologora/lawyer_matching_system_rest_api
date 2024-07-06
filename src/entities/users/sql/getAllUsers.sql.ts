@@ -1,3 +1,3 @@
 export const getAllUsersQuery = `
-SELECT id, username, email, password from users;
+SELECT id, email, role, password from users;
 `;

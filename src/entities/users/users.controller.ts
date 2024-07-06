@@ -53,9 +53,9 @@ export const remove = async (req: Request, res: Response, _next: NextFunction) =
 
 export const update = async (req: Request, res: Response, _next: NextFunction) => {
   const { id } = req.params;
-  const { email, username } = req.body;
+  const { email } = req.body;
 
-  const { error, value } = userUpdateSchema.validate({ email, username });
+  const { error, value } = userUpdateSchema.validate({ email });
 
   if (error) {
     throw new AppError(error.message);
