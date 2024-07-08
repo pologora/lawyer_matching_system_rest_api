@@ -1,7 +1,6 @@
 import { createJWT } from '../../utils/jwt/createJWT';
 import { hashPassword } from '../../utils/passwordManagement/hashPassword';
 import { CreateUser } from '../users/dto/createUser.dto';
-import { User } from '../users/users.model';
 import { Auth } from './auth.model';
 import { LoginUser } from './dto/loginUser.dto';
 import { AppError } from '../../utils/errors/AppError';
@@ -11,7 +10,7 @@ import { comparePasswords } from '../../utils/passwordManagement/comparePassword
 export const registerService = async ({ email, password }: CreateUser) => {
   const hashedPassword = await hashPassword(password);
 
-  const { insertId } = await User.create({ email, hashedPassword });
+  const { insertId } = await Auth.register({ email, password: hashedPassword });
 
   const token = createJWT({ id: insertId });
 

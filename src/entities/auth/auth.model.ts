@@ -1,4 +1,4 @@
-import { RowDataPacket } from 'mysql2';
+import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import pool from '../../config/db.config';
 import { RegisterUser } from './dto/registerUser.dto';
 import { loginUserQuery } from './sql/login.sql';
@@ -12,8 +12,8 @@ export class Auth {
   }
 
   static async register({ email, password }: RegisterUser) {
-    const user = await pool.query(registerNewUserQuery, [email, password]);
+    const result = await pool.query<ResultSetHeader>(registerNewUserQuery, [email, password]);
 
-    return user;
+    return result[0];
   }
 }
