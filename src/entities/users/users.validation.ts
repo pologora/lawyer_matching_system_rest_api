@@ -15,14 +15,11 @@ export const userCreateSchema = Joi.object({
   }),
 });
 
-const usernameMinLength = 3;
-const usernameMaxLength = 30;
 export const userUpdateSchema = Joi.object({
   email: Joi.string().email().messages({
     'string.email': 'Email must be a valid email address',
   }),
-  username: Joi.string().min(usernameMinLength).max(usernameMaxLength).messages({
-    'string.min': 'Username should have at least 3 characters',
-    'string.max': 'Username should have at most 30 characters',
+  role: Joi.string().valid('admin', 'client', 'lawyer').messages({
+    'any.only': 'Role must be one of the following values: admin, client, lawyer',
   }),
 });

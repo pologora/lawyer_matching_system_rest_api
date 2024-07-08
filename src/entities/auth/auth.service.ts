@@ -6,13 +6,9 @@ import { User } from '../users/users.model';
 export const registerService = async (data: CreateUser) => {
   const { email, password } = data;
 
-  const idxOfEmailSymbol = email.indexOf('@');
-  const zeroIdx = 0;
-  const username = email.substring(zeroIdx, idxOfEmailSymbol);
-
   const hashedPassword = await hashPassword(password);
 
-  const { insertId } = await User.create({ username, email, hashedPassword });
+  const { insertId } = await User.create({ email, hashedPassword });
 
   const token = createJWT({ id: insertId });
 
