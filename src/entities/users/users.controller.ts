@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import { createUser, getAllUsers, getUser, removeUser, updateUser } from './users.service';
 import { userCreateSchema, userUpdateSchema } from './users.validation';
-import { AppError } from '../../utils/AppError';
+import { AppError } from '../../utils/errors/AppError';
 
 export const getAll = async (_req: Request, res: Response, _next: NextFunction) => {
   const users = await getAllUsers();

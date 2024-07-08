@@ -1,5 +1,5 @@
 import { patchQueryBuilder } from '../../helpers/patchQueryBuilder';
-import { hashPassword } from '../../utils/hashPassword';
+import { hashPassword } from '../../utils/passwordManagement/hashPassword';
 import { CreateUser } from './dto/createUser.dto';
 import { UpdateUser, UpdateUserKey } from './dto/updateUser.dto';
 import { User } from './users.model';

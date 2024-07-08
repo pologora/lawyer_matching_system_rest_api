@@ -1,7 +1,7 @@
 import { RowDataPacket } from 'mysql2';
 import pool from '../config/db.config';
-import { AppError } from '../utils/AppError';
-import { asyncErrorCatch } from '../utils/asyncErrorCatch';
+import { AppError } from '../utils/errors/AppError';
+import { asyncErrorCatch } from '../utils/errors/asyncErrorCatch';
 import { HTTP_STATUS_CODES } from '../utils/statusCodes';
 
 /**

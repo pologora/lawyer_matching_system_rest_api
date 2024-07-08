@@ -1,4 +1,4 @@
-import { sign } from './jwt/sign';
+import { sign } from './sign';
 
 export const createJWT = (payload: object) => {
   const secret = process.env.TOKEN_SECRET!;
