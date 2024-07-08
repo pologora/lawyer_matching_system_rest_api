@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { create, remove, getAll, get, update } from './users.controller';
-import { asyncErrorCatch } from '../../utils/asyncErrorCatch';
+import { asyncErrorCatch } from '../../utils/errors/asyncErrorCatch';
 import { verifyAndValidateRecordById } from '../../middleware/verifyAndValidateRecordById';
 
 export const usersRouter = Router();
