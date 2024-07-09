@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     role ENUM('user', 'client', 'lawyer', 'admin') DEFAULT 'user',
     reset_password_token VARCHAR(255),
-    reset_password_token_expiration TIMESTAMP,
+    reset_password_token_expiration TIMESTAMP NULL DEFAULT NULL,
+    password_changed_at TIMESTAMP NULL DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

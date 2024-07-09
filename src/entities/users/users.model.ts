@@ -4,6 +4,7 @@ import { createUserQuery } from './sql/createUser.sql';
 import { deleteUserQuery } from './sql/deleteUser.sql';
 import { getAllUsersQuery } from './sql/getAllUsers.sql';
 import { getUserByIdQuery } from './sql/getUserById.sql';
+import { IUser } from '../../types/user';
 
 type CreateUser = {
   email: string;
@@ -20,7 +21,7 @@ class User {
   static async get(id: string) {
     const result = await pool.query<RowDataPacket[]>(getUserByIdQuery, [id]);
 
-    return result[0][0];
+    return result[0][0] as IUser;
   }
 
   static async getAll() {
