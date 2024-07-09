@@ -29,13 +29,13 @@ export const verify = ({ token, secret }: VerifyInput) => {
   });
 
   if (signature !== candidateSignature) {
-    return null;
+    throw new Error('Invalid signature');
   }
 
   const decoded = decode({ token });
 
   if (isExpired(decoded.exp)) {
-    return null;
+    throw new Error('Token expired');
   }
 
   return decoded;

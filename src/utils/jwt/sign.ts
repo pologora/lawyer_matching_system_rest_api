@@ -27,8 +27,9 @@ export const sign = ({ payload, secret, options }: SignInput) => {
   const encodedHeader = Buffer.from(JSON.stringify(header)).toString('base64');
 
   const expiresIn = createExpiresIn(options.expiresIn);
+  const issuedAt = Date.now();
 
-  const encodedPayload = Buffer.from(JSON.stringify({ ...payload, exp: expiresIn })).toString('base64');
+  const encodedPayload = Buffer.from(JSON.stringify({ ...payload, exp: expiresIn, iat: issuedAt })).toString('base64');
 
   const signature = createSignature({ secret, encodedHeader, encodedPayload });
 
