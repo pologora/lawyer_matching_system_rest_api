@@ -71,7 +71,7 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
 
 ## Database Schema Design
 
-![Screenshot](public/database_schema.png)
+![Screenshot](screenshots/public/database_schema.png)
 
 - Users:
   - id, name, email, password, role, created_at, updated_at
