@@ -45,24 +45,21 @@ describe('verify token', () => {
     expect(verified.name).toBe(payload.name);
   });
 
-  test('should returns null if the signature is invalid', () => {
+  test('should throw if the signature is invalid', () => {
     const secret = 'secret';
     const secretTwo = 'different';
     const payload = { name: 'John' };
 
     const token = sign({ payload, secret, options });
 
-    const result = verify({ token, secret: secretTwo });
-    expect(result).toBe(null);
+    expect(() => verify({ token, secret: secretTwo })).toThrow();
   });
-  test('should return null if the token has expired', () => {
+  test('should throw if the token has expired', () => {
     const secret = 'secret';
     const payload = { name: 'John' };
 
     const token = sign({ payload, secret, options: { expiresIn: -1 } });
 
-    const result = verify({ token, secret });
-
-    expect(result).toBe(null);
+    expect(() => verify({ token, secret })).toThrow();
   });
 });
