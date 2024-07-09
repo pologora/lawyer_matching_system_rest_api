@@ -13,7 +13,6 @@ export default [
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: 'req|res|next' }],
       'no-magic-numbers': ['error', { ignore: [1], ignoreArrayIndexes: true }],
       'no-else-return': 'error',
-      'no-param-reassign': 'error',
       'prefer-const': 'error',
       'no-shadow': 'error',
       'no-use-before-define': ['error', { functions: false }],

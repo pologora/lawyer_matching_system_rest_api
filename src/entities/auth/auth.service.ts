@@ -12,7 +12,7 @@ export const registerService = async ({ email, password }: CreateUser) => {
 
   const { insertId } = await Auth.register({ email, password: hashedPassword });
 
-  const token = createJWT({ id: insertId });
+  const token = await createJWT({ id: insertId });
 
   return token;
 };
@@ -28,7 +28,7 @@ export const loginService = async ({ email: inputEmail, password: candidatePassw
   // profile
   // create token, return user info + token
   const { id, email, role } = user;
-  const token = createJWT({ id: user.id });
+  const token = await createJWT({ id: user.id });
   const data = { token, user: { id, email, role } };
 
   return data;

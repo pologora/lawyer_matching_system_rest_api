@@ -20,7 +20,8 @@ const sendProductionError = (err: AppError, res: Response, statusCode: StatusCod
 };
 
 export const globalErrorHandler = (err: AppError, req: Request, res: Response, next: NextFunction) => {
-  if (err.errno === 1062) {
+  const sqlDuplicateUniqErrorCode = 1062;
+  if (err.errno === sqlDuplicateUniqErrorCode) {
     err = new AppError(err.message);
   }
 

@@ -13,7 +13,7 @@ export const verifyAndValidateRecordById = (tableName: string) =>
     const id = Number(req.params.id);
 
     if (isNaN(id)) {
-      throw new AppError(`Bad user id type, should be a number.`);
+      throw new AppError(`Bad ${tableName} id type, should be a number.`);
     }
 
     const query = `SELECT id 
@@ -24,7 +24,7 @@ export const verifyAndValidateRecordById = (tableName: string) =>
     const [result] = await pool.query<RowDataPacket[]>(query, [Number(id)]);
 
     if (!result[0]) {
-      throw new AppError(`No user found with id: ${id}`, HTTP_STATUS_CODES.NOT_FOUND_404);
+      throw new AppError(`No ${tableName} record found with id: ${id}`, HTTP_STATUS_CODES.NOT_FOUND_404);
     }
 
     next();
