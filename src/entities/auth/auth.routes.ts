@@ -8,4 +8,4 @@ export const authRouter = Router();
 authRouter.post('/register', asyncErrorCatch(register));
 authRouter.post('/login', asyncErrorCatch(login));
 authRouter.post('/forgot-password', asyncErrorCatch(forgotPassword));
-authRouter.post('/reset-password', asyncErrorCatch(resetPassword));
+authRouter.patch('/reset-password/:token', asyncErrorCatch(resetPassword));

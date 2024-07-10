@@ -1,5 +1,5 @@
 export interface SetResetPasswordToken {
-  resetToken: string;
+  hashedToken: string;
   expirationInMinutes: number;
   userId: number;
 }

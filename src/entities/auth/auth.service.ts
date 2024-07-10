@@ -1,12 +1,15 @@
 import { createJWT } from '../../utils/jwt/createJWT';
 import { hashPassword } from '../../utils/passwordManagement/hashPassword';
 import { Auth } from './auth.model';
-import { ForgotPassword, LoginUser, RegisterUser } from './dto';
+import { ForgotPassword, LoginUser, RegisterUser, ResetPassword } from './dto';
 import { AppError } from '../../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import { comparePasswords } from '../../utils/passwordManagement/comparePasswords';
 import { createPasswordResetToken } from '../../utils/passwordManagement/createPasswordResetToken';
 import { RESET_PASSWORD_EXPIRATION_IN_MINUTES } from '../../config/constants';
+import { sendEmail } from '../../utils/email/email';
+import { Request } from 'express';
+import { createPasswordResetHashedToken } from '../../utils/passwordManagement/createHashedPasswordResetToken';
 
 export const registerService = async ({ email, password }: RegisterUser) => {
   const hashedPassword = await hashPassword(password);
@@ -35,19 +38,69 @@ export const loginService = async ({ email: inputEmail, password: candidatePassw
   return data;
 };
 
-export const forgotPasswordService = async ({ email }: ForgotPassword) => {
+export const forgotPasswordService = async ({ email }: ForgotPassword, req: Request) => {
   const user = await Auth.getUserByEmail({ email });
   if (!user) {
     throw new AppError('There is no user with this email adress', HTTP_STATUS_CODES.NOT_FOUND_404);
   }
 
   const resetToken = createPasswordResetToken();
+  const hashedToken = createPasswordResetHashedToken(resetToken);
 
-  const result = await Auth.setResetPasswordToken({
-    resetToken,
+  await Auth.setResetPasswordToken({
+    hashedToken,
     expirationInMinutes: RESET_PASSWORD_EXPIRATION_IN_MINUTES,
     userId: user.id,
   });
 
-  return result;
+  const resetPasswordUrl = `${req.protocol}://${req.get('host')}/api/v1/reset-password/${resetToken}`;
+  const from = 'Lawyer Matching Service <no-reply@lawyer.com';
+  const subject = 'Reset password';
+  const text = `To reset your password, please visit this link, valid for ${RESET_PASSWORD_EXPIRATION_IN_MINUTES} minutes: \n${resetPasswordUrl}`;
+  const toEmail = user.email;
+
+  try {
+    await sendEmail({ from, subject, text, toEmail });
+  } catch (err) {
+    await Auth.clearResetPassword({ id: user.id });
+    // eslint-disable-next-line no-console
+    console.error(err);
+    throw new AppError(
+      'There was an error sending the email. Please, try again later',
+      HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500,
+    );
+  }
 };
+
+export const resetPasswordService = async ({ resetToken, password }: ResetPassword) => {
+  const hashedToken = createPasswordResetHashedToken(resetToken);
+  //get user by token
+  const user = await Auth.getUserByResetToken({ hashedToken });
+  if (!user) {
+    throw new AppError('Invalid reset password token', HTTP_STATUS_CODES.BAD_REQUEST_400);
+  }
+
+  // check if token not expired
+  const isTokenExpired = checkIfResetTokenExpired(user.reset_password_token_expiration!);
+  if (isTokenExpired) {
+    throw new AppError('The time limit for changing the password has expired. Please try again.');
+  }
+
+  //3. update changePasswordAt, and set new pass
+  const result = await Auth.updatePassword({ password, id: user.id });
+  if (!result) {
+    throw new AppError('Password update failed. Please try again later.', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
+  }
+
+  //4. send jwt
+  const jwt = await createJWT({ id: user.id });
+
+  return jwt;
+};
+
+function checkIfResetTokenExpired(resetTokenExpire: Date) {
+  const now = Date.now();
+  const exp = new Date(resetTokenExpire).getTime();
+
+  return now > exp;
+}
