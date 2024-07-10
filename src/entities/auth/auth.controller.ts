@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { loginService, registerService } from './auth.service';
+import { forgotPasswordService, loginService, registerService } from './auth.service';
 import { userCreateSchema } from '../users/users.validation';
 import { AppError } from '../../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
-import { userRegistrationSchema } from './auth.validation';
+import { passwordResetInputShema, userRegistrationSchema } from './auth.validation';
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password, confirmPassword } = req.body;
@@ -39,6 +39,20 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   });
 };
 
-export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {};
+export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+  const { email } = req.body;
+  const { error, value } = passwordResetInputShema.validate({ email });
+
+  if (error) {
+    throw new AppError(error.message);
+  }
+
+  await forgotPasswordService(value);
+
+  res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+    status: 'success',
+    message: 'Reset password link was sent to the user email',
+  });
+};
 
 export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {};

@@ -8,3 +8,9 @@ export const userRegistrationSchema = Joi.object({
     'any.required': 'Password is required',
   }),
 });
+
+export const passwordResetInputShema = Joi.object({
+  email: Joi.string().email().required().messages({
+    'string.empty': 'Email is required',
+  }),
+});
