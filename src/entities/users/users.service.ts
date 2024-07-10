@@ -1,10 +1,9 @@
 import { patchQueryBuilder } from '../../helpers/patchQueryBuilder';
 import { hashPassword } from '../../utils/passwordManagement/hashPassword';
-import { CreateUser } from './dto/createUser.dto';
-import { UpdateUser, UpdateUserKey } from './dto/updateUser.dto';
+import { CreateUser, UpdateUser, UpdateUserKey } from './dto';
 import { User } from './users.model';
 
-export const createUser = async (data: CreateUser) => {
+export const createUserService = async (data: CreateUser) => {
   const { email, password } = data;
 
   const hashedPassword = await hashPassword(password);
@@ -14,7 +13,7 @@ export const createUser = async (data: CreateUser) => {
   return result;
 };
 
-export const updateUser = async (id: string, data: UpdateUser) => {
+export const updateUserService = async (id: string, data: UpdateUser) => {
   const allowedKeys: Set<UpdateUserKey> = new Set(['email']);
   const tableName = 'users';
 
@@ -27,19 +26,19 @@ export const updateUser = async (id: string, data: UpdateUser) => {
   return updatedUser;
 };
 
-export const getUser = async (id: string) => {
+export const getUserService = async (id: string) => {
   const user = await User.get(id);
 
   return user;
 };
 
-export const getAllUsers = async () => {
+export const getAllUsersService = async () => {
   const users = await User.getAll();
 
   return users;
 };
 
-export const removeUser = async (id: string) => {
+export const removeUserService = async (id: string) => {
   const result = await User.remove(id);
 
   return result;

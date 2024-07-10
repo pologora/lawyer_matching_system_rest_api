@@ -1,11 +1,18 @@
 import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
-import { createUser, getAllUsers, getUser, removeUser, updateUser } from './users.service';
+import {
+  createUserService,
+  getAllUsersService,
+  getUserService,
+  removeUserService,
+  updateUserService,
+} from './users.service';
 import { userCreateSchema, userUpdateSchema } from './users.validation';
 import { AppError } from '../../utils/errors/AppError';
+import { CreateUser } from './dto';
 
 export const getAll = async (_req: Request, res: Response, _next: NextFunction) => {
-  const users = await getAllUsers();
+  const users = await getAllUsersService();
 
   res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
     status: 'success',
@@ -17,7 +24,7 @@ export const getAll = async (_req: Request, res: Response, _next: NextFunction) 
 export const get = async (req: Request, res: Response, _next: NextFunction) => {
   const { id } = req.params;
 
-  const user = await getUser(id);
+  const user = await getUserService(id);
 
   res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
     status: 'success',
@@ -27,14 +34,14 @@ export const get = async (req: Request, res: Response, _next: NextFunction) => {
 };
 
 export const create = async (req: Request, res: Response, _next: NextFunction) => {
-  const { email, password, confirmPassword } = req.body;
+  const { email, password, confirmPassword }: CreateUser = req.body;
   const { error, value } = userCreateSchema.validate({ email, password, confirmPassword });
 
   if (error) {
     throw new AppError(error.message);
   }
 
-  const result = await createUser(value);
+  const result = await createUserService(value);
 
   res.status(HTTP_STATUS_CODES.CREATED_201).json({
     status: 'success',
@@ -46,7 +53,7 @@ export const create = async (req: Request, res: Response, _next: NextFunction) =
 export const remove = async (req: Request, res: Response, _next: NextFunction) => {
   const { id } = req.params;
 
-  await removeUser(id);
+  await removeUserService(id);
 
   res.status(HTTP_STATUS_CODES.NO_CONTENT_204).send();
 };
@@ -61,7 +68,7 @@ export const update = async (req: Request, res: Response, _next: NextFunction) =
     throw new AppError(error.message);
   }
 
-  const result = await updateUser(id, value);
+  const result = await updateUserService(id, value);
 
   res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
     status: 'success',

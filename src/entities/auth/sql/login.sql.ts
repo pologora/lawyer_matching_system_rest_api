@@ -1,4 +1,5 @@
 export const loginUserQuery = `
-SELECT * FROM users
+SELECT *
+FROM users
 WHERE email = ?;
 `;
