@@ -1,7 +1,7 @@
 import { createJWT } from '../../utils/jwt/createJWT';
 import { hashPassword } from '../../utils/passwordManagement/hashPassword';
 import { Auth } from './auth.model';
-import { ForgotPassword, LoginUser, RegisterUser, ResetPassword } from './dto';
+import { ChangeMyPasswordDto, ForgotPasswordDto, LoginUserDto, RegisterUserDto, ResetPasswordDto } from './dto';
 import { AppError } from '../../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import { comparePasswords } from '../../utils/passwordManagement/comparePasswords';
@@ -10,8 +10,9 @@ import { RESET_PASSWORD_EXPIRATION_IN_MINUTES } from '../../config/constants';
 import { sendEmail } from '../../utils/email/email';
 import { Request } from 'express';
 import { createPasswordResetHashedToken } from '../../utils/passwordManagement/createHashedPasswordResetToken';
+import { checkIfResetTokenExpired } from '../../helpers/checkIfResetTokenExpired';
 
-export const registerService = async ({ email, password }: RegisterUser) => {
+export const registerService = async ({ email, password }: RegisterUserDto) => {
   const hashedPassword = await hashPassword(password);
 
   const { insertId } = await Auth.register({ email, password: hashedPassword });
@@ -21,7 +22,7 @@ export const registerService = async ({ email, password }: RegisterUser) => {
   return token;
 };
 
-export const loginService = async ({ email: inputEmail, password: candidatePassword }: LoginUser) => {
+export const loginService = async ({ email: inputEmail, password: candidatePassword }: LoginUserDto) => {
   // 1) check user with email exists and password is valid
   const user = await Auth.login({ email: inputEmail });
   if (!user || !(await comparePasswords(candidatePassword, user.password))) {
@@ -38,7 +39,7 @@ export const loginService = async ({ email: inputEmail, password: candidatePassw
   return data;
 };
 
-export const forgotPasswordService = async ({ email }: ForgotPassword, req: Request) => {
+export const forgotPasswordService = async ({ email }: ForgotPasswordDto, req: Request) => {
   const user = await Auth.getUserByEmail({ email });
   if (!user) {
     throw new AppError('There is no user with this email adress', HTTP_STATUS_CODES.NOT_FOUND_404);
@@ -72,7 +73,7 @@ export const forgotPasswordService = async ({ email }: ForgotPassword, req: Requ
   }
 };
 
-export const resetPasswordService = async ({ resetToken, password }: ResetPassword) => {
+export const resetPasswordService = async ({ resetToken, password }: ResetPasswordDto) => {
   const hashedToken = createPasswordResetHashedToken(resetToken);
   //get user by token
   const user = await Auth.getUserByResetToken({ hashedToken });
@@ -98,9 +99,18 @@ export const resetPasswordService = async ({ resetToken, password }: ResetPasswo
   return jwt;
 };
 
-function checkIfResetTokenExpired(resetTokenExpire: Date) {
-  const now = Date.now();
-  const exp = new Date(resetTokenExpire).getTime();
+export const changeMyPasswordService = async ({ password, newPassword, user }: ChangeMyPasswordDto) => {
+  const validPassword = await comparePasswords(password, user.password!);
+  if (!validPassword) {
+    throw new AppError('Invalid  password', HTTP_STATUS_CODES.UNAUTHORIZED_401);
+  }
 
-  return now > exp;
-}
+  const result = await Auth.updatePassword({ password: newPassword, id: user.id });
+  if (!result) {
+    throw new AppError('Password update failed. Please try again later.', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
+  }
+
+  const jwt = await createJWT({ id: user.id });
+
+  return jwt;
+};

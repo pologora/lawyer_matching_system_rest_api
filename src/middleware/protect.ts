@@ -21,7 +21,7 @@ export const protect = asyncErrorCatch(async (req: Request, res: Response, next:
     throw new AppError('The user belonging to this token no longer exists', HTTP_STATUS_CODES.UNAUTHORIZED_401);
   }
 
-  // 3. user change password after token was issued
+  // 3. user didn't change password after token was issued
   const passwordChangedAt = user.password_changed_at && new Date(user.password_changed_at).getTime();
   const isPasswordChangedAfterTokenIssued = checkPasswordChanged(iat, passwordChangedAt);
   if (isPasswordChangedAfterTokenIssued) {
