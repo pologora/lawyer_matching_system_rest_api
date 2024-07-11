@@ -1,6 +1,6 @@
-export interface UpdateUser {
+export interface UpdateUserDto {
   email?: string;
   password?: string;
 }
 
-export type UpdateUserKey = keyof UpdateUser;
+export type UpdateUserKey = keyof UpdateUserDto;

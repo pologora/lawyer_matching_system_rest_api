@@ -1,7 +1,7 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import pool from '../../config/db.config';
 import { IUser } from '../../types/user';
-import { SetResetPasswordToken } from './dto';
+import { SetResetPasswordTokenDto } from './dto';
 import {
   clearResetPasswordQuery,
   getUserByEmailQuery,
@@ -31,7 +31,7 @@ export class Auth {
     return user[0][0] as IUser;
   }
 
-  static async setResetPasswordToken({ hashedToken, expirationInMinutes, userId }: SetResetPasswordToken) {
+  static async setResetPasswordToken({ hashedToken, expirationInMinutes, userId }: SetResetPasswordTokenDto) {
     const result = await pool.query<ResultSetHeader>(setResetPasswordTokenQuery, [
       hashedToken,
       expirationInMinutes,

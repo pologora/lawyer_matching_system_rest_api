@@ -1,9 +1,9 @@
 import { patchQueryBuilder } from '../../helpers/patchQueryBuilder';
 import { hashPassword } from '../../utils/passwordManagement/hashPassword';
-import { CreateUser, UpdateUser, UpdateUserKey } from './dto';
+import { CreateUserDto, UpdateUserDto, UpdateUserKey } from './dto';
 import { User } from './users.model';
 
-export const createUserService = async (data: CreateUser) => {
+export const createUserService = async (data: CreateUserDto) => {
   const { email, password } = data;
 
   const hashedPassword = await hashPassword(password);
@@ -13,7 +13,7 @@ export const createUserService = async (data: CreateUser) => {
   return result;
 };
 
-export const updateUserService = async (id: string, data: UpdateUser) => {
+export const updateUserService = async (id: string, data: UpdateUserDto) => {
   const allowedKeys: Set<UpdateUserKey> = new Set(['email']);
   const tableName = 'users';
 

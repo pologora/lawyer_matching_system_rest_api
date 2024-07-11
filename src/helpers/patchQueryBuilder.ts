@@ -1,6 +1,6 @@
-import { UpdateUser, UpdateUserKey } from '../entities/users/dto/updateUser.dto';
+import { UpdateUserDto, UpdateUserKey } from '../entities/users/dto/updateUser.dto';
 
-export const patchQueryBuilder = (table: string, columns: UpdateUser, allowedKeys: Set<UpdateUserKey>) => {
+export const patchQueryBuilder = (table: string, columns: UpdateUserDto, allowedKeys: Set<UpdateUserKey>) => {
   const createSetClause = (key: UpdateUserKey) => `${key} = ?`;
   const getValue = (key: UpdateUserKey) => columns[key];
 

@@ -1,9 +1,20 @@
 import { NextFunction, Request, Response } from 'express';
-import { forgotPasswordService, loginService, registerService, resetPasswordService } from './auth.service';
+import {
+  changeMyPasswordService,
+  forgotPasswordService,
+  loginService,
+  registerService,
+  resetPasswordService,
+} from './auth.service';
 import { userCreateSchema } from '../users/users.validation';
 import { AppError } from '../../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
-import { forgotPasswordShema, resetPasswordSchema, userRegistrationSchema } from './auth.validation';
+import {
+  changeMyPasswordSchema,
+  forgotPasswordShema,
+  resetPasswordSchema,
+  userRegistrationSchema,
+} from './auth.validation';
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password, confirmPassword } = req.body;
@@ -71,5 +82,22 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
     status: 'success',
     message: 'Password has been changed',
     token: jwt,
+  });
+};
+
+export const changeMyPassword = async (req: Request, res: Response, next: NextFunction) => {
+  const { password, newPassword, confirmNewPassword } = req.body;
+  const { error, value } = changeMyPasswordSchema.validate({ password, newPassword, confirmNewPassword });
+
+  if (error) {
+    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
+  }
+
+  const token = await changeMyPasswordService({ ...value, user: req.user! });
+
+  res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+    status: 'success',
+    message: 'Password was changed',
+    token,
   });
 };

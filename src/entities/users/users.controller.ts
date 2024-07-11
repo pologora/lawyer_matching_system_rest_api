@@ -9,7 +9,7 @@ import {
 } from './users.service';
 import { userCreateSchema, userUpdateSchema } from './users.validation';
 import { AppError } from '../../utils/errors/AppError';
-import { CreateUser } from './dto';
+import { CreateUserDto } from './dto';
 
 export const getAll = async (_req: Request, res: Response, _next: NextFunction) => {
   const users = await getAllUsersService();
@@ -34,7 +34,7 @@ export const get = async (req: Request, res: Response, _next: NextFunction) => {
 };
 
 export const create = async (req: Request, res: Response, _next: NextFunction) => {
-  const { email, password, confirmPassword }: CreateUser = req.body;
+  const { email, password, confirmPassword }: CreateUserDto = req.body;
   const { error, value } = userCreateSchema.validate({ email, password, confirmPassword });
 
   if (error) {
