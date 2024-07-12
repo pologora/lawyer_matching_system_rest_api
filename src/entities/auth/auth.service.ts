@@ -32,7 +32,6 @@ export const registerService = async ({ email, password }: RegisterUserDto) => {
 export const loginService = async ({ email: inputEmail, password: candidatePassword }: LoginUserDto) => {
   // 1) check user with email exists and password is valid
   const user = await Auth.login({ email: inputEmail });
-  console.log(user);
 
   if (!user || !(await comparePasswords(candidatePassword, user.password))) {
     throw new AppError('Email or password is not valid', HTTP_STATUS_CODES.UNAUTHORIZED_401);
