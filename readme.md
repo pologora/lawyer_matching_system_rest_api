@@ -6,9 +6,10 @@
 2. [Project Management](#project-management)
 3. [Technical requirements](#technical-requirements)
 4. [Database Schema](#database-schema-design)
-5. [JWT](#jwt)
-6. [Base URL](#base-url)
-7. [API Documentation](#api-documentation)
+5. [Security](#security)
+6. [JWT](#jwt)
+7. [Base URL](#base-url)
+8. [API Documentation](#api-documentation)
 
    - [Authentication](#authentication)
      - [Login](#login)
@@ -86,6 +87,19 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
 - Messages:
 
   - id, sender_id, receiver_id, message, created_at
+
+## Security
+
+The following security measures have been implemented:
+
+- Encrypted passwords and reset password tokens
+- Rate limiting
+- JWT stored in cookies
+- Denial of access after password change
+- Body payload size limit in requests
+- Security headers with Helmet
+- Prepared statements to prevent SQL injections
+- Validation of all user inputs to prevent XSS attacks
 
 ## JWT
 
