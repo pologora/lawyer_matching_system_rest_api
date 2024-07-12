@@ -2,6 +2,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
 
 const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
 dotenv.config({ path: envFile });
@@ -22,17 +23,20 @@ process.on('uncaughtException', (err) => {
 
 const app = express();
 
+// security headers
+app.use('/api', helmet());
+// rate limiter
+app.use('/api', limiter);
+// loger in development
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-
-app.use('/api', limiter);
-
-app.use(express.json());
-
+// body parser
+app.use(express.json({ limit: '10kb' }));
+// api routes
 app.use('/api/v1', usersRouter);
 app.use('/api/v1', authRouter);
-
+// route not found on server send error response
 app.use('*', (req: Request, _res: Response, next: NextFunction) => {
   const error = new AppError(`Can't find ${req.originalUrl} on this server!`, HTTP_STATUS_CODES.NOT_FOUND_404);
 
