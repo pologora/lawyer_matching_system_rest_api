@@ -1,7 +1,14 @@
 import { createJWT } from '../../utils/jwt/createJWT';
 import { hashPassword } from '../../utils/passwordManagement/hashPassword';
 import { Auth } from './auth.model';
-import { ChangeMyPasswordDto, ForgotPasswordDto, LoginUserDto, RegisterUserDto, ResetPasswordDto } from './dto';
+import {
+  ChangeMyPasswordDto,
+  DeleteMeDto,
+  ForgotPasswordDto,
+  LoginUserDto,
+  RegisterUserDto,
+  ResetPasswordDto,
+} from './dto';
 import { AppError } from '../../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import { comparePasswords } from '../../utils/passwordManagement/comparePasswords';
@@ -25,6 +32,8 @@ export const registerService = async ({ email, password }: RegisterUserDto) => {
 export const loginService = async ({ email: inputEmail, password: candidatePassword }: LoginUserDto) => {
   // 1) check user with email exists and password is valid
   const user = await Auth.login({ email: inputEmail });
+  console.log(user);
+
   if (!user || !(await comparePasswords(candidatePassword, user.password))) {
     throw new AppError('Email or password is not valid', HTTP_STATUS_CODES.UNAUTHORIZED_401);
   }
@@ -88,7 +97,8 @@ export const resetPasswordService = async ({ resetToken, password }: ResetPasswo
   }
 
   //3. update changePasswordAt, and set new pass
-  const result = await Auth.updatePassword({ password, id: user.id });
+  const hashedPassword = await hashPassword(password);
+  const result = await Auth.updatePassword({ password: hashedPassword, id: user.id });
   if (!result) {
     throw new AppError('Password update failed. Please try again later.', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
   }
@@ -105,7 +115,8 @@ export const changeMyPasswordService = async ({ password, newPassword, user }: C
     throw new AppError('Invalid  password', HTTP_STATUS_CODES.UNAUTHORIZED_401);
   }
 
-  const result = await Auth.updatePassword({ password: newPassword, id: user.id });
+  const hashedPassword = await hashPassword(newPassword);
+  const result = await Auth.updatePassword({ password: hashedPassword, id: user.id });
   if (!result) {
     throw new AppError('Password update failed. Please try again later.', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
   }
@@ -113,4 +124,19 @@ export const changeMyPasswordService = async ({ password, newPassword, user }: C
   const jwt = await createJWT({ id: user.id });
 
   return jwt;
+};
+
+export const deleteMeService = async ({ password, user }: DeleteMeDto) => {
+  const validPassword = await comparePasswords(password, user.password!);
+  if (!validPassword) {
+    throw new AppError('Invalid  password', HTTP_STATUS_CODES.UNAUTHORIZED_401);
+  }
+
+  const result = await Auth.deleteMe({ id: user.id });
+  if (!result) {
+    throw new AppError(
+      'Fail to delete an account. Please try again later.',
+      HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500,
+    );
+  }
 };

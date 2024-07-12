@@ -11,6 +11,7 @@ import {
   setResetPasswordTokenQuery,
   updateUserPasswordQuery,
 } from './sql';
+import { deleteMeQuery } from './sql/deleteMe.sql';
 
 export class Auth {
   static async login({ email }: { email: string }) {
@@ -57,5 +58,11 @@ export class Auth {
     const result = await pool.query<RowDataPacket[]>(getUserByResetTokenQuery, [hashedToken]);
 
     return result[0][0] as IUser;
+  }
+
+  static async deleteMe({ id }: { id: number }) {
+    const result = await pool.query<ResultSetHeader>(deleteMeQuery, [id]);
+
+    return result[0].affectedRows;
   }
 }
