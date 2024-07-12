@@ -1,7 +1,7 @@
 import { AppError } from '../errors/AppError';
 import { sign } from './sign';
 
-export const createJWT = async (payload: object) => {
+export const createJWT = async (payload: object): Promise<string> => {
   return new Promise((resolve, reject) => {
     const secret = process.env.TOKEN_SECRET!;
     const expiresIn = process.env.TOKEN_EXPIRES_IN!;
