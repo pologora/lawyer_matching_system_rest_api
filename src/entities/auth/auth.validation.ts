@@ -42,3 +42,9 @@ export const changeMyPasswordSchema = Joi.object({
     'any.required': 'Confirm password is required',
   }),
 });
+
+export const deleteMeSchema = Joi.object({
+  password: Joi.string().required().messages({
+    'any.required': 'Password is required',
+  }),
+});

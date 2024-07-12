@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import {
   changeMyPasswordService,
+  deleteMeService,
   forgotPasswordService,
   loginService,
   registerService,
@@ -11,12 +12,13 @@ import { AppError } from '../../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import {
   changeMyPasswordSchema,
+  deleteMeSchema,
   forgotPasswordShema,
   resetPasswordSchema,
   userRegistrationSchema,
 } from './auth.validation';
 
-export const register = async (req: Request, res: Response, next: NextFunction) => {
+export const register = async (req: Request, res: Response, _next: NextFunction) => {
   const { email, password, confirmPassword } = req.body;
   const { error, value } = userCreateSchema.validate({ email, password, confirmPassword });
 
@@ -33,7 +35,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
   });
 };
 
-export const login = async (req: Request, res: Response, next: NextFunction) => {
+export const login = async (req: Request, res: Response, _next: NextFunction) => {
   const { email, password } = req.body;
   const { error, value } = userRegistrationSchema.validate({ email, password });
 
@@ -50,7 +52,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   });
 };
 
-export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+export const forgotPassword = async (req: Request, res: Response, _next: NextFunction) => {
   const { email } = req.body;
   const { error, value } = forgotPasswordShema.validate({ email });
 
@@ -66,7 +68,7 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
   });
 };
 
-export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+export const resetPassword = async (req: Request, res: Response, _next: NextFunction) => {
   const { token: resetToken } = req.params;
   const { password, confirmPassword } = req.body;
 
@@ -85,7 +87,7 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
   });
 };
 
-export const changeMyPassword = async (req: Request, res: Response, next: NextFunction) => {
+export const changeMyPassword = async (req: Request, res: Response, _next: NextFunction) => {
   const { password, newPassword, confirmNewPassword } = req.body;
   const { error, value } = changeMyPasswordSchema.validate({ password, newPassword, confirmNewPassword });
 
@@ -100,4 +102,18 @@ export const changeMyPassword = async (req: Request, res: Response, next: NextFu
     message: 'Password was changed',
     token,
   });
+};
+
+export const deleteMe = async (req: Request, res: Response, _next: NextFunction) => {
+  const { password } = req.body;
+
+  const { error, value } = deleteMeSchema.validate({ password });
+
+  if (error) {
+    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
+  }
+
+  await deleteMeService({ ...value, user: req.user });
+
+  res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
 };
