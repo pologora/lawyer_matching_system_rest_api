@@ -17,6 +17,7 @@ import {
   resetPasswordSchema,
   userRegistrationSchema,
 } from './auth.validation';
+import { setTokenCookieAndSendResponse } from './helpers/setTokenCookieAndSendResponse';
 
 export const register = async (req: Request, res: Response, _next: NextFunction) => {
   const { email, password, confirmPassword } = req.body;
@@ -28,10 +29,10 @@ export const register = async (req: Request, res: Response, _next: NextFunction)
 
   const token = await registerService(value);
 
-  res.status(HTTP_STATUS_CODES.CREATED_201).json({
-    status: 'success',
-    message: 'User registered successfully',
+  setTokenCookieAndSendResponse(res, {
     token,
+    message: 'User registered successfully',
+    statusCode: HTTP_STATUS_CODES.CREATED_201,
   });
 };
 
@@ -43,12 +44,13 @@ export const login = async (req: Request, res: Response, _next: NextFunction) =>
     throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
   }
 
-  const data = await loginService(value);
+  const { token, user } = await loginService(value);
 
-  res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-    status: 'success',
+  setTokenCookieAndSendResponse(res, {
+    token,
     message: 'User login successfully',
-    data,
+    statusCode: HTTP_STATUS_CODES.SUCCESS_200,
+    user,
   });
 };
 
@@ -78,12 +80,12 @@ export const resetPassword = async (req: Request, res: Response, _next: NextFunc
     throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
   }
 
-  const jwt = await resetPasswordService(value);
+  const token = await resetPasswordService(value);
 
-  res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-    status: 'success',
+  setTokenCookieAndSendResponse(res, {
+    token,
     message: 'Password has been changed',
-    token: jwt,
+    statusCode: HTTP_STATUS_CODES.SUCCESS_200,
   });
 };
 
@@ -96,11 +98,10 @@ export const changeMyPassword = async (req: Request, res: Response, _next: NextF
   }
 
   const token = await changeMyPasswordService({ ...value, user: req.user! });
-
-  res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-    status: 'success',
-    message: 'Password was changed',
+  setTokenCookieAndSendResponse(res, {
     token,
+    message: 'Password has been changed',
+    statusCode: HTTP_STATUS_CODES.SUCCESS_200,
   });
 };
 
