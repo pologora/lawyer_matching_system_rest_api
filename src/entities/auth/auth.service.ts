@@ -42,9 +42,8 @@ export const loginService = async ({ email: inputEmail, password: candidatePassw
   // 3) create token, return user info + token
   const { id, email, role } = user;
   const token = await createJWT({ id: user.id });
-  const data = { token, user: { id, email, role } };
 
-  return data;
+  return { token, user: { id, email, role } };
 };
 
 export const forgotPasswordService = async ({ email }: ForgotPasswordDto, req: Request) => {
@@ -103,9 +102,7 @@ export const resetPasswordService = async ({ resetToken, password }: ResetPasswo
   }
 
   //4. send jwt
-  const jwt = await createJWT({ id: user.id });
-
-  return jwt;
+  return await createJWT({ id: user.id });
 };
 
 export const changeMyPasswordService = async ({ password, newPassword, user }: ChangeMyPasswordDto) => {
@@ -120,9 +117,7 @@ export const changeMyPasswordService = async ({ password, newPassword, user }: C
     throw new AppError('Password update failed. Please try again later.', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
   }
 
-  const jwt = await createJWT({ id: user.id });
-
-  return jwt;
+  return await createJWT({ id: user.id });
 };
 
 export const deleteMeService = async ({ password, user }: DeleteMeDto) => {

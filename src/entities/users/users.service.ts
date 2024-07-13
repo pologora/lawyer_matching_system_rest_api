@@ -8,9 +8,7 @@ export const createUserService = async (data: CreateUserDto) => {
 
   const hashedPassword = await hashPassword(password);
 
-  const result = await User.create({ email, hashedPassword });
-
-  return result;
+  return await User.create({ email, hashedPassword });
 };
 
 export const updateUserService = async (id: string, data: UpdateUserDto) => {
@@ -21,25 +19,17 @@ export const updateUserService = async (id: string, data: UpdateUserDto) => {
 
   await User.update(query, values, id);
 
-  const updatedUser = User.get(id);
-
-  return updatedUser;
+  return await User.get(id);
 };
 
 export const getUserService = async (id: string) => {
-  const user = await User.get(id);
-
-  return user;
+  return await User.get(id);
 };
 
 export const getAllUsersService = async () => {
-  const users = await User.getAll();
-
-  return users;
+  return await User.getAll();
 };
 
 export const removeUserService = async (id: string) => {
-  const result = await User.remove(id);
-
-  return result;
+  return await User.remove(id);
 };
