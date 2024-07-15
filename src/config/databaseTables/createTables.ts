@@ -1,12 +1,21 @@
 /* eslint-disable no-console */
 import { exit } from 'process';
-import { createUsersTable } from './tables.sql';
+import { usersTable, lawyersTable, lawyer_specializationsTable, specializationsTable } from './tables.sql';
 import pool from '../db.config';
 
-const createDatabaseTablesIfNotExists = async (connection: typeof pool, query: string) => {
+const createDatabaseTablesIfNotExists = async (connection: typeof pool) => {
   try {
-    await connection.query(query);
-    console.log('Table created or already exists.');
+    await connection.query(usersTable);
+    console.log('Users table created successfully.');
+
+    await connection.query(lawyersTable);
+    console.log('Lawyers table created successfully.');
+
+    await connection.query(specializationsTable);
+    console.log('Specializations table created successfully.');
+
+    await connection.query(lawyer_specializationsTable);
+    console.log('Lawyer specializations table created successfully.');
   } catch (error) {
     console.error('Error creating table:', error);
   } finally {
@@ -16,8 +25,8 @@ const createDatabaseTablesIfNotExists = async (connection: typeof pool, query: s
   }
 };
 
-createDatabaseTablesIfNotExists(pool, createUsersTable);
+createDatabaseTablesIfNotExists(pool);
 
 export const runTablesSetup = () => {
-  createDatabaseTablesIfNotExists(pool, createUsersTable);
+  createDatabaseTablesIfNotExists(pool);
 };
