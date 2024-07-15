@@ -1,15 +1,16 @@
 /* eslint-disable no-console */
 import { app } from './app';
+import { logger } from './config/logger/logger';
 
-const PORT = process.env.PORT || 8000;
+const port = 8000;
+const PORT = process.env.PORT || port;
 
 const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
 process.on('unhandledRejection', (err: Error) => {
-  console.error(err.name, err.message);
-  console.log('UNHANDLED REJECTION! Shutting down...');
+  logger.error(err);
 
   server.close(() => {
     process.exit(1);
