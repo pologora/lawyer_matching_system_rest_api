@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 
 const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
 dotenv.config({ path: envFile });
@@ -28,13 +29,16 @@ app.use('/api', helmet());
 // rate limiter
 app.use('/api', limiter);
 
-// loger in development
+// logger in development
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
 // body parser
 app.use(express.json({ limit: '10kb' }));
+
+//cookie parser
+app.use(cookieParser());
 
 // api routes
 app.use('/api/v1', usersRouter);

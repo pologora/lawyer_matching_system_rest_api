@@ -28,7 +28,7 @@ class User {
   }
 
   static async remove(id: string) {
-    const result = await pool.query(deleteUserQuery, [id]);
+    const result = await pool.query<ResultSetHeader>(deleteUserQuery, [id]);
 
     return result[0];
   }

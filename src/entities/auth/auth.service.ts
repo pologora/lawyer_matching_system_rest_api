@@ -71,8 +71,6 @@ export const forgotPasswordService = async ({ email }: ForgotPasswordDto, req: R
     await sendEmail({ from, subject, text, toEmail });
   } catch (err) {
     await Auth.clearResetPassword({ id: user.id });
-    // eslint-disable-next-line no-console
-    console.error(err);
     throw new AppError(
       'There was an error sending the email. Please, try again later',
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500,
@@ -129,7 +127,7 @@ export const deleteMeService = async ({ password, user }: DeleteMeDto) => {
   const result = await Auth.deleteMe({ id: user.id });
   if (!result) {
     throw new AppError(
-      'Fail to delete an account. Please try again later.',
+      'Failed to delete an account. Please try again later.',
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500,
     );
   }

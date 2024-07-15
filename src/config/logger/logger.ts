@@ -4,15 +4,14 @@ import path from 'path';
 
 const { combine, timestamp, printf, errors } = format;
 
-const customFormat = printf(({ level, message, timestamp_, stack }) => {
-  return `${timestamp_} ${level}: ${stack || message}`;
+const customFormat = printf(({ level, message, timestamp: time, stack }) => {
+  return `${time} ${level}: ${stack || message}`;
 });
 
 export const logger = createLogger({
   level: 'info',
   format: combine(timestamp(), errors({ stack: true }), customFormat),
   transports: [
-    new transports.Console(),
     new transports.DailyRotateFile({
       filename: path.join(__dirname, '../../..', 'logs', 'error-%DATE%.log'),
       datePattern: 'YYYY-MM-DD',
