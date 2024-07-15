@@ -2,6 +2,8 @@
 import { exit } from 'process';
 import { usersTable, lawyersTable, lawyer_specializationsTable, specializationsTable } from './tables.sql';
 import pool from '../db.config';
+import { specializations } from './specjalizations';
+import { createInsertSpecializationsQuery, insertSpecializations } from './insertSpecializations';
 
 const createDatabaseTablesIfNotExists = async (connection: typeof pool) => {
   try {
@@ -25,8 +27,7 @@ const createDatabaseTablesIfNotExists = async (connection: typeof pool) => {
   }
 };
 
-createDatabaseTablesIfNotExists(pool);
-
 export const runTablesSetup = () => {
   createDatabaseTablesIfNotExists(pool);
+  insertSpecializations(createInsertSpecializationsQuery(specializations));
 };
