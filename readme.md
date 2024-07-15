@@ -4,12 +4,13 @@
 
 1. [Description](#description)
 2. [Project Management](#project-management)
-3. [Technical requirements](#technical-requirements)
+3. [Technical Requirements](#technical-requirements)
 4. [Database Schema](#database-schema-design)
-5. [Security](#security)
-6. [JWT](#jwt)
-7. [Base URL](#base-url)
-8. [API Documentation](#api-documentation)
+5. [Error Handling](#error-handling)
+6. [Security](#security)
+7. [JWT](#jwt)
+8. [Base URL](#base-url)
+9. [API Documentation](#api-documentation)
 
    - [Authentication](#authentication)
      - [Login](#login)
@@ -87,6 +88,15 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
 - Messages:
 
   - id, sender_id, receiver_id, message, created_at
+
+## Error Handling
+
+1. Custom Error Class: `AppError` class is used to create custom error objects with additional properties for better error management.
+2. Asynchronous Error Wrapper: `asyncErrorCatch` function wraps asynchronous functions to automatically catch errors and pass them to the global error handler.
+3. Global Error Handler: `globalErrorHanler` - The global error handler middleware is used at the end of the app to handle all errors passed down the middleware chain.
+4. Uncaught Exceptions: To handle uncaught exceptions, we log the error and exit the process.
+5. Unhandled Rejections: To handle unhandled promise rejections, we log the error and close the server gracefully.
+6. The application uses the `winston` library for logging. Errors that are not operational and chosen errors by the developer are saved to files and kept for 14 days.
 
 ## Security
 

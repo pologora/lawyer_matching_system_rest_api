@@ -1,5 +1,7 @@
 import { patchQueryBuilder } from '../../helpers/patchQueryBuilder';
+import { AppError } from '../../utils/errors/AppError';
 import { hashPassword } from '../../utils/passwordManagement/hashPassword';
+import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import { CreateUserDto, UpdateUserDto, UpdateUserKey } from './dto';
 import { User } from './users.model';
 
@@ -19,7 +21,13 @@ export const updateUserService = async (id: string, data: UpdateUserDto) => {
 
   await User.update(query, values, id);
 
-  return await User.get(id);
+  const user = await User.get(id);
+
+  if (!user) {
+    throw new AppError(`Failed to update user id: ${id}`, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
+  }
+
+  return user;
 };
 
 export const getUserService = async (id: string) => {
@@ -31,5 +39,9 @@ export const getAllUsersService = async () => {
 };
 
 export const removeUserService = async (id: string) => {
-  return await User.remove(id);
+  const result = await User.remove(id);
+
+  if (!result.affectedRows) {
+    throw new AppError('Failed to delete user.', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
+  }
 };
