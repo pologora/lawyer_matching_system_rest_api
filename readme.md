@@ -73,12 +73,41 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
 
 ## Database Schema Design
 
-![Screenshot](https://github.com/pologora/lawyer_matching_system_rest_api/blob/screenshots/public/database_schema.png)
+[Database Schema](https://drawsql.app/teams/noteam-240/diagrams/lawyer-matching-system)
 
-- Users:
-  - id, name, email, password, role, created_at, updated_at
-- Lawyer Profile:
-  - id, specialty, experience_years, hourly_rate, rating, reviews_count
+- users:
+  - `id` int primary key,
+  - `email` varchar unique not null,
+  - `role` enum ('admin', 'user', 'client', 'lawyer') default 'user',
+  - `active` boolean default `true`,
+  - `reset_password_token` varchar,
+  - `reset_password_token_expirations` timestamp,
+  - `password_changed_at` timestamp,
+  - `created_at` timestamp,
+  - `updated_at` timestamp.
+- lawyer_profile:
+  - `id` int primary key,
+  - `user_id` foreign key(users) on delete cascade,
+  - `experience` int,
+  - `license_number` varchar,
+  - `rating` int,
+  - `bio` text,
+  - `first_name` varchar,
+  - `last_name` varchar,
+  - `city` varchar,
+  - `region` varchar
+- specializations:
+
+  - `id` int primary key,
+  - `name` varchar not null
+
+- lawyer_specialization:
+
+  - `id` int primary key,
+  - `lawyer_id` foreign key (lawyer_profile) on delete cascade,
+  - `specialization_id` foreign key (specializations) on delete cascade,
+  - `unique_specialization` unique key (lawyer_id, specialization_id)
+
 - Client Profile:
   - id, preferences, location
 - Cases:
