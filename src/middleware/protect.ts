@@ -7,9 +7,8 @@ import { User } from '../entities/users/users.model';
 
 export const protect = asyncErrorCatch(async (req: Request, res: Response, next: NextFunction) => {
   // 1. get token from request and validate
-  const bearer = req.headers.authorization?.split(' ')[0];
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!req.headers.authorization || bearer !== 'Bearer' || !token) {
+  const token = req.cookies.jwt;
+  if (!token) {
     throw new AppError('You are not not logged in. Please log in to get access', HTTP_STATUS_CODES.UNAUTHORIZED_401);
   }
 
