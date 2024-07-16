@@ -15,18 +15,18 @@ CREATE TABLE IF NOT EXISTS users (
 
 const lawyersTable = `
 CREATE TABLE IF NOT EXISTS lawyer_profiles(
-id int AUTO_INCREMENT PRIMARY KEY,
-user_id int NOT NULL UNIQUE,
-license_number VARCHAR(255),
-bio TEXT,
-experience int,
-first_name VARCHAR(100),
-last_name VARCHAR(100),
-city VARCHAR(100),
-region VARCHAR(100),
-rating int,
-FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-INDEX (user_id)
+    id int AUTO_INCREMENT PRIMARY KEY,
+    user_id int NOT NULL UNIQUE,
+    license_number VARCHAR(255),
+    bio TEXT,
+    experience int,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    city VARCHAR(100),
+    region VARCHAR(100),
+    rating int,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX (user_id)
 );
 `;
 
