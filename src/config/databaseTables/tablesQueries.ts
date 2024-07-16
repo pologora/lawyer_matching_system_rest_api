@@ -70,6 +70,8 @@ const casesTable = `
     status ENUM("open", "closed", "pending") DEFAULT "open",
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+     FOREIGN KEY (client_id) REFERENCES client_profiles(id) ON DELETE SET NULL,
+    FOREIGN KEY (lawyer_id) REFERENCES lawyer_profiles(id) ON DELETE SET NULL,
     INDEX (client_id),
     INDEX (lawyer_id)
     );
@@ -80,8 +82,8 @@ const reviewsTable = `
     id INT AUTO_INCREMENT PRIMARY KEY,
     client_id int,
     lawyer_id int NOT NULL,
-    description text,
-    status ENUM ("open", "closed", "pending") DEFAULT "open",
+    review_text text,
+    rating int,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (client_id) REFERENCES client_profiles(id) ON DELETE SET NULL,
