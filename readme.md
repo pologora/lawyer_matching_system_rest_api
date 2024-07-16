@@ -73,23 +73,6 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
 
 ## Database Schema Design
 
-<<<<<<< Updated upstream
-![Screenshot](https://github.com/pologora/lawyer_matching_system_rest_api/blob/screenshots/public/database_schema.png)
-
-- Users:
-  - id, name, email, password, role, created_at, updated_at
-- Lawyer Profile:
-  - id, specialty, experience_years, hourly_rate, rating, reviews_count
-- Client Profile:
-  - id, preferences, location
-- Cases:
-  - id, client_id, description, case_type, budget, status, created_at, updated_at
-- Reviews:
-  - id, client_id, lawyer_id, rating, review, created_at, updated_at
-- Messages:
-
-  - id, sender_id, receiver_id, message, created_at
-=======
 [Database Schema](https://drawsql.app/teams/noteam-240/diagrams/lawyer-matching-system)
 
 ![Screenshot](https://github.com/pologora/lawyer_matching_system_rest_api/blob/screenshots/public/screenshots/database_schema.png)
@@ -165,7 +148,6 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
   - `updates_at` timestamp default current_timestamp on update current_timestamp,
   - `index (client_id)`,
   - `index (lawyer_id)`
->>>>>>> Stashed changes
 
 ## Error Handling
 
