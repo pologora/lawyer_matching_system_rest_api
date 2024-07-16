@@ -73,6 +73,7 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
 
 ## Database Schema Design
 
+<<<<<<< Updated upstream
 ![Screenshot](https://github.com/pologora/lawyer_matching_system_rest_api/blob/screenshots/public/database_schema.png)
 
 - Users:
@@ -88,6 +89,83 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
 - Messages:
 
   - id, sender_id, receiver_id, message, created_at
+=======
+[Database Schema](https://drawsql.app/teams/noteam-240/diagrams/lawyer-matching-system)
+
+![Screenshot](https://github.com/pologora/lawyer_matching_system_rest_api/blob/screenshots/public/screenshots/database_schema.png)
+
+### Tables:
+
+- users:
+  - `id` int primary key,
+  - `email` varchar unique not null,
+  - `role` enum ('admin', 'user', 'client', 'lawyer') default 'user',
+  - `active` boolean default `true`,
+  - `reset_password_token` varchar,
+  - `reset_password_token_expirations` timestamp,
+  - `password_changed_at` timestamp,
+  - `created_at` timestamp default current_timestamp,
+  - `updated_at` timestamp default current_timestamp on update current_timestamp.
+- lawyer_profiles:
+  - `id` int primary key,
+  - `user_id` foreign key (users) not null on delete cascade,
+  - `experience` int,
+  - `license_number` varchar,
+  - `rating` int,
+  - `bio` text,
+  - `first_name` varchar,
+  - `last_name` varchar,
+  - `city` varchar,
+  - `region` varchar
+  - `index (user_id)`
+- specializations:
+
+  - `id` int primary key,
+  - `name` varchar not null
+
+- lawyer_specializations:
+
+  - `id` int primary key,
+  - `lawyer_id` foreign key (lawyer_profiles) not null on delete cascade,
+  - `specialization_id` foreign key (specializations) on delete cascade,
+  - `unique_specialization` unique key (lawyer_id, specialization_id),
+  - `index (lawyer_id)`,
+  - `index (specialization_id)`
+
+- client_profiles:
+  - `id` int primary key,
+  - `user_id` int foreign key (users) not null on delete cascade,
+  - `first_name` varchar,
+  - `last_name` varchar,
+  - `index (user_id)`
+- cases:
+  - `id` int primary key,
+  - `client_id` int foreign key (client_profiles) on delete set null,
+  - `lawyer_id` int foreign key (lawyer_profiles) on delete set null,
+  - `description` text,
+  - `status` enum ('open', 'closed', 'pending') default open,
+  - `created_at` timestamp default current_timestamp,
+  - `updates_at` timestamp default current_timestamp on update current_timestamp,
+  - `index (client_id)`,
+  - `index (lawyer_id)`
+- reviews:
+  - `id` int primary key,
+  - `client_id` int foreign key (client_profiles) on delete set null
+  - `lawyer_id` int foreign key (lawyer_profiles) on delete cascade,
+  - `review` text,
+  - `rating` int,
+  - `index (client_id)`,
+  - `index (lawyer_id)`
+- messages:
+  `id` int primary key,
+  - `client_id` int foreign key (client_profiles) on delete set null
+  - `lawyer_id` int foreign key (lawyer_profiles) on delete set null,
+  - `message` text,
+  - `created_at` timestamp default current_timestamp,
+  - `updates_at` timestamp default current_timestamp on update current_timestamp,
+  - `index (client_id)`,
+  - `index (lawyer_id)`
+>>>>>>> Stashed changes
 
 ## Error Handling
 
