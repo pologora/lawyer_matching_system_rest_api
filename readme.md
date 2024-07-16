@@ -88,7 +88,8 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
   - `reset_password_token_expirations` timestamp,
   - `password_changed_at` timestamp,
   - `created_at` timestamp default current_timestamp,
-  - `updated_at` timestamp default current_timestamp on update current_timestamp.
+  - `updated_at` timestamp default current_timestamp on update current_timestamp
+    
 - lawyer_profiles:
   - `id` int primary key,
   - `user_id` foreign key (users) not null on delete cascade,
@@ -101,26 +102,26 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
   - `city` varchar,
   - `region` varchar
   - `index (user_id)`
-
+    
 - specializations:
   - `id` int primary key,
   - `name` varchar not null
-  - 
+    
 - lawyer_specializations:
-
   - `id` int primary key,
   - `lawyer_id` foreign key (lawyer_profiles) not null on delete cascade,
   - `specialization_id` foreign key (specializations) on delete cascade,
   - `unique_specialization` unique key (lawyer_id, specialization_id),
   - `index (lawyer_id)`,
   - `index (specialization_id)`
-
+    
 - client_profiles:
   - `id` int primary key,
   - `user_id` int foreign key (users) not null on delete cascade,
   - `first_name` varchar,
   - `last_name` varchar,
   - `index (user_id)`
+    
 - cases:
   - `id` int primary key,
   - `client_id` int foreign key (client_profiles) on delete set null,
@@ -131,6 +132,7 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
   - `updates_at` timestamp default current_timestamp on update current_timestamp,
   - `index (client_id)`,
   - `index (lawyer_id)`
+    
 - reviews:
   - `id` int primary key,
   - `client_id` int foreign key (client_profiles) on delete set null
@@ -139,8 +141,9 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
   - `rating` int,
   - `index (client_id)`,
   - `index (lawyer_id)`
+    
 - messages:
-  `id` int primary key,
+  - `id` int primary key,
   - `client_id` int foreign key (client_profiles) on delete set null
   - `lawyer_id` int foreign key (lawyer_profiles) on delete set null,
   - `message` text,
