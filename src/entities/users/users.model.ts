@@ -15,13 +15,13 @@ class User {
     return result[0];
   }
 
-  static async get(id: string) {
+  static async getOne(id: string) {
     const result = await pool.query<RowDataPacket[]>(getUserByIdQuery, [id]);
 
     return result[0][0] as IUser;
   }
 
-  static async getAll() {
+  static async getMany() {
     const result = await pool.query(getAllUsersQuery);
 
     return result[0];

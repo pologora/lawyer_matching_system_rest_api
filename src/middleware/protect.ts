@@ -15,7 +15,7 @@ export const protect = asyncErrorCatch(async (req: Request, res: Response, next:
   const { id, iat } = await verifyJWT(token);
 
   // 2. user still exists
-  const user = await User.get(id);
+  const user = await User.getOne(id);
   if (!user) {
     throw new AppError('The user belonging to this token no longer exists', HTTP_STATUS_CODES.UNAUTHORIZED_401);
   }

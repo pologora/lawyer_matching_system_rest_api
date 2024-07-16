@@ -14,6 +14,7 @@ import { HTTP_STATUS_CODES } from './utils/statusCodes';
 import { authRouter } from './entities/auth/auth.routes';
 import { limiter } from './config/rateLimit/rateLimit';
 import { logger } from './config/logger/logger';
+import { lawyersRouter } from './entities/lawyers/lawyers.route';
 
 process.on('uncaughtException', (err) => {
   logger.error(err);
@@ -43,8 +44,9 @@ app.use(cookieParser());
 // api routes
 app.use('/api/v1', usersRouter);
 app.use('/api/v1', authRouter);
+app.use('/api/v1', lawyersRouter);
 
-// route not found on server send error response
+// route not found on server
 app.use('*', (req: Request, _res: Response, next: NextFunction) => {
   throw new AppError(`Can't find ${req.originalUrl} on this server!`, HTTP_STATUS_CODES.NOT_FOUND_404);
 });

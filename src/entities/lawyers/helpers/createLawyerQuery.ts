@@ -1,4 +1,4 @@
-export const createLawyerQueryBuilder = (data: object) => {
+export const createLawyerQuery = (data: object) => {
   const values = [];
   const columns = [];
   for (const [key, value] of Object.entries(data)) {

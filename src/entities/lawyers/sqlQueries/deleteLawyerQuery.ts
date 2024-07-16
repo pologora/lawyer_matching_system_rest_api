@@ -1,3 +1,3 @@
 export const deleteLawyerQuery = `
-DELETE FROM lawyer_profile where id = ?;
+DELETE FROM lawyer_profiles where id = ?
 `;

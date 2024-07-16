@@ -21,7 +21,7 @@ export const updateUserService = async (id: string, data: UpdateUserDto) => {
 
   await User.update(query, values, id);
 
-  const user = await User.get(id);
+  const user = await User.getOne(id);
 
   if (!user) {
     throw new AppError(`Failed to update user id: ${id}`, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
@@ -31,11 +31,11 @@ export const updateUserService = async (id: string, data: UpdateUserDto) => {
 };
 
 export const getUserService = async (id: string) => {
-  return await User.get(id);
+  return await User.getOne(id);
 };
 
-export const getAllUsersService = async () => {
-  return await User.getAll();
+export const getManyUsersService = async () => {
+  return await User.getMany();
 };
 
 export const removeUserService = async (id: string) => {

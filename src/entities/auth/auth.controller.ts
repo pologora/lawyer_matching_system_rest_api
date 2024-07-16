@@ -19,7 +19,7 @@ import {
 } from './auth.validation';
 import { setTokenCookieAndSendResponse } from './helpers/setTokenCookieAndSendResponse';
 
-export const register = async (req: Request, res: Response, _next: NextFunction) => {
+export const registerController = async (req: Request, res: Response, _next: NextFunction) => {
   const { email, password, confirmPassword } = req.body;
   const { error, value } = userCreateSchema.validate({ email, password, confirmPassword });
 
@@ -36,7 +36,7 @@ export const register = async (req: Request, res: Response, _next: NextFunction)
   });
 };
 
-export const login = async (req: Request, res: Response, _next: NextFunction) => {
+export const loginController = async (req: Request, res: Response, _next: NextFunction) => {
   const { email, password } = req.body;
   const { error, value } = userRegistrationSchema.validate({ email, password });
 
@@ -46,7 +46,7 @@ export const login = async (req: Request, res: Response, _next: NextFunction) =>
 
   const { token, user } = await loginService(value);
 
-  setTokenCookieAndSendResponse(res, {
+  return setTokenCookieAndSendResponse(res, {
     token,
     message: 'User login successfully',
     statusCode: HTTP_STATUS_CODES.SUCCESS_200,
@@ -54,7 +54,7 @@ export const login = async (req: Request, res: Response, _next: NextFunction) =>
   });
 };
 
-export const forgotPassword = async (req: Request, res: Response, _next: NextFunction) => {
+export const forgotPasswordController = async (req: Request, res: Response, _next: NextFunction) => {
   const { email } = req.body;
   const { error, value } = forgotPasswordShema.validate({ email });
 
@@ -64,13 +64,13 @@ export const forgotPassword = async (req: Request, res: Response, _next: NextFun
 
   await forgotPasswordService(value, req);
 
-  res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
     status: 'success',
     message: 'Reset password link was sent to the user email',
   });
 };
 
-export const resetPassword = async (req: Request, res: Response, _next: NextFunction) => {
+export const resetPasswordController = async (req: Request, res: Response, _next: NextFunction) => {
   const { token: resetToken } = req.params;
   const { password, confirmPassword } = req.body;
 
@@ -82,14 +82,14 @@ export const resetPassword = async (req: Request, res: Response, _next: NextFunc
 
   const token = await resetPasswordService(value);
 
-  setTokenCookieAndSendResponse(res, {
+  return setTokenCookieAndSendResponse(res, {
     token,
     message: 'Password has been changed',
     statusCode: HTTP_STATUS_CODES.SUCCESS_200,
   });
 };
 
-export const changeMyPassword = async (req: Request, res: Response, _next: NextFunction) => {
+export const changeMyPasswordController = async (req: Request, res: Response, _next: NextFunction) => {
   const { password, newPassword, confirmNewPassword } = req.body;
   const { error, value } = changeMyPasswordSchema.validate({ password, newPassword, confirmNewPassword });
 
@@ -98,14 +98,15 @@ export const changeMyPassword = async (req: Request, res: Response, _next: NextF
   }
 
   const token = await changeMyPasswordService({ ...value, user: req.user! });
-  setTokenCookieAndSendResponse(res, {
+
+  return setTokenCookieAndSendResponse(res, {
     token,
     message: 'Password has been changed',
     statusCode: HTTP_STATUS_CODES.SUCCESS_200,
   });
 };
 
-export const deleteMe = async (req: Request, res: Response, _next: NextFunction) => {
+export const deleteMeController = async (req: Request, res: Response, _next: NextFunction) => {
   const { password } = req.body;
 
   const { error, value } = deleteMeSchema.validate({ password });
@@ -116,5 +117,5 @@ export const deleteMe = async (req: Request, res: Response, _next: NextFunction)
 
   await deleteMeService({ ...value, user: req.user });
 
-  res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
+  return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
 };
