@@ -1,16 +1,9 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import pool from '../../config/db.config';
-import { IUser } from '../../types/user';
-import { createUserQuery, deleteUserQuery, getAllUsersQuery, getUserByIdQuery } from './sqlQueries';
 
-type CreateUser = {
-  email: string;
-  hashedPassword: string;
-};
-
-class User {
-  static async create({ email, hashedPassword }: CreateUser) {
-    const result = await pool.query<ResultSetHeader>(createUserQuery, [email, hashedPassword]);
+export class LawyersProfile {
+  static async create() {
+    const result = await pool.query<ResultSetHeader>();
 
     return result[0];
   }
@@ -18,7 +11,7 @@ class User {
   static async get(id: string) {
     const result = await pool.query<RowDataPacket[]>(getUserByIdQuery, [id]);
 
-    return result[0][0] as IUser;
+    return result[0][0];
   }
 
   static async getAll() {
@@ -39,5 +32,3 @@ class User {
     return result[0];
   }
 }
-
-export { User };

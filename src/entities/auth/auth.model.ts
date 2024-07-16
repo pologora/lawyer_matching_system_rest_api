@@ -10,8 +10,8 @@ import {
   registerNewUserQuery,
   setResetPasswordTokenQuery,
   updateUserPasswordQuery,
-} from './sql';
-import { deleteMeQuery } from './sql/deleteMe.sql';
+} from './sqlQueries';
+import { deleteMeQuery } from './sqlQueries/deleteMeQuery';
 
 export class Auth {
   static async login({ email }: { email: string }) {

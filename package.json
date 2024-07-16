@@ -11,7 +11,7 @@
     "build": "rm -rf build && npx tsc",
     "test": "cross-env NODE_ENV=test jest",
     "test-watch": "jest --watch --detectOpenHandles",
-    "setup": "ts-node src/config/databaseTables/createTables.ts"
+    "setup": "ts-node src/config/databaseTables/setupDatabaseTablesAndValues.ts"
   },
   "overrides": {
     "eslint": "^9.6.0"

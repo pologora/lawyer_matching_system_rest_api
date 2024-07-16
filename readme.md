@@ -101,11 +101,11 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
   - `city` varchar,
   - `region` varchar
   - `index (user_id)`
-- specializations:
 
+- specializations:
   - `id` int primary key,
   - `name` varchar not null
-
+  - 
 - lawyer_specializations:
 
   - `id` int primary key,
