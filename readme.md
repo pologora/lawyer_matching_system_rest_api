@@ -157,8 +157,8 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
 1. Custom Error Class: `AppError` class is used to create custom error objects with additional properties for better error management.
 2. Asynchronous Error Wrapper: `asyncErrorCatch` function wraps asynchronous functions to automatically catch errors and pass them to the global error handler.
 3. Global Error Handler: `globalErrorHanler` - The global error handler middleware is used at the end of the app to handle all errors passed down the middleware chain.
-4. Uncaught Exceptions: To handle uncaught exceptions, we log the error and exit the process.
-5. Unhandled Rejections: To handle unhandled promise rejections, we log the error and close the server gracefully.
+4. Uncaught Exceptions: To handle uncaught exceptions, log the error and exit the process.
+5. Unhandled Rejections: To handle unhandled promise rejections, log the error and close the server gracefully.
 6. The application uses the `winston` library for logging. Errors that are not operational and chosen errors by the developer are saved to files and kept for 14 days.
 
 ## Security
