@@ -1,6 +1,12 @@
 /* eslint-disable no-console */
 import { exit } from 'process';
-import { usersTable, lawyersTable, lawyer_specializationsTable, specializationsTable } from './tables.sql';
+import {
+  usersTable,
+  lawyersTable,
+  lawyerSpecializationsTable,
+  specializationsTable,
+  casesTable,
+} from './tablesQueries';
 import pool from '../db.config';
 import { specializations } from './specjalizations';
 import { createInsertSpecializationsQuery, insertSpecializations } from './insertSpecializations';
@@ -16,8 +22,11 @@ const createDatabaseTablesIfNotExists = async (connection: typeof pool) => {
     await connection.query(specializationsTable);
     console.log('Specializations table created successfully.');
 
-    await connection.query(lawyer_specializationsTable);
+    await connection.query(lawyerSpecializationsTable);
     console.log('Lawyer specializations table created successfully.');
+
+    await connection.query(casesTable);
+    console.log('Cases table created successfully.');
   } catch (error) {
     console.error('Error creating table:', error);
   } finally {

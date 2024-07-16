@@ -1,7 +1,7 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import pool from '../../config/db.config';
 import { IUser } from '../../types/user';
-import { createUserQuery, deleteUserQuery, getAllUsersQuery, getUserByIdQuery } from './sql';
+import { createUserQuery, deleteUserQuery, getAllUsersQuery, getUserByIdQuery } from './sqlQueries';
 
 type CreateUser = {
   email: string;

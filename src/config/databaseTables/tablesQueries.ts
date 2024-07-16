@@ -1,5 +1,5 @@
 const usersTable = `
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS user (
     id int AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -26,27 +26,51 @@ city VARCHAR(100),
 region VARCHAR(100),
 rating int,
 FOREIGN KEY (user_id)
-    REFERENCES users(id)
+    REFERENCES user(id)
     ON DELETE CASCADE
 );
 `;
 
 const specializationsTable = `
-CREATE TABLE IF NOT EXISTS specializations (
+CREATE TABLE IF NOT EXISTS specialization (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE
 );
 `;
 
-const lawyer_specializationsTable = `
-CREATE TABLE IF NOT EXISTS lawyer_specializations (
+const lawyerSpecializationsTable = `
+CREATE TABLE IF NOT EXISTS lawyer_specialization (
     id INT AUTO_INCREMENT PRIMARY KEY,
     lawyer_id INT NOT NULL,
     specialization_id INT NOT NULL,
     FOREIGN KEY (lawyer_id) REFERENCES lawyer_profile(id) ON DELETE CASCADE,
-    FOREIGN KEY (specialization_id) REFERENCES specializations(id),
+    FOREIGN KEY (specialization_id) REFERENCES specialization(id),
     UNIQUE KEY unique_specialization (lawyer_id, specialization_id)
 );
 `;
 
-export { usersTable, lawyersTable, lawyer_specializationsTable, specializationsTable };
+const casesTable = `
+    CREATE TABLE IF NOT EXISTS cases (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id int,
+    lawyer_id int,
+    description text,
+    status ENUM ("open", "closed", "pending") DEFAULT "open",
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    );
+`;
+
+const reviewsTable = `
+    CREATE TABLE IF NOT EXISTS reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id int,
+    lawyer_id int,
+    description text,
+    status ENUM ("open", "closed", "pending") DEFAULT "open",
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    );
+`;
+
+export { usersTable, lawyersTable, lawyerSpecializationsTable, specializationsTable, casesTable };
