@@ -2,7 +2,7 @@
   "name": "lawyer_matching_service",
   "version": "0.0.1",
   "description": "Platform to match clients with lawyers",
-  "main": "server.js",
+  "main": "src/server.js",
   "author": "Oleksandr Wojtyla",
   "license": "MIT",
   "scripts": {
