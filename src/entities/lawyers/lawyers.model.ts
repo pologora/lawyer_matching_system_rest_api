@@ -3,6 +3,7 @@ import pool from '../../config/db.config';
 import {
   createLawyerSpecializationsQuery,
   deleteLawyerQuery,
+  deleteLawyerSpecializationsQuery,
   getAllLawyersQuery,
   getLawyerByIdQuery,
 } from './sqlQueries';
@@ -14,6 +15,17 @@ type CreateLawyerInput = {
   query: string;
   values: string | number[];
   specializations: number[];
+};
+
+type UpdateLawyerInput = {
+  query: string;
+  values: string | number[];
+  id: number;
+};
+
+type UpdateLawyerSpecializationsInput = {
+  lawyerId: number;
+  specializationsIds: number[];
 };
 
 export class LawyersProfile {
@@ -73,7 +85,37 @@ export class LawyersProfile {
     return result;
   }
 
-  static async update(query: string, values: (string | number)[], id: number) {
+  static async updateLawyerSpecializations({ lawyerId, specializationsIds }: UpdateLawyerSpecializationsInput) {
+    const connection = await pool.getConnection();
+
+    try {
+      await connection.execute<ResultSetHeader>(deleteLawyerSpecializationsQuery, [lawyerId]);
+
+      for (const specializationId of specializationsIds) {
+        const [result] = await connection.execute<ResultSetHeader>(createLawyerSpecializationsQuery, [
+          lawyerId,
+          specializationId,
+        ]);
+        checkDatabaseOperation({ result: result.affectedRows, operation: 'create' });
+      }
+
+      connection.commit();
+      await connection.beginTransaction();
+    } catch (error) {
+      await connection.rollback();
+      if (error instanceof Error) {
+        throw new AppError(error.message, HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
+      }
+    } finally {
+      connection.release();
+    }
+  }
+
+  static async update({ id, query, values }: UpdateLawyerInput) {
+    if (!values.length) {
+      return;
+    }
+
     const [result] = await pool.query<ResultSetHeader>(query, [...values, id]);
 
     checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });

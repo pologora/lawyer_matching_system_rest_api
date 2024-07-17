@@ -1,6 +1,7 @@
 import { User } from '../users/users.model';
 import { CreateLawyerDto, UpdateLawyerDto } from './dto';
-import { getCreateLawyerQuery } from './helpers/getCreateLawyerQuery';
+import { buildCreateLawyerQuery } from './helpers/buildCreateLawyerQuery';
+import { buildUpdateLawyerQuery } from './helpers/buildUpdateLawyerQuery';
 import { LawyersProfile } from './lawyers.model';
 
 export const getManyLawyersService = async () => {
@@ -18,7 +19,7 @@ export const getLawyerService = async (id: number) => {
 export const createLawyerService = async (data: CreateLawyerDto) => {
   const { user_id, license_number, bio, experience, first_name, last_name, city, region, specializations } = data;
 
-  const { query, values } = getCreateLawyerQuery({
+  const { query, values } = buildCreateLawyerQuery({
     user_id,
     license_number,
     bio,
@@ -37,8 +38,18 @@ export const createLawyerService = async (data: CreateLawyerDto) => {
 };
 
 export const updateLawyerService = async (data: UpdateLawyerDto, id: number) => {
-  // const result = await LawyersProfile.update();
-  // return result;
+  const { specializations } = data;
+
+  if (specializations?.length) {
+    await LawyersProfile.updateLawyerSpecializations({ lawyerId: id, specializationsIds: specializations });
+    delete data.specializations;
+  }
+
+  const { query, values } = buildUpdateLawyerQuery(data);
+
+  await LawyersProfile.update({ query, values, id });
+
+  return await LawyersProfile.getOne(id);
 };
 
 export const removeLawyerService = async (id: number) => {

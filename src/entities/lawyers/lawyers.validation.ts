@@ -15,6 +15,7 @@ export const lawyerCreateSchema = Joi.object({
 export const lawyerUpdateSchema = Joi.object({
   experience: Joi.number(),
   license_number: Joi.string(),
+  rating: Joi.number(),
   bio: Joi.string(),
   first_name: Joi.string(),
   last_name: Joi.string(),
