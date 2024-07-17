@@ -12,9 +12,11 @@ type CreateUser = {
 
 class User {
   static async create({ email, hashedPassword }: CreateUser) {
-    const result = await pool.query<ResultSetHeader>(createUserQuery, [email, hashedPassword]);
+    const [result] = await pool.query<ResultSetHeader>(createUserQuery, [email, hashedPassword]);
 
-    return result[0];
+    checkDatabaseOperation({ result: result.affectedRows, operation: 'create' });
+
+    return result;
   }
 
   static async getOne(id: number) {

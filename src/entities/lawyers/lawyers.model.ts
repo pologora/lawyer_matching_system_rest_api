@@ -1,8 +1,14 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import pool from '../../config/db.config';
-import { deleteLawyerQuery, getAllLawyersQuery, getLawyerByIdQuery } from './sqlQueries';
+import {
+  createLawyerSpecializationsQuery,
+  deleteLawyerQuery,
+  getAllLawyersQuery,
+  getLawyerByIdQuery,
+} from './sqlQueries';
 import { AppError } from '../../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
+import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
 
 type CreateLawyerInput = {
   query: string;
@@ -16,22 +22,24 @@ export class LawyersProfile {
 
     try {
       await connection.beginTransaction();
+
       const [result] = await connection.execute<ResultSetHeader>(query, values);
 
+      checkDatabaseOperation({ result: result.affectedRows, operation: 'create' });
+
       const lawyerId = result.insertId;
-      if (!lawyerId) {
-        throw new AppError('Failed to insert lawyer profile', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
-      }
 
       for (const specializationId of specializations) {
-        await connection.execute(
-          `INSERT INTO lawyer_specializations (lawyer_id, specialization_id)
-           VALUES (?, ?)`,
-          [lawyerId, specializationId],
-        );
+        const [data] = await connection.execute<ResultSetHeader>(createLawyerSpecializationsQuery, [
+          lawyerId,
+          specializationId,
+        ]);
+
+        checkDatabaseOperation({ result: data.affectedRows, operation: 'create' });
       }
 
       await connection.commit();
+
       return lawyerId;
     } catch (error) {
       await connection.rollback();
@@ -44,9 +52,11 @@ export class LawyersProfile {
   }
 
   static async getOne(id: number) {
-    const result = await pool.query<RowDataPacket[]>(getLawyerByIdQuery, [id]);
+    const [result] = await pool.query<RowDataPacket[]>(getLawyerByIdQuery, [id]);
 
-    return result[0][0];
+    checkDatabaseOperation({ result: result[0], id, operation: 'get' });
+
+    return result[0];
   }
 
   static async getMany() {
@@ -56,14 +66,18 @@ export class LawyersProfile {
   }
 
   static async remove(id: number) {
-    const result = await pool.query<ResultSetHeader>(deleteLawyerQuery, [id]);
+    const [result] = await pool.query<ResultSetHeader>(deleteLawyerQuery, [id]);
 
-    return result[0];
+    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'remove' });
+
+    return result;
   }
 
-  static async update(query: string, values: (string | undefined)[], id: string) {
-    const result = await pool.query(query, [...values, id]);
+  static async update(query: string, values: (string | number)[], id: number) {
+    const [result] = await pool.query<ResultSetHeader>(query, [...values, id]);
 
-    return result[0];
+    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });
+
+    return result;
   }
 }
