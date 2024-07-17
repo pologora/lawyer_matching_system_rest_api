@@ -25,7 +25,7 @@ export const getManyUsersController = async (_req: Request, res: Response, _next
 export const getUserController = async (req: Request, res: Response, _next: NextFunction) => {
   const { id: candidateId } = req.params;
 
-  const id = validateId(Number(candidateId));
+  const { id } = validateId(Number(candidateId));
 
   const user = await getUserService(id);
 
@@ -56,7 +56,7 @@ export const createUserController = async (req: Request, res: Response, _next: N
 export const removeUserController = async (req: Request, res: Response, _next: NextFunction) => {
   const { id: candidateId } = req.params;
 
-  const id = validateId(Number(candidateId));
+  const { id } = validateId(Number(candidateId));
 
   await removeUserService(id);
 
@@ -67,7 +67,7 @@ export const updateUserController = async (req: Request, res: Response, _next: N
   const { email } = req.body;
   const { id: candidateId } = req.params;
 
-  const id = validateId(Number(candidateId));
+  const { id } = validateId(Number(candidateId));
 
   const { error, value } = userUpdateSchema.validate({ email });
 
