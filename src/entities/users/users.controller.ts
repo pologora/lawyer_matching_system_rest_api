@@ -10,6 +10,7 @@ import {
 import { userCreateSchema, userUpdateSchema } from './users.validation';
 import { AppError } from '../../utils/errors/AppError';
 import { CreateUserDto } from './dto';
+import { validateId } from '../../utils/validateId';
 
 export const getManyUsersController = async (_req: Request, res: Response, _next: NextFunction) => {
   const users = await getManyUsersService();
@@ -22,7 +23,9 @@ export const getManyUsersController = async (_req: Request, res: Response, _next
 };
 
 export const getUserController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = req.params;
+  const { id: candidateId } = req.params;
+
+  const id = validateId(Number(candidateId));
 
   const user = await getUserService(id);
 
@@ -51,7 +54,9 @@ export const createUserController = async (req: Request, res: Response, _next: N
 };
 
 export const removeUserController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = req.params;
+  const { id: candidateId } = req.params;
+
+  const id = validateId(Number(candidateId));
 
   await removeUserService(id);
 
@@ -59,8 +64,10 @@ export const removeUserController = async (req: Request, res: Response, _next: N
 };
 
 export const updateUserController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = req.params;
   const { email } = req.body;
+  const { id: candidateId } = req.params;
+
+  const id = validateId(Number(candidateId));
 
   const { error, value } = userUpdateSchema.validate({ email });
 

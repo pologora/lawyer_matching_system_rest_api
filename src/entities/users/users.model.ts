@@ -2,6 +2,8 @@ import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import pool from '../../config/db.config';
 import { IUser } from '../../types/user';
 import { createUserQuery, deleteUserQuery, getAllUsersQuery, getUserByIdQuery } from './sqlQueries';
+import { UserRole } from '../../types/userRoles';
+import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
 
 type CreateUser = {
   email: string;
@@ -15,10 +17,12 @@ class User {
     return result[0];
   }
 
-  static async getOne(id: string) {
-    const result = await pool.query<RowDataPacket[]>(getUserByIdQuery, [id]);
+  static async getOne(id: number) {
+    const [result] = await pool.query<RowDataPacket[]>(getUserByIdQuery, [id]);
 
-    return result[0][0] as IUser;
+    checkDatabaseOperation({ result: result[0], id, operation: 'get' });
+
+    return result[0] as IUser;
   }
 
   static async getMany() {
@@ -27,16 +31,30 @@ class User {
     return result[0];
   }
 
-  static async remove(id: string) {
-    const result = await pool.query<ResultSetHeader>(deleteUserQuery, [id]);
+  static async remove(id: number) {
+    const [result] = await pool.query<ResultSetHeader>(deleteUserQuery, [id]);
 
-    return result[0];
+    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'remove' });
+
+    return result;
   }
 
-  static async update(query: string, values: (string | undefined)[], id: string) {
-    const result = await pool.query(query, [...values, id]);
+  static async update(query: string, values: (string | undefined)[], id: number) {
+    const [result] = await pool.query<ResultSetHeader>(query, [...values, id]);
 
-    return result[0];
+    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });
+
+    return result;
+  }
+
+  static async setRole(role: UserRole, id: number) {
+    const query = `UPDATE users SET role = '${role}' WHERE id = ?`;
+
+    const [result] = await pool.query<ResultSetHeader>(query, [id]);
+
+    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });
+
+    return result;
   }
 }
 
