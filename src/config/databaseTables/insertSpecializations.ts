@@ -6,7 +6,7 @@ export const createInsertSpecializationsQuery = (spec: SpecializationArray) => {
   return spec.reduce((acc, specialization, idx) => {
     const lastSymbol = idx === spec.length - 1 ? ';' : ',';
     return `${acc}(${idx + 1}, "${specialization}")${lastSymbol}`;
-  }, `INSERT INTO specializations (id, name) VALUES `);
+  }, `INSERT INTO Specialization (specializationId, name) VALUES `);
 };
 
 export const insertSpecializations = async (query: string) => {

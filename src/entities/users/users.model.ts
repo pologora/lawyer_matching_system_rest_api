@@ -1,7 +1,13 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import pool from '../../config/db.config';
 import { IUser } from '../../types/user';
-import { createUserQuery, deleteUserQuery, getAllUsersQuery, getUserByIdQuery } from './sqlQueries';
+import {
+  createUserQuery,
+  deleteUserQuery,
+  getAllUsersQuery,
+  getUserByIdQuery,
+  updateUserRoleQuery,
+} from './sqlQueries';
 import { UserRole } from '../../types/userRoles';
 import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
 
@@ -50,9 +56,7 @@ class User {
   }
 
   static async setRole(role: UserRole, id: number) {
-    const query = `UPDATE users SET role = '${role}' WHERE id = ?`;
-
-    const [result] = await pool.query<ResultSetHeader>(query, [id]);
+    const [result] = await pool.query<ResultSetHeader>(updateUserRoleQuery, [role, id]);
 
     checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });
 

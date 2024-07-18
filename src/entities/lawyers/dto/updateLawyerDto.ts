@@ -1,9 +1,9 @@
 export interface UpdateLawyerDto {
   experience?: number;
-  license_number?: string;
+  licenseNumber?: string;
   bio?: string;
-  first_name?: string;
-  last_name?: string;
+  firstName?: string;
+  lastName?: string;
   city?: string;
   region?: string;
   specializations?: number[];

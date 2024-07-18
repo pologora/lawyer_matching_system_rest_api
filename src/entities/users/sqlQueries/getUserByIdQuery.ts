@@ -3,5 +3,5 @@
 // `;
 
 export const getUserByIdQuery = `
-SELECT * FROM users where id = ?;
+SELECT * FROM User where userId = ?;
 `;

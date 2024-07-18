@@ -1,10 +1,10 @@
 export interface CreateLawyerDto {
-  user_id: number;
+  userId: number;
   experience: number;
-  license_number: string;
+  licenseNumber: string;
   bio: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   city: string;
   region: string;
   specializations: number[];

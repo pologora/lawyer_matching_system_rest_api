@@ -5,7 +5,7 @@ import { createInsertSpecializationsQuery, insertSpecializations } from './inser
 import { specializations } from './specjalizations';
 import { dropAllTables, dropAllTablesQuery } from './dropAllTables';
 
-const runTablesSetup = async () => {
+export const runTablesSetup = async () => {
   try {
     await dropAllTables(dropAllTablesQuery);
     await createDatabaseTablesIfNotExists();

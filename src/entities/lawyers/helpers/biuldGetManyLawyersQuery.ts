@@ -6,12 +6,12 @@ export const buildGetManyLawyersQuery = (queryString: GetManyLawyersQueryStringD
   const DEFAULT_OFFSET = 0;
 
   const {
-    experience_min,
-    experience_max,
+    experienceMin,
+    experienceMax,
     city,
     region,
-    rating_max,
-    rating_min,
+    ratingMax,
+    ratingMin,
     limit,
     order,
     page,
@@ -22,12 +22,12 @@ export const buildGetManyLawyersQuery = (queryString: GetManyLawyersQueryStringD
 
   const filters = [];
 
-  if (experience_min) filters.push(`lp.experience >= ${experience_min}`);
-  if (experience_max) filters.push(`lp.experience <= ${experience_max}`);
+  if (experienceMin) filters.push(`lp.experience >= ${experienceMin}`);
+  if (experienceMax) filters.push(`lp.experience <= ${experienceMax}`);
   if (city) filters.push(`lp.city = '${city}'`);
   if (region) filters.push(`lp.city = '${region}'`);
-  if (rating_max) filters.push(`lp.rating <= ${rating_max}`);
-  if (rating_min) filters.push(`lp.rating >= ${rating_min}`);
+  if (ratingMax) filters.push(`lp.rating <= ${ratingMax}`);
+  if (ratingMin) filters.push(`lp.rating >= ${ratingMin}`);
   if (specialization) filters.push(`s.id = ${specialization}`);
   if (search) filters.push(`lp.first_name LIKE '%${search}%' OR lp.last_name LIKE '%${search}%'`);
 
@@ -37,26 +37,26 @@ export const buildGetManyLawyersQuery = (queryString: GetManyLawyersQueryStringD
   const sortValue = sort ? `ORDER BY ${sort} ${order === 'desc' ? 'DESC' : 'ASC'}` : '';
 
   const query = `SELECT 
-    lp.id, 
-    lp.user_id, 
-    lp.license_number, 
+    lp.lawyerProfileId, 
+    lp.userId, 
+    lp.licenseNumber, 
     lp.bio, 
     lp.experience, 
-    lp.first_name, 
-    lp.last_name, 
+    lp.firstName, 
+    lp.lastName, 
     lp.city, 
     lp.region, 
     lp.rating,
     GROUP_CONCAT(s.name) AS specializations
 FROM 
-    lawyer_profiles lp
+    LawyerProfile lp
 LEFT JOIN 
-    lawyer_specializations ls ON lp.id = ls.lawyer_id
+    LawyerSpecialization ls ON lp.lawyerProfileId = ls.lawyerId
 LEFT JOIN 
-    specializations s ON ls.specialization_id = s.id
+    Specialization s ON ls.specializationId = s.specializationId
 ${filterString}
 GROUP BY
-    lp.id, lp.user_id, lp.license_number, lp.bio, lp.experience, lp.first_name, lp.last_name, lp.city, lp.region, lp.rating
+    lp.id, lp.userId, lp.licenseNumber, lp.bio, lp.experience, lp.firstName, lp.lastName, lp.city, lp.region, lp.rating
 ${sortValue}
 LIMIT ${limitValue}
 OFFSET ${offsetValue}

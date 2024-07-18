@@ -2,14 +2,14 @@
 import pool from '../db.config';
 
 export const dropAllTablesQuery = `
-DROP TABLE IF EXISTS cases,
-    lawyer_specializations,
-    specializations,
-    messages,
-    reviews,
-    lawyer_profiles,
-    client_profiles,
-    users;
+DROP TABLE IF EXISTS \`Case\`,
+    LawyerSpecialization,
+    Specialization,
+    Message,
+    Review,
+    LawyerProfile,
+    ClientProfile,
+    \`User\`
 `;
 
 export const dropAllTables = async (query: string) => {

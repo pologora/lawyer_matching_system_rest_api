@@ -1,5 +1,5 @@
 export const deleteMeQuery = `
-UPDATE users
+UPDATE User
 SET active = false
-where id = ?
+where userId = ?
 `;

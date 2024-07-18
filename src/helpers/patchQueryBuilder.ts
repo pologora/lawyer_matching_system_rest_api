@@ -12,7 +12,7 @@ export const patchQueryBuilder = (table: string, columns: UpdateUserDto, allowed
   const setClauses = updateKeys.map(createSetClause).join(', ');
   const values = updateKeys.map(getValue);
 
-  const query = `UPDATE ${table} SET ${setClauses} WHERE id = ?`;
+  const query = `UPDATE ${table} SET ${setClauses} WHERE userId = ?`;
 
   return { query, values };
 };

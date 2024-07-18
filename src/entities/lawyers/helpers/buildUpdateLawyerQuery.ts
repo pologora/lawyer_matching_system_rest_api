@@ -7,7 +7,7 @@ export const buildUpdateLawyerQuery = (data: object) => {
       values.push(value);
     }
   }
-  const query = `UPDATE lawyer_profiles SET ${keyValuePairs.join(', ')} WHERE id = ?;`;
+  const query = `UPDATE LawyerProfile SET ${keyValuePairs.join(', ')} WHERE lawyerProfileId = ?;`;
 
   return { query, values };
 };
