@@ -4,7 +4,6 @@ import {
   createLawyerSpecializationsQuery,
   deleteLawyerQuery,
   deleteLawyerSpecializationsQuery,
-  getAllLawyersQuery,
   getLawyerByIdQuery,
 } from './sqlQueries';
 import { AppError } from '../../utils/errors/AppError';
@@ -71,8 +70,8 @@ export class LawyersProfile {
     return result[0];
   }
 
-  static async getMany() {
-    const result = await pool.query(getAllLawyersQuery);
+  static async getMany(query: string) {
+    const result = await pool.query(query);
 
     return result[0];
   }

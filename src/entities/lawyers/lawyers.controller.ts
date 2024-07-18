@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
-import { lawyerUpdateSchema } from './lawyers.validation';
+import { getManyLawyersQuerySchema, lawyerUpdateSchema } from './lawyers.validation';
 import { AppError } from '../../utils/errors/AppError';
 import {
   createLawyerService,
@@ -11,8 +11,16 @@ import {
 } from './lawyers.service';
 import { validateId } from '../../utils/validateId';
 
-export const getManyLawyersController = async (_req: Request, res: Response, _next: NextFunction) => {
-  const lawyers = await getManyLawyersService();
+export const getManyLawyersController = async (req: Request, res: Response, _next: NextFunction) => {
+  const { query } = req;
+
+  const { error, value } = getManyLawyersQuerySchema.validate(query);
+
+  if (error) {
+    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
+  }
+
+  const lawyers = await getManyLawyersService(value);
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)

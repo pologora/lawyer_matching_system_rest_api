@@ -1,13 +1,15 @@
 import { User } from '../users/users.model';
 import { CreateLawyerDto, UpdateLawyerDto } from './dto';
+import { GetManyLawyersQueryStringDto } from './dto/getManyLawyersQueryStringDto';
+import { buildGetManyLawyersQuery } from './helpers/biuldGetManyLawyersQuery';
 import { buildCreateLawyerQuery } from './helpers/buildCreateLawyerQuery';
 import { buildUpdateLawyerQuery } from './helpers/buildUpdateLawyerQuery';
 import { LawyersProfile } from './lawyers.model';
 
-export const getManyLawyersService = async () => {
-  const result = await LawyersProfile.getMany();
+export const getManyLawyersService = async (queryString: GetManyLawyersQueryStringDto) => {
+  const query = buildGetManyLawyersQuery(queryString);
 
-  return result;
+  return await LawyersProfile.getMany(query);
 };
 
 export const getLawyerService = async (id: number) => {
