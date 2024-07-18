@@ -13,9 +13,7 @@ export const runTablesSetup = async () => {
   } catch (error) {
     console.error('Error creating table:', error);
   } finally {
-    if (process.env.NODE_ENV !== 'test') {
-      exit(1);
-    }
+    exit(1);
   }
 };
 

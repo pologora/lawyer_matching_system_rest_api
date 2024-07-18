@@ -1,7 +1,7 @@
 import { UserRole } from './userRoles';
 
 export interface IUser {
-  id: number;
+  userId: number;
   email: string;
   role: UserRole;
   passwordChangedAt: Date | null;

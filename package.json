@@ -9,9 +9,12 @@
     "start": "cross-env NODE_ENV=development nodemon --files src/server.ts",
     "start:production": "cross-env NODE_ENV=production nodemon --files src/server.ts",
     "build": "rm -rf build && npx tsc",
-    "test": "cross-env NODE_ENV=test jest",
+    "test": "cross-env NODE_ENV=test jest --testPathPattern=unit\\.test\\.ts$",
+    "test:integration": "npm run setup:test || npm run jest:integration",
+    "jest:integration": "cross-env NODE_ENV=test  jest --testPathPattern=integration\\.test\\.ts$",
     "test-watch": "jest --watch --detectOpenHandles",
-    "setup": "ts-node src/config/databaseTables/setupDatabaseTablesAndValues.ts"
+    "setup": "ts-node src/config/databaseTables/setupDatabaseTablesAndValues.ts",
+    "setup:test": "cross-env NODE_ENV=test ts-node src/config/databaseTables/setupDatabaseTablesAndValues.ts"
   },
   "overrides": {
     "eslint": "^9.6.0"

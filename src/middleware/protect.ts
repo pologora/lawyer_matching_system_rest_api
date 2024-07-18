@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { AppError } from '../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../utils/statusCodes';
 import { asyncErrorCatch } from '../utils/errors/asyncErrorCatch';
-import { verifyJWT } from '../utils/jwt/varifyJWT';
+import { verifyJWT } from '../utils/jwt/verifyJWT';
 import { User } from '../entities/users/users.model';
 
 export const protect = asyncErrorCatch(async (req: Request, res: Response, next: NextFunction) => {
@@ -32,5 +32,6 @@ export const protect = asyncErrorCatch(async (req: Request, res: Response, next:
 });
 
 function checkPasswordChanged(iat: number, password_changed_at: number | null) {
-  return password_changed_at && password_changed_at > iat;
+  const oneSecond = 1000;
+  return password_changed_at && password_changed_at > iat + oneSecond;
 }
