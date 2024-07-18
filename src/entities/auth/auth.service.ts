@@ -40,10 +40,10 @@ export const loginService = async ({ email: inputEmail, password: candidatePassw
   // 2) check user role and fetch appropriate data
 
   // 3) create token, return user info + token
-  const { id, email, role } = user;
-  const token = await createJWT({ id: user.id });
+  const { userId, email, role } = user;
+  const token = await createJWT({ id: userId });
 
-  return { token, user: { id, email, role } };
+  return { token, user: { userId, email, role } };
 };
 
 export const forgotPasswordService = async ({ email }: ForgotPasswordDto, req: Request) => {
@@ -58,7 +58,7 @@ export const forgotPasswordService = async ({ email }: ForgotPasswordDto, req: R
   await Auth.setResetPasswordToken({
     hashedToken,
     expirationInMinutes: RESET_PASSWORD_EXPIRATION_IN_MINUTES,
-    userId: user.id,
+    userId: user.userId,
   });
 
   const resetPasswordUrl = `${req.protocol}://${req.get('host')}/api/v1/reset-password/${resetToken}`;
@@ -70,7 +70,7 @@ export const forgotPasswordService = async ({ email }: ForgotPasswordDto, req: R
   try {
     await sendEmail({ from, subject, text, toEmail });
   } catch (err) {
-    await Auth.clearResetPassword({ id: user.id });
+    await Auth.clearResetPassword({ id: user.userId });
     throw new AppError(
       'There was an error sending the email. Please, try again later',
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500,
@@ -94,13 +94,13 @@ export const resetPasswordService = async ({ resetToken, password }: ResetPasswo
 
   //3. update changePasswordAt, and set new pass
   const hashedPassword = await hashPassword(password);
-  const result = await Auth.updatePassword({ password: hashedPassword, id: user.id });
+  const result = await Auth.updatePassword({ password: hashedPassword, id: user.userId });
   if (!result) {
     throw new AppError('Password update failed. Please try again later.', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
   }
 
   //4. send jwt
-  return await createJWT({ id: user.id });
+  return await createJWT({ id: user.userId });
 };
 
 export const changeMyPasswordService = async ({ password, newPassword, user }: ChangeMyPasswordDto) => {
@@ -110,12 +110,12 @@ export const changeMyPasswordService = async ({ password, newPassword, user }: C
   }
 
   const hashedPassword = await hashPassword(newPassword);
-  const result = await Auth.updatePassword({ password: hashedPassword, id: user.id });
+  const result = await Auth.updatePassword({ password: hashedPassword, id: user.userId });
   if (!result) {
     throw new AppError('Password update failed. Please try again later.', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
   }
 
-  return await createJWT({ id: user.id });
+  return await createJWT({ id: user.userId });
 };
 
 export const deleteMeService = async ({ password, user }: DeleteMeDto) => {
@@ -124,7 +124,7 @@ export const deleteMeService = async ({ password, user }: DeleteMeDto) => {
     throw new AppError('Invalid  password', HTTP_STATUS_CODES.UNAUTHORIZED_401);
   }
 
-  const result = await Auth.deleteMe({ id: user.id });
+  const result = await Auth.deleteMe({ id: user.userId });
   if (!result) {
     throw new AppError(
       'Failed to delete an account. Please try again later.',

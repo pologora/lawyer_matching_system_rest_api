@@ -1,1 +1,2 @@
 export const RESET_PASSWORD_EXPIRATION_IN_MINUTES = 10;
+export const PASSWORD_MIN_LENGTH = 3;
