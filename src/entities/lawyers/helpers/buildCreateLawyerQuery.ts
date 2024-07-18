@@ -5,7 +5,7 @@ export const buildCreateLawyerQuery = (data: object) => {
     columns.push(key);
     values.push(value);
   }
-  const query = `INSERT INTO lawyer_profiles (${columns.join(', ')}) 
+  const query = `INSERT INTO LawyerProfile (${columns.join(', ')}) 
   VALUES (${columns.map(() => '?').join(', ')});`;
 
   return { query, values };

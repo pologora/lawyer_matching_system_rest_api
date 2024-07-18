@@ -1,4 +1,4 @@
 export const deleteLawyerSpecializationsQuery = `
-DELETE FROM lawyer_specializations
-WHERE lawyer_id = ?
+DELETE FROM LawyerSpecialization
+WHERE lawyerId = ?
 `;

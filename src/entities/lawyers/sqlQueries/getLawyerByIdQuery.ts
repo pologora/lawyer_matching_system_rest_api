@@ -1,22 +1,22 @@
 export const getLawyerByIdQuery = `
 SELECT 
     lp.id, 
-    lp.user_id, 
-    lp.license_number, 
+    lp.userId, 
+    lp.licenseNumber, 
     lp.bio, 
     lp.experience, 
-    lp.first_name, 
-    lp.last_name, 
+    lp.firstName, 
+    lp.lastName, 
     lp.city, 
     lp.region, 
     lp.rating,
     GROUP_CONCAT(s.name) AS specializations
 FROM 
-    lawyer_profiles lp
+    LawyerProfile lp
 LEFT JOIN 
-    lawyer_specializations ls ON lp.id = ls.lawyer_id
+    LawyerSpecialization ls ON lp.lawyerId = ls.lawyerId
 LEFT JOIN 
-    specializations s ON ls.specialization_id = s.id
-WHERE lp.id = ?
+    Specialization s ON ls.specializationId = s.specializationId
+WHERE lp.lawyerProfileId = ?
 GROUP BY 
-    lp.id, lp.user_id, lp.license_number, lp.bio, lp.experience, lp.first_name, lp.last_name, lp.city, lp.region, lp.rating;`;
+    lp.id, lp.userId, lp.licenseNumber, lp.bio, lp.experience, lp.firstName, lp.lastName, lp.city, lp.region, lp.rating;`;

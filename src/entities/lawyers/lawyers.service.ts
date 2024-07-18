@@ -19,22 +19,22 @@ export const getLawyerService = async (id: number) => {
 };
 
 export const createLawyerService = async (data: CreateLawyerDto) => {
-  const { user_id, license_number, bio, experience, first_name, last_name, city, region, specializations } = data;
+  const { userId, licenseNumber, bio, experience, firstName, lastName, city, region, specializations } = data;
 
   const { query, values } = buildCreateLawyerQuery({
-    user_id,
-    license_number,
+    userId,
+    licenseNumber,
     bio,
     experience,
-    first_name,
-    last_name,
+    firstName,
+    lastName,
     city,
     region,
   });
 
   const lawyerId = await LawyersProfile.create({ query, values, specializations });
 
-  await User.setRole('lawyer', user_id);
+  await User.setRole('lawyer', userId);
 
   return await LawyersProfile.getOne(lawyerId!);
 };

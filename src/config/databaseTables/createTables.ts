@@ -24,11 +24,11 @@ export const createDatabaseTablesIfNotExists = async () => {
   await pool.query(lawyerSpecializationsTable);
   console.log('Lawyer specializations table created successfully.');
 
-  await pool.query(casesTable);
-  console.log('Cases table created successfully.');
-
   await pool.query(clientProfilesTable);
   console.log('Client profiles table created successfully.');
+
+  await pool.query(casesTable);
+  console.log('Cases table created successfully.');
 
   await pool.query(messagesTable);
   console.log('Messages table created successfully.');

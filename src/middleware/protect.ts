@@ -21,7 +21,7 @@ export const protect = asyncErrorCatch(async (req: Request, res: Response, next:
   }
 
   // 3. user didn't change password after token was issued
-  const passwordChangedAt = user.password_changed_at && new Date(user.password_changed_at).getTime();
+  const passwordChangedAt = user.passwordChangedAt && new Date(user.passwordChangedAt).getTime();
   const isPasswordChangedAfterTokenIssued = checkPasswordChanged(iat, passwordChangedAt);
   if (isPasswordChangedAfterTokenIssued) {
     throw new AppError('User changed password. Please log in again.', HTTP_STATUS_CODES.UNAUTHORIZED_401);

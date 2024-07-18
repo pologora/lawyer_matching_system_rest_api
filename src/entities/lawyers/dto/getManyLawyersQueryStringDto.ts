@@ -1,12 +1,12 @@
 export interface GetManyLawyersQueryStringDto {
   limit?: number;
   page?: number;
-  experience_min?: number;
-  experience_max?: number;
+  experienceMin?: number;
+  experienceMax?: number;
   city?: string;
   region?: string;
-  rating_min?: number;
-  rating_max?: number;
+  ratingMin?: number;
+  ratingMax?: number;
   search?: string;
   sort?: string;
   order?: 'desc' | 'asc';

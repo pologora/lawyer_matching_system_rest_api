@@ -1,12 +1,12 @@
 import Joi from 'joi';
 
 export const lawyerCreateSchema = Joi.object({
-  user_id: Joi.number().required(),
+  userId: Joi.number().required(),
   experience: Joi.number().required(),
-  license_number: Joi.string().required(),
+  licenseNumber: Joi.string().required(),
   bio: Joi.string().required(),
-  first_name: Joi.string().required(),
-  last_name: Joi.string().required(),
+  firstName: Joi.string().required(),
+  lastName: Joi.string().required(),
   city: Joi.string().required(),
   region: Joi.string().required(),
   specializations: Joi.array().items(Joi.number()).required(),
@@ -14,23 +14,23 @@ export const lawyerCreateSchema = Joi.object({
 
 export const lawyerUpdateSchema = Joi.object({
   experience: Joi.number(),
-  license_number: Joi.string(),
+  licenseNumber: Joi.string(),
   rating: Joi.number(),
   bio: Joi.string(),
-  first_name: Joi.string(),
-  last_name: Joi.string(),
+  firstName: Joi.string(),
+  lastName: Joi.string(),
   city: Joi.string(),
   region: Joi.string(),
   specializations: Joi.array().items(Joi.number()),
 });
 
 export const getManyLawyersQuerySchema = Joi.object({
-  experience_min: Joi.number(),
-  experience_max: Joi.number(),
+  experienceMin: Joi.number(),
+  experienceMax: Joi.number(),
   city: Joi.string(),
   region: Joi.number(),
-  rating_max: Joi.number(),
-  rating_min: Joi.number(),
+  ratingMax: Joi.number(),
+  ratingMin: Joi.number(),
   limit: Joi.number(),
   order: Joi.allow('desc', 'asc'),
   page: Joi.number(),

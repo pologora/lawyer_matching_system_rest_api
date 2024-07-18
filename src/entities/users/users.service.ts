@@ -13,7 +13,7 @@ export const createUserService = async (data: CreateUserDto) => {
 
 export const updateUserService = async (id: number, data: UpdateUserDto) => {
   const allowedKeys: Set<UpdateUserKey> = new Set(['email']);
-  const tableName = 'users';
+  const tableName = 'User';
 
   const { query, values } = patchQueryBuilder(tableName, data, allowedKeys);
 

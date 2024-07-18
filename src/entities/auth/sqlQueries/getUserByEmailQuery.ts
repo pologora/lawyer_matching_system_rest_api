@@ -1,5 +1,5 @@
 export const getUserByEmailQuery = `
 SELECT * 
-FROM users 
+FROM User 
 WHERE email = ?;
 `;

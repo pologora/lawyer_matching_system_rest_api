@@ -87,7 +87,7 @@ export const resetPasswordService = async ({ resetToken, password }: ResetPasswo
   }
 
   // check if token not expired
-  const isTokenExpired = checkIfResetTokenExpired(user.reset_password_token_expiration!);
+  const isTokenExpired = checkIfResetTokenExpired(user.resetPasswordTokenExpiration!);
   if (isTokenExpired) {
     throw new AppError('The time limit for changing the password has expired. Please try again.');
   }

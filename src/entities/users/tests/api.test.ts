@@ -2,7 +2,7 @@ import supertest from 'supertest';
 import { app } from '../../../app';
 import { HTTP_STATUS_CODES } from '../../../utils/statusCodes';
 import pool from '../../../config/db.config';
-import { runTablesSetup } from '../../../config/databaseTables/createTables';
+import { runTablesSetup } from '../../../config/databaseTables/setupDatabaseTablesAndValues';
 
 let userId: number;
 
@@ -19,7 +19,7 @@ afterAll(async () => {
 });
 
 beforeAll(async () => {
-  runTablesSetup();
+  await runTablesSetup();
 });
 
 describe('Test GET /users', () => {
@@ -49,7 +49,7 @@ describe('Test PATCH /users/:id', () => {
       .send(patchData)
       .expect(HTTP_STATUS_CODES.SUCCESS_200);
 
-    expect(response.body.data).toHaveProperty('id', userId);
+    expect(response.body.data).toHaveProperty('userId', userId);
     expect(response.body.data).toHaveProperty('email', patchData.email);
   });
 });
@@ -58,7 +58,7 @@ describe('Test GET /users/:id', () => {
   test('Should respond with 200 success', async () => {
     const response = await supertest(app).get(`/api/v1/users/${userId}`).expect(HTTP_STATUS_CODES.SUCCESS_200);
 
-    expect(response.body.data).toHaveProperty('id', userId);
+    expect(response.body.data).toHaveProperty('userId', userId);
     expect(response.body.data).toHaveProperty('email', patchData.email);
   });
 
