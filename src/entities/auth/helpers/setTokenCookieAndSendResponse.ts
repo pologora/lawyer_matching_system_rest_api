@@ -22,7 +22,7 @@ export const setTokenCookieAndSendResponse = (res: Response, { token, message, u
 
   res.cookie('jwt', token, cookieOptions);
 
-  res.status(statusCode).json({
+  return res.status(statusCode).json({
     status: 'success',
     message,
     data: user,

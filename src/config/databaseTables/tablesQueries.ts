@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS lawyer_profiles(
     last_name VARCHAR(100),
     city VARCHAR(100),
     region VARCHAR(100),
-    rating int,
+    rating DECIMAL(2,1),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     INDEX (user_id)
 );
