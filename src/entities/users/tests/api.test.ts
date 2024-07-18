@@ -2,7 +2,6 @@ import supertest from 'supertest';
 import { app } from '../../../app';
 import { HTTP_STATUS_CODES } from '../../../utils/statusCodes';
 import pool from '../../../config/db.config';
-import { runTablesSetup } from '../../../config/databaseTables/setupDatabaseTablesAndValues';
 
 let userId: number;
 
@@ -16,10 +15,6 @@ const patchData = { email: 'test2@mail.com' };
 
 afterAll(async () => {
   await pool.end();
-});
-
-beforeAll(async () => {
-  await runTablesSetup();
 });
 
 describe('Test GET /users', () => {
