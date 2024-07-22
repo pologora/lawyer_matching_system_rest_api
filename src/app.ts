@@ -4,7 +4,8 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 
-const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
+import { ENV_FILES_MAP } from './config/constants';
+const envFile = ENV_FILES_MAP.get(process.env.NODE_ENV!);
 dotenv.config({ path: envFile });
 
 import { usersRouter } from './entities/users/users.routes';
