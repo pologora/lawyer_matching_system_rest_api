@@ -5,39 +5,40 @@
 1. [Description](#description)
 2. [Project Management](#project-management)
 3. [Technical Requirements](#technical-requirements)
-4. [Database Schema](#database-schema-design)
-5. [Error Handling](#error-handling)
-6. [Security](#security)
-7. [JWT](#jwt)
-8. [Base URL](#base-url)
-9. [API Documentation](#api-documentation)
+4. [Installation]()
+5. [Database Schema](#database-schema-design)
+6. [Error Handling](#error-handling)
+7. [Security](#security)
+8. [JWT](#jwt)
+9. [Base URL](#base-url)
+10. [API Documentation](#api-documentation)
 
-   - [Authentication](#authentication)
-     - [Login](#login)
-     - [Register](#register)
-   - [Users](#users)
+    - [Authentication](#authentication)
+      - [Login](#login)
+      - [Register](#register)
+    - [Users](#users)
 
-     - [Get All Users](#get-all-users)
-     - [Create User](#create-user)
-     - [Get User By ID](#get-user-by-id)
-     - [Update User](#update-user)
-     - [Delete User](#delete-user)
+      - [Get All Users](#get-all-users)
+      - [Create User](#create-user)
+      - [Get User By ID](#get-user-by-id)
+      - [Update User](#update-user)
+      - [Delete User](#delete-user)
 
-   - [Cases](#cases)
+    - [Cases](#cases)
 
-     - [Create Case](#create-case)
-     - [Get Case by ID](#get-case-by-id)
-     - [Update Case](#update-case)
-     - [Delete Case](#delete-case)
+      - [Create Case](#create-case)
+      - [Get Case by ID](#get-case-by-id)
+      - [Update Case](#update-case)
+      - [Delete Case](#delete-case)
 
-   - [Reviews](#reviews)
-     - [Create Review](#create-review)
-     - [Get Reviews by Lawyer ID](#get-reviews-by-lawyer-id)
-     - [Update Review](#update-review)
-     - [Delete Review](#delete-review)
-   - [Messages](#messages)
-     - [Send Message](#send-message)
-     - [Get Messages by User ID](#get-messages-by-user-id)
+    - [Reviews](#reviews)
+      - [Create Review](#create-review)
+      - [Get Reviews by Lawyer ID](#get-reviews-by-lawyer-id)
+      - [Update Review](#update-review)
+      - [Delete Review](#delete-review)
+    - [Messages](#messages)
+      - [Send Message](#send-message)
+      - [Get Messages by User ID](#get-messages-by-user-id)
 
 ## Description
 
@@ -70,6 +71,52 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
   - Programming language -`Typescript`
   - Framework - `React`
   - Component Library - `Chakra UI`
+
+## Installation
+
+### Clone the Project
+
+```bash
+git clone https://github.com/pologora/lawyer_matching_system_rest_api.git
+```
+
+### Install dependencies
+
+```Bash
+npm install
+```
+
+## Running the Application
+
+### Docker Setup
+
+1. **Install docker:** Ensure Docker is installed on your machine. You can follow the installation instructions on [the official Docker website](https://www.docker.com/).
+
+2. **Configuration:**
+
+- Rename `env.dev.example` to `.env.dev` and adjust the variables as needed. The database configuration variables are already set for the Docker MariaDB database.
+
+- Rename `env.dev.example` to `.env.prod.` Ensure all necessary variables are set for the application to function properly in the production environment.
+
+### Development Enviroment
+
+To run the application in development mode:
+
+```Bash
+docker-compose -f docker-compose.dev.yml up --build
+```
+
+The application will be accessible at `http://localhost:8000/api/v1`
+
+### Production Enviroment
+
+To run the application in production mode:
+
+```Bash
+docker-compose -f docker-compose.prod.yml up --build
+```
+
+The application will be accessible at `http://localhost:5000/api/v1`
 
 ## Database Schema Design
 

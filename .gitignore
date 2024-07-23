@@ -1,6 +1,6 @@
-.env
+.env*
 node_modules
 build
 *.env
-.env.test
+
 /logs

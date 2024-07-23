@@ -32,6 +32,6 @@ export const protect = asyncErrorCatch(async (req: Request, res: Response, next:
 });
 
 function checkPasswordChanged(iat: number, password_changed_at: number | null) {
-  const oneSecond = 1000;
-  return password_changed_at && password_changed_at > iat + oneSecond;
+  const gracePeriod = 5000;
+  return password_changed_at && password_changed_at > iat + gracePeriod;
 }

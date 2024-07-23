@@ -1,0 +1,9 @@
+services:
+  app:
+    env_file:
+      - .env.prod
+    build:
+      context: .
+      target: production
+    ports:
+      - ${PORT:-5000}:${PORT:-5000}
