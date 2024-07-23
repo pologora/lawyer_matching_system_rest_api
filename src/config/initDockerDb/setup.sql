@@ -64,7 +64,7 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS ClientProfile (
         clientProfileId INT AUTO_INCREMENT PRIMARY KEY,
-        userId INT,
+        userId INT NOT NULL UNIQUE,
         firstName VARCHAR(100),
         lastName VARCHAR(100),
         FOREIGN KEY (userId) REFERENCES `User` (userId) ON DELETE CASCADE,

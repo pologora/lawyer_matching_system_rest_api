@@ -2,8 +2,8 @@ import { User } from '../users/users.model';
 import { CreateLawyerDto, UpdateLawyerDto } from './dto';
 import { GetManyLawyersQueryStringDto } from './dto/getManyLawyersQueryStringDto';
 import { buildGetManyLawyersQuery } from './helpers/biuldGetManyLawyersQuery';
-import { buildCreateLawyerQuery } from './helpers/buildCreateLawyerQuery';
-import { buildUpdateLawyerQuery } from './helpers/buildUpdateLawyerQuery';
+import { buildCreateTableRowQuery } from '../../helpers/buildCreateTableRowQuery';
+import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
 import { LawyersProfile } from './lawyers.model';
 
 export const getManyLawyersService = async (queryString: GetManyLawyersQueryStringDto) => {
@@ -21,16 +21,19 @@ export const getLawyerService = async (id: number) => {
 export const createLawyerService = async (data: CreateLawyerDto) => {
   const { userId, licenseNumber, bio, experience, firstName, lastName, city, region, specializations } = data;
 
-  const { query, values } = buildCreateLawyerQuery({
-    userId,
-    licenseNumber,
-    bio,
-    experience,
-    firstName,
-    lastName,
-    city,
-    region,
-  });
+  const { query, values } = buildCreateTableRowQuery(
+    {
+      userId,
+      licenseNumber,
+      bio,
+      experience,
+      firstName,
+      lastName,
+      city,
+      region,
+    },
+    'LawyerProfile',
+  );
 
   const lawyerId = await LawyersProfile.create({ query, values, specializations });
 
@@ -47,7 +50,7 @@ export const updateLawyerService = async (data: UpdateLawyerDto, id: number) => 
     delete data.specializations;
   }
 
-  const { query, values } = buildUpdateLawyerQuery(data);
+  const { query, values } = buildUpdateTableRowQuery(data, 'LawyerProfile');
 
   await LawyersProfile.update({ query, values, id });
 
@@ -55,7 +58,5 @@ export const updateLawyerService = async (data: UpdateLawyerDto, id: number) => 
 };
 
 export const removeLawyerService = async (id: number) => {
-  const result = await LawyersProfile.remove(id);
-
-  return result;
+  return await LawyersProfile.remove(id);
 };

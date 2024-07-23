@@ -16,6 +16,7 @@ import { authRouter } from './entities/auth/auth.routes';
 import { limiter } from './config/rateLimit/rateLimit';
 import { logger } from './config/logger/logger';
 import { lawyersRouter } from './entities/lawyers/lawyers.route';
+import { clientsRouter } from './entities/clients/clients.route';
 
 process.on('uncaughtException', (err) => {
   logger.error(err);
@@ -46,6 +47,7 @@ app.use(cookieParser());
 app.use('/api/v1', usersRouter);
 app.use('/api/v1', authRouter);
 app.use('/api/v1', lawyersRouter);
+app.use('/api/v1', clientsRouter);
 
 // route not found on server
 app.use('*', (req: Request, _res: Response, next: NextFunction) => {
