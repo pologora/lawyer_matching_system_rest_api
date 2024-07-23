@@ -141,7 +141,7 @@ The application will be accessible at `http://localhost:5000/api/v1`
 - **LawyerProfile**:
 
   - `id` int primary key,
-  - `userId` foreign key (User) not null on delete cascade,
+  - `userId` foreign key (User) not null unique on delete cascade,
   - `experience` int,
   - `licenseNumber` varchar,
   - `rating` decimal(2,1),
@@ -169,7 +169,7 @@ The application will be accessible at `http://localhost:5000/api/v1`
 - **ClientProfile**:
 
   - `clientProfileId` int primary key,
-  - `userId` int foreign key (users) not null on delete cascade,
+  - `userId` int foreign key (users) not null unique on delete cascade,
   - `firstName` varchar,
   - `lastName` varchar,
   - `index (userId)`

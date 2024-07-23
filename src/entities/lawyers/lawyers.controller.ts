@@ -24,7 +24,7 @@ export const getManyLawyersController = async (req: Request, res: Response, _nex
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
-    .json({ status: 'success', message: 'Lawyers retrieved successfully', data: lawyers });
+    .json({ status: 'success', message: 'Lawyer profiles retrieved successfully', data: lawyers });
 };
 
 export const getLawyerController = async (req: Request, res: Response, _next: NextFunction) => {
@@ -36,7 +36,7 @@ export const getLawyerController = async (req: Request, res: Response, _next: Ne
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
-    .json({ status: 'success', message: 'Lawyer retrieved successfully', data: lawyer });
+    .json({ status: 'success', message: 'Lawyer profile retrieved successfully', data: lawyer });
 };
 
 export const createLawyerController = async (req: Request, res: Response, _next: NextFunction) => {
