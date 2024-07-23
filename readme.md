@@ -126,85 +126,85 @@ The application will be accessible at `http://localhost:5000/api/v1`
 
 ### Tables:
 
-- users:
+- User:
 
-  - `id` int primary key,
+  - `userId` int primary key,
   - `email` varchar unique not null,
   - `role` enum ('admin', 'user', 'client', 'lawyer') default 'user',
   - `active` boolean default `true`,
-  - `reset_password_token` varchar,
-  - `reset_password_token_expirations` timestamp,
-  - `password_changed_at` timestamp,
-  - `created_at` timestamp default current_timestamp,
-  - `updated_at` timestamp default current_timestamp on update current_timestamp
+  - `resetPasswordToken` varchar,
+  - `resetPasswordTokenExpirations` timestamp,
+  - `passwordChangedAt` timestamp,
+  - `createdAt` timestamp default current_timestamp,
+  - `updatedAt` timestamp default current_timestamp on update current_timestamp
 
-- lawyer_profiles:
+- LawyerProfile:
 
   - `id` int primary key,
-  - `user_id` foreign key (users) not null on delete cascade,
+  - `userId` foreign key (User) not null on delete cascade,
   - `experience` int,
-  - `license_number` varchar,
+  - `licenseNumber` varchar,
   - `rating` decimal(2,1),
   - `bio` text,
-  - `first_name` varchar,
-  - `last_name` varchar,
+  - `firstName` varchar,
+  - `lastName` varchar,
   - `city` varchar,
   - `region` varchar
-  - `index (user_id)`
+  - `index (userId)`
 
-- specializations:
+- Specialization:
 
-  - `id` int primary key,
+  - `specializationId` int primary key,
   - `name` varchar not null
 
-- lawyer_specializations:
+- LawyerSpecialization:
 
-  - `id` int primary key,
-  - `lawyer_id` foreign key (lawyer_profiles) not null on delete cascade,
-  - `specialization_id` foreign key (specializations) on delete cascade,
-  - `unique_specialization` unique key (lawyer_id, specialization_id),
-  - `index (lawyer_id)`,
-  - `index (specialization_id)`
+  - `lawyerSpecializationId` int primary key,
+  - `lawyerId` foreign key (LawyerProfile) not null on delete cascade,
+  - `specializationId` foreign key (Specialization) on delete cascade,
+  - `uniqueSpecialization` unique key (lawyerId, specializationId),
+  - `index (lawyerId)`,
+  - `index (specializationId)`
 
-- client_profiles:
+- ClientProfile:
 
-  - `id` int primary key,
-  - `user_id` int foreign key (users) not null on delete cascade,
-  - `first_name` varchar,
-  - `last_name` varchar,
-  - `index (user_id)`
+  - `clientProfileId` int primary key,
+  - `userId` int foreign key (users) not null on delete cascade,
+  - `firstName` varchar,
+  - `lastName` varchar,
+  - `index (userId)`
 
-- cases:
+- Case:
 
-  - `id` int primary key,
-  - `client_id` int foreign key (client_profiles) on delete set null,
-  - `lawyer_id` int foreign key (lawyer_profiles) on delete set null,
+  - `caseId` int primary key,
+  - `clientId` int foreign key (ClientProfile) on delete set null,
+  - `lawyerId` int foreign key (LawyerProfile) on delete set null,
   - `description` text,
   - `status` enum ('open', 'closed', 'pending') default open,
-  - `created_at` timestamp default current_timestamp,
-  - `updates_at` timestamp default current_timestamp on update current_timestamp,
-  - `index (client_id)`,
-  - `index (lawyer_id)`
+  - `createdAt` timestamp default current_timestamp,
+  - `updatesAt` timestamp default current_timestamp on update current_timestamp,
+  - `index (clientId)`,
+  - `index (lawyerId)`
 
-- reviews:
+- Review:
 
-  - `id` int primary key,
-  - `client_id` int foreign key (client_profiles) on delete set null
-  - `lawyer_id` int foreign key (lawyer_profiles) on delete cascade,
+  - `reviewId` int primary key,
+  - `clientId` int foreign key (ClientProfile) on delete set null
+  - `lawyerId` int foreign key (LawyerProfile) on delete cascade,
   - `review` text,
   - `rating` int,
-  - `index (client_id)`,
-  - `index (lawyer_id)`
+  - `index (clientId)`,
+  - `index (lawyerId)`
 
-- messages:
-  - `id` int primary key,
-  - `client_id` int foreign key (client_profiles) on delete set null
-  - `lawyer_id` int foreign key (lawyer_profiles) on delete set null,
+- Message:
+  - `messageId` int primary key,
+  - `clientId` int foreign key (ClientProfile) on delete set null
+  - `lawyerId` int foreign key (LawyerProfile) on delete set null,
   - `message` text,
-  - `created_at` timestamp default current_timestamp,
-  - `updates_at` timestamp default current_timestamp on update current_timestamp,
-  - `index (client_id)`,
-  - `index (lawyer_id)`
+  - `createdAt` timestamp default current_timestamp,
+  - `updatesAt` timestamp default current_timestamp on update current_timestamp,
+  - `index (clientId)`,
+  - `index (lawyerId)`
 
 ## Error Handling
 
