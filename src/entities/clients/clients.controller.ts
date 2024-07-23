@@ -42,7 +42,7 @@ export const createClientController = async (req: Request, res: Response, _next:
 
   const client = await createClientService(value);
 
-  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+  return res.status(HTTP_STATUS_CODES.CREATED_201).json({
     status: 'success',
     message: 'Successfully created client profile',
     data: client,
