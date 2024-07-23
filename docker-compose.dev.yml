@@ -1,0 +1,32 @@
+services:
+  app:
+    env_file:
+      - .env.dev
+    build:
+      context: .
+      target: development
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - ${PORT:-8000}:${PORT:-8000}
+    depends_on:
+      - db
+    command: npm run start:dev
+  db:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_DATABASE=database
+      - MARIADB_PORT=3306
+      - MARIADB_USER=user
+      - MARIADB_PASSWORD=password
+      - MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./src/config/initDockerDb:/docker-entrypoint-initdb.d
+volumes:
+  db_data:
