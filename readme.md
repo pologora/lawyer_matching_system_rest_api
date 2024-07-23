@@ -126,7 +126,7 @@ The application will be accessible at `http://localhost:5000/api/v1`
 
 ### Tables:
 
-- User:
+- **User**:
 
   - `userId` int primary key,
   - `email` varchar unique not null,
@@ -138,7 +138,7 @@ The application will be accessible at `http://localhost:5000/api/v1`
   - `createdAt` timestamp default current_timestamp,
   - `updatedAt` timestamp default current_timestamp on update current_timestamp
 
-- LawyerProfile:
+- **LawyerProfile**:
 
   - `id` int primary key,
   - `userId` foreign key (User) not null on delete cascade,
@@ -152,12 +152,12 @@ The application will be accessible at `http://localhost:5000/api/v1`
   - `region` varchar
   - `index (userId)`
 
-- Specialization:
+- **Specialization**:
 
   - `specializationId` int primary key,
   - `name` varchar not null
 
-- LawyerSpecialization:
+- **LawyerSpecialization**:
 
   - `lawyerSpecializationId` int primary key,
   - `lawyerId` foreign key (LawyerProfile) not null on delete cascade,
@@ -166,7 +166,7 @@ The application will be accessible at `http://localhost:5000/api/v1`
   - `index (lawyerId)`,
   - `index (specializationId)`
 
-- ClientProfile:
+- **ClientProfile**:
 
   - `clientProfileId` int primary key,
   - `userId` int foreign key (users) not null on delete cascade,
@@ -174,7 +174,7 @@ The application will be accessible at `http://localhost:5000/api/v1`
   - `lastName` varchar,
   - `index (userId)`
 
-- Case:
+- **Case**:
 
   - `caseId` int primary key,
   - `clientId` int foreign key (ClientProfile) on delete set null,
@@ -186,7 +186,7 @@ The application will be accessible at `http://localhost:5000/api/v1`
   - `index (clientId)`,
   - `index (lawyerId)`
 
-- Review:
+- **Review**:
 
   - `reviewId` int primary key,
   - `clientId` int foreign key (ClientProfile) on delete set null
@@ -196,7 +196,8 @@ The application will be accessible at `http://localhost:5000/api/v1`
   - `index (clientId)`,
   - `index (lawyerId)`
 
-- Message:
+- **Message**:
+
   - `messageId` int primary key,
   - `clientId` int foreign key (ClientProfile) on delete set null
   - `lawyerId` int foreign key (LawyerProfile) on delete set null,
