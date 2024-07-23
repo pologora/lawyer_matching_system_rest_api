@@ -16,7 +16,7 @@
     "setup:test": "cross-env NODE_ENV=test ts-node src/config/databaseTables/setupDatabaseTablesAndValues.ts",
     "down": "docker-compose -f docker-compose.dev.yml down",
     "docker:dev-build": "docker-compose -f docker-compose.dev.yml up --build",
-    "docker:dev": "docker-compose -f docker-compose.dev.yml up",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up --build",
     "docker:prod": "docker-compose -f docker-compose.prod.yml up --build"
   },
   "overrides": {
