@@ -56,7 +56,7 @@ LEFT JOIN
     Specialization s ON ls.specializationId = s.specializationId
 ${filterString}
 GROUP BY
-    lp.id, lp.userId, lp.licenseNumber, lp.bio, lp.experience, lp.firstName, lp.lastName, lp.city, lp.region, lp.rating
+    lp.lawyerProfileId, lp.userId, lp.licenseNumber, lp.bio, lp.experience, lp.firstName, lp.lastName, lp.city, lp.region, lp.rating
 ${sortValue}
 LIMIT ${limitValue}
 OFFSET ${offsetValue}

@@ -2,7 +2,7 @@ export type DatabaseTableNames =
   | 'LawyerProfile'
   | 'ClientProfile'
   | 'User'
-  | 'Case'
+  | `Case`
   | 'Message'
   | 'Specialization'
   | 'LawyerSpecialization'

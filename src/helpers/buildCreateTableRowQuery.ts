@@ -7,7 +7,7 @@ export const buildCreateTableRowQuery = (data: object, table: DatabaseTableNames
     columns.push(key);
     values.push(value);
   }
-  const query = `INSERT INTO ${table} (${columns.join(', ')}) 
+  const query = `INSERT INTO \`${table}\` (${columns.join(', ')}) 
   VALUES (${columns.map(() => '?').join(', ')});`;
 
   return { query, values };
