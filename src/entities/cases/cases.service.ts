@@ -3,24 +3,24 @@ import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery
 import { Case } from './cases.model';
 import { CreateCaseDto, UpdateCaseDto } from './dto';
 
-type CreateCaseServiceParams = {
+type CreateCaseServiceProps = {
   data: CreateCaseDto;
 };
 
-type GetCaseServiceParams = {
+type GetCaseServiceProps = {
   id: number;
 };
 
-type UpdateCaseServiceParams = {
+type UpdateCaseServiceProps = {
   data: UpdateCaseDto;
   id: number;
 };
 
-type RemoveCaseServiceParams = {
+type RemoveCaseServiceProps = {
   id: number;
 };
 
-export const createCaseService = async ({ data }: CreateCaseServiceParams) => {
+export const createCaseService = async ({ data }: CreateCaseServiceProps) => {
   const { query: createCaseQuery, values } = buildCreateTableRowQuery(data, 'Case');
 
   const caseId = await Case.create({ createCaseQuery, values });
@@ -28,7 +28,7 @@ export const createCaseService = async ({ data }: CreateCaseServiceParams) => {
   return await Case.getOne({ id: caseId });
 };
 
-export const getCaseService = async ({ id }: GetCaseServiceParams) => {
+export const getCaseService = async ({ id }: GetCaseServiceProps) => {
   return await Case.getOne({ id });
 };
 
@@ -36,7 +36,7 @@ export const getManyCasesService = async () => {
   return await Case.getMany();
 };
 
-export const updateCaseService = async ({ data, id }: UpdateCaseServiceParams) => {
+export const updateCaseService = async ({ data, id }: UpdateCaseServiceProps) => {
   const { query: updateCaseQuery, values } = buildUpdateTableRowQuery(data, 'Case');
 
   await Case.update({ updateCaseQuery, values, id });
@@ -44,6 +44,6 @@ export const updateCaseService = async ({ data, id }: UpdateCaseServiceParams) =
   return await Case.getOne({ id });
 };
 
-export const removeCaseService = async ({ id }: RemoveCaseServiceParams) => {
+export const removeCaseService = async ({ id }: RemoveCaseServiceProps) => {
   return await Case.remove({ id });
 };

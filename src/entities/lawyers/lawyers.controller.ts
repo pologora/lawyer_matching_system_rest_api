@@ -11,6 +11,34 @@ import {
 } from './lawyers.service';
 import { validateId } from '../../utils/validateId';
 
+export const createLawyerController = async (req: Request, res: Response, _next: NextFunction) => {
+  const { error, value } = lawyerCreateSchema.validate(req.body);
+
+  if (error) {
+    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
+  }
+
+  const lawyer = await createLawyerService({ data: value });
+
+  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+    status: 'success',
+    message: 'Successfully created lawyer profile',
+    data: lawyer,
+  });
+};
+
+export const getLawyerController = async (req: Request, res: Response, _next: NextFunction) => {
+  const { id: candidateId } = req.params;
+
+  const { id } = validateId(Number(candidateId));
+
+  const lawyer = await getLawyerService({ id });
+
+  return res
+    .status(HTTP_STATUS_CODES.SUCCESS_200)
+    .json({ status: 'success', message: 'Lawyer profile retrieved successfully', data: lawyer });
+};
+
 export const getManyLawyersController = async (req: Request, res: Response, _next: NextFunction) => {
   const { query } = req;
 
@@ -20,39 +48,11 @@ export const getManyLawyersController = async (req: Request, res: Response, _nex
     throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
   }
 
-  const lawyers = await getManyLawyersService(value);
+  const lawyers = await getManyLawyersService({ queryString: value });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
     .json({ status: 'success', message: 'Lawyer profiles retrieved successfully', data: lawyers });
-};
-
-export const getLawyerController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
-
-  const { id } = validateId(Number(candidateId));
-
-  const lawyer = await getLawyerService(id);
-
-  return res
-    .status(HTTP_STATUS_CODES.SUCCESS_200)
-    .json({ status: 'success', message: 'Lawyer profile retrieved successfully', data: lawyer });
-};
-
-export const createLawyerController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { error, value } = lawyerCreateSchema.validate(req.body);
-
-  if (error) {
-    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
-  }
-
-  const lawyer = await createLawyerService(value);
-
-  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-    status: 'success',
-    message: 'Successfully created lawyer profile',
-    data: lawyer,
-  });
 };
 
 export const updateLawyerController = async (req: Request, res: Response, _next: NextFunction) => {
@@ -66,7 +66,7 @@ export const updateLawyerController = async (req: Request, res: Response, _next:
     throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
   }
 
-  const updatedLawyer = await updateLawyerService(value, id);
+  const updatedLawyer = await updateLawyerService({ data: value, id });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -78,7 +78,7 @@ export const removeLawyerController = async (req: Request, res: Response, _next:
 
   const { id } = validateId(Number(candidateId));
 
-  await removeLawyerService(id);
+  await removeLawyerService({ id });
 
   return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
 };

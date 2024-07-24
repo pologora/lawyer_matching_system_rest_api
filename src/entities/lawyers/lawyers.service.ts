@@ -6,19 +6,28 @@ import { buildCreateTableRowQuery } from '../../helpers/buildCreateTableRowQuery
 import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
 import { LawyersProfile } from './lawyers.model';
 
-export const getManyLawyersService = async (queryString: GetManyLawyersQueryStringDto) => {
-  const query = buildGetManyLawyersQuery(queryString);
-
-  return await LawyersProfile.getMany(query);
+type CreateLawyerServiceProps = {
+  data: CreateLawyerDto;
 };
 
-export const getLawyerService = async (id: number) => {
-  const result = await LawyersProfile.getOne(id);
-
-  return result;
+type GetLawyerServiceProps = {
+  id: number;
 };
 
-export const createLawyerService = async (data: CreateLawyerDto) => {
+type GetManyLawyersServiceProps = {
+  queryString: GetManyLawyersQueryStringDto;
+};
+
+type UpdateLawerServiceProps = {
+  data: UpdateLawyerDto;
+  id: number;
+};
+
+type RemoveLawyerServiceProps = {
+  id: number;
+};
+
+export const createLawyerService = async ({ data }: CreateLawyerServiceProps) => {
   const { userId, licenseNumber, bio, experience, firstName, lastName, city, region, specializations } = data;
 
   const { query, values } = buildCreateTableRowQuery(
@@ -37,12 +46,24 @@ export const createLawyerService = async (data: CreateLawyerDto) => {
 
   const lawyerId = await LawyersProfile.create({ query, values, specializations });
 
-  await User.setRole('lawyer', userId);
+  await User.setRole({ role: 'lawyer', id: userId });
 
-  return await LawyersProfile.getOne(lawyerId!);
+  return await LawyersProfile.getOne({ id: lawyerId! });
 };
 
-export const updateLawyerService = async (data: UpdateLawyerDto, id: number) => {
+export const getLawyerService = async ({ id }: GetLawyerServiceProps) => {
+  const result = await LawyersProfile.getOne({ id });
+
+  return result;
+};
+
+export const getManyLawyersService = async ({ queryString }: GetManyLawyersServiceProps) => {
+  const query = buildGetManyLawyersQuery(queryString);
+
+  return await LawyersProfile.getMany({ query });
+};
+
+export const updateLawyerService = async ({ data, id }: UpdateLawerServiceProps) => {
   const { specializations } = data;
 
   if (specializations?.length) {
@@ -54,9 +75,9 @@ export const updateLawyerService = async (data: UpdateLawyerDto, id: number) => 
 
   await LawyersProfile.update({ query, values, id });
 
-  return await LawyersProfile.getOne(id);
+  return await LawyersProfile.getOne({ id });
 };
 
-export const removeLawyerService = async (id: number) => {
-  return await LawyersProfile.remove(id);
+export const removeLawyerService = async ({ id }: RemoveLawyerServiceProps) => {
+  return await LawyersProfile.remove({ id });
 };

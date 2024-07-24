@@ -11,13 +11,32 @@ import {
 import { UserRole } from '../../types/userRoles';
 import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
 
-type CreateUser = {
+type CreateProps = {
   email: string;
   hashedPassword: string;
 };
 
+type GetOneProps = {
+  id: number;
+};
+
+type UpdateProps = {
+  query: string;
+  values: (string | undefined)[];
+  id: number;
+};
+
+type RemoveProps = {
+  id: number;
+};
+
+type SetRoleProps = {
+  id: number;
+  role: UserRole;
+};
+
 class User {
-  static async create({ email, hashedPassword }: CreateUser) {
+  static async create({ email, hashedPassword }: CreateProps) {
     const [result] = await pool.query<ResultSetHeader>(createUserQuery, [email, hashedPassword]);
 
     checkDatabaseOperation({ result: result.affectedRows, operation: 'create' });
@@ -25,7 +44,7 @@ class User {
     return result;
   }
 
-  static async getOne(id: number) {
+  static async getOne({ id }: GetOneProps) {
     const [result] = await pool.query<RowDataPacket[]>(getUserByIdQuery, [id]);
 
     checkDatabaseOperation({ result: result[0], id, operation: 'get' });
@@ -39,15 +58,7 @@ class User {
     return result[0];
   }
 
-  static async remove(id: number) {
-    const [result] = await pool.query<ResultSetHeader>(deleteUserQuery, [id]);
-
-    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'remove' });
-
-    return result;
-  }
-
-  static async update(query: string, values: (string | undefined)[], id: number) {
+  static async update({ query, values, id }: UpdateProps) {
     const [result] = await pool.query<ResultSetHeader>(query, [...values, id]);
 
     checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });
@@ -55,7 +66,15 @@ class User {
     return result;
   }
 
-  static async setRole(role: UserRole, id: number) {
+  static async remove({ id }: RemoveProps) {
+    const [result] = await pool.query<ResultSetHeader>(deleteUserQuery, [id]);
+
+    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'remove' });
+
+    return result;
+  }
+
+  static async setRole({ role, id }: SetRoleProps) {
     const [result] = await pool.query<ResultSetHeader>(updateUserRoleQuery, [role, id]);
 
     checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });

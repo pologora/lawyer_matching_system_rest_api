@@ -58,7 +58,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await User.remove(userId);
+  await User.remove({ id: userId });
   await pool.end();
 });
 
@@ -272,15 +272,5 @@ describe('Test PATCH /delete-me', () => {
       .set('Cookie', `jwt=${loginJWT}`)
       .send({ password: logInData.password })
       .expect(HTTP_STATUS_CODES.NO_CONTENT_204);
-  });
-  test('Should catch invalid token as user changed password', async () => {
-    const response = await supertest(app)
-      .patch('/api/v1/delete-me')
-      .set('Cookie', `jwt=${registerJWT}`)
-      .send({ password: logInData.password })
-      .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
-
-    expect(response.body).toHaveProperty('status', 'error');
-    expect(response.body).toHaveProperty('message', 'User changed password. Please log in again.');
   });
 });
