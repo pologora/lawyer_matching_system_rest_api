@@ -21,15 +21,47 @@ export const buildGetManyLawyersQuery = (queryString: GetManyLawyersQueryStringD
   } = queryString;
 
   const filters = [];
+  const values = [];
 
-  if (experienceMin) filters.push(`lp.experience >= ${experienceMin}`);
-  if (experienceMax) filters.push(`lp.experience <= ${experienceMax}`);
-  if (city) filters.push(`lp.city = '${city}'`);
-  if (region) filters.push(`lp.city = '${region}'`);
-  if (ratingMax) filters.push(`lp.rating <= ${ratingMax}`);
-  if (ratingMin) filters.push(`lp.rating >= ${ratingMin}`);
-  if (specialization) filters.push(`s.id = ${specialization}`);
-  if (search) filters.push(`lp.first_name LIKE '%${search}%' OR lp.last_name LIKE '%${search}%'`);
+  if (experienceMin) {
+    filters.push(`lp.experience >= ?`);
+    values.push(experienceMin);
+  }
+
+  if (experienceMax) {
+    filters.push(`lp.experience <= ?`);
+    values.push(experienceMax);
+  }
+
+  if (city) {
+    filters.push(`lp.city = ?`);
+    values.push(city);
+  }
+
+  if (region) {
+    filters.push(`lp.region = ?`);
+    values.push(region);
+  }
+
+  if (ratingMax) {
+    filters.push(`lp.rating <= ?`);
+    values.push(ratingMax);
+  }
+
+  if (ratingMin) {
+    filters.push(`lp.rating >= ?`);
+    values.push(ratingMin);
+  }
+
+  if (specialization) {
+    filters.push(`s.id = ?`);
+    values.push(specialization);
+  }
+
+  if (search) {
+    filters.push(`(lp.firstName LIKE ? OR lp.lastName LIKE ?)`);
+    values.push(`%${search}%`, `%${search}%`);
+  }
 
   const filterString = filters.length ? `WHERE ${filters.join(' AND ')}` : '';
   const limitValue = limit ? limit : DEFAULT_LIMIT_QUERY_RESULTS;
@@ -58,9 +90,10 @@ ${filterString}
 GROUP BY
     lp.lawyerProfileId, lp.userId, lp.licenseNumber, lp.bio, lp.experience, lp.firstName, lp.lastName, lp.city, lp.region, lp.rating
 ${sortValue}
-LIMIT ${limitValue}
-OFFSET ${offsetValue}
-;`;
+LIMIT ?
+OFFSET ?`;
 
-  return query;
+  values.push(limitValue, offsetValue);
+
+  return { query, values };
 };

@@ -22,6 +22,7 @@ type GetOneProps = {
 
 type GetManyProps = {
   query: string;
+  values: (string | number | Date)[];
 };
 
 type UpdateProps = {
@@ -82,8 +83,8 @@ export class LawyersProfile {
     return result[0];
   }
 
-  static async getMany({ query }: GetManyProps) {
-    const result = await pool.query(query);
+  static async getMany({ query, values }: GetManyProps) {
+    const result = await pool.query(query, values);
 
     return result[0];
   }

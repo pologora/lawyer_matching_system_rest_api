@@ -24,6 +24,17 @@ export const lawyerUpdateSchema = Joi.object({
   specializations: Joi.array().items(Joi.number()),
 });
 
+const ALLOWED_SORT_FIELDS = [
+  'experience',
+  'city',
+  'region',
+  'rating',
+  'firstName',
+  'lastName',
+  'createdAt',
+  'updatedAt',
+];
+
 export const getManyLawyersQuerySchema = Joi.object({
   experienceMin: Joi.number(),
   experienceMax: Joi.number(),
@@ -32,9 +43,9 @@ export const getManyLawyersQuerySchema = Joi.object({
   ratingMax: Joi.number(),
   ratingMin: Joi.number(),
   limit: Joi.number(),
-  order: Joi.allow('desc', 'asc'),
+  order: Joi.valid('desc', 'asc'),
   page: Joi.number(),
   search: Joi.string(),
-  sort: Joi.string(),
+  sort: Joi.valid(...ALLOWED_SORT_FIELDS),
   specialization: Joi.number(),
 });
