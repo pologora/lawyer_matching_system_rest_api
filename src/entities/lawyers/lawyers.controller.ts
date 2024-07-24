@@ -20,7 +20,7 @@ export const createLawyerController = async (req: Request, res: Response, _next:
 
   const lawyer = await createLawyerService({ data: value });
 
-  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+  return res.status(HTTP_STATUS_CODES.CREATED_201).json({
     status: 'success',
     message: 'Successfully created lawyer profile',
     data: lawyer,
