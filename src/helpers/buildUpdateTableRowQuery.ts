@@ -11,7 +11,7 @@ export const buildUpdateTableRowQuery = (data: object, table: DatabaseTableNames
       values.push(value);
     }
   }
-  const query = `UPDATE ${table} SET ${keyValuePairs.join(', ')} WHERE ${tableIdField} = ?;`;
+  const query = `UPDATE \`${table}\` SET ${keyValuePairs.join(', ')} WHERE ${tableIdField} = ?;`;
 
   return { query, values };
 };

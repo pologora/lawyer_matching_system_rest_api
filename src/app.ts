@@ -17,6 +17,7 @@ import { limiter } from './config/rateLimit/rateLimit';
 import { logger } from './config/logger/logger';
 import { lawyersRouter } from './entities/lawyers/lawyers.route';
 import { clientsRouter } from './entities/clients/clients.route';
+import { casesRouter } from './entities/cases/cases.route';
 
 process.on('uncaughtException', (err) => {
   logger.error(err);
@@ -48,6 +49,7 @@ app.use('/api/v1', usersRouter);
 app.use('/api/v1', authRouter);
 app.use('/api/v1', lawyersRouter);
 app.use('/api/v1', clientsRouter);
+app.use('/api/v1', casesRouter);
 
 // route not found on server
 app.use('*', (req: Request, _res: Response, next: NextFunction) => {

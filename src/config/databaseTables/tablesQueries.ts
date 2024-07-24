@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS ClientProfile (
 
 const casesTable = `
     CREATE TABLE IF NOT EXISTS \`Case\` (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    caseId INT AUTO_INCREMENT PRIMARY KEY,
     clientId int,
     lawyerId int,
     description text,

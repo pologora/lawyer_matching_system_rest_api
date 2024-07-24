@@ -74,7 +74,7 @@ CREATE TABLE
 -- Create Case table
 CREATE TABLE
     IF NOT EXISTS `Case` (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        caseId INT AUTO_INCREMENT PRIMARY KEY,
         clientId INT,
         lawyerId INT,
         description TEXT,

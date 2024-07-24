@@ -1,6 +1,6 @@
 export const getLawyerByIdQuery = `
 SELECT 
-    lp.id, 
+    lp.lawyerProfileId, 
     lp.userId, 
     lp.licenseNumber, 
     lp.bio, 
@@ -14,9 +14,9 @@ SELECT
 FROM 
     LawyerProfile lp
 LEFT JOIN 
-    LawyerSpecialization ls ON lp.lawyerId = ls.lawyerId
+    LawyerSpecialization ls ON lp.lawyerProfileId = ls.lawyerId
 LEFT JOIN 
     Specialization s ON ls.specializationId = s.specializationId
 WHERE lp.lawyerProfileId = ?
 GROUP BY 
-    lp.id, lp.userId, lp.licenseNumber, lp.bio, lp.experience, lp.firstName, lp.lastName, lp.city, lp.region, lp.rating;`;
+    lp.lawyerProfileId, lp.userId, lp.licenseNumber, lp.bio, lp.experience, lp.firstName, lp.lastName, lp.city, lp.region, lp.rating;`;
