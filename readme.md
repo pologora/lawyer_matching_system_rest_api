@@ -199,13 +199,13 @@ The application will be accessible at `http://localhost:5000/api/v1`
 - **Message**:
 
   - `messageId` int primary key,
-  - `clientId` int foreign key (ClientProfile) on delete set null
-  - `lawyerId` int foreign key (LawyerProfile) on delete set null,
+  - `senderId` int foreign key (User) on delete set null
+  - `receiverId` int foreign key (User) on delete set null,
   - `message` text,
   - `createdAt` timestamp default current_timestamp,
   - `updatesAt` timestamp default current_timestamp on update current_timestamp,
-  - `index (clientId)`,
-  - `index (lawyerId)`
+  - `index (senderId)`,
+  - `index (receiverId)`
 
 ## Error Handling
 

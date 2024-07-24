@@ -107,15 +107,15 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS Message (
         messageId INT AUTO_INCREMENT PRIMARY KEY,
-        clientId INT,
-        lawyerId INT,
+        senderId INT,
+        receiverId INT,
         message TEXT,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (clientId) REFERENCES ClientProfile (clientProfileId) ON DELETE SET NULL,
-        FOREIGN KEY (lawyerId) REFERENCES LawyerProfile (lawyerProfileId) ON DELETE SET NULL,
-        INDEX (clientId),
-        INDEX (lawyerId)
+        FOREIGN KEY (senderId) REFERENCES User (userId) ON DELETE SET NULL,
+        FOREIGN KEY (receiverId) REFERENCES User (userId) ON DELETE SET NULL,
+        INDEX (senderId),
+        INDEX (receiverId)
     );
 
 -- Insert initial data into Specialization table

@@ -96,15 +96,15 @@ const reviewsTable = `
 const messagesTable = `
     CREATE TABLE IF NOT EXISTS Message (
     messageId INT AUTO_INCREMENT PRIMARY KEY,
-    clientId int,
-    lawyerId int,
+    senderId int,
+    receiverId int,
     message text,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (clientId) REFERENCES ClientProfile(clientProfileId) ON DELETE SET NULL,
-    FOREIGN KEY (lawyerId) REFERENCES LawyerProfile(lawyerProfileId) ON DELETE SET NULL,
-    INDEX (clientId),
-    INDEX (lawyerId)
+    FOREIGN KEY (senderId) REFERENCES User(userId) ON DELETE SET NULL,
+    FOREIGN KEY (receiverId) REFERENCES User(userId) ON DELETE SET NULL,
+    INDEX (senderId),
+    INDEX (receiverId)
     );
 `;
 
