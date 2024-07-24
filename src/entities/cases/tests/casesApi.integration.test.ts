@@ -138,8 +138,6 @@ describe('Test POST /cases', () => {
 
 describe('Test GET /cases/:id', () => {
   test('Should respond with 200 success', async () => {
-    console.log('caseId:', caseId);
-
     const response = await supertest(app)
       .get(`/api/v1/cases/${caseId}`)
       .expect(HTTP_STATUS_CODES.SUCCESS_200)
