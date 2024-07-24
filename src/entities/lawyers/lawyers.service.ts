@@ -58,9 +58,9 @@ export const getLawyerService = async ({ id }: GetLawyerServiceProps) => {
 };
 
 export const getManyLawyersService = async ({ queryString }: GetManyLawyersServiceProps) => {
-  const query = buildGetManyLawyersQuery(queryString);
+  const { query, values } = buildGetManyLawyersQuery(queryString);
 
-  return await LawyersProfile.getMany({ query });
+  return await LawyersProfile.getMany({ query, values });
 };
 
 export const updateLawyerService = async ({ data, id }: UpdateLawerServiceProps) => {
