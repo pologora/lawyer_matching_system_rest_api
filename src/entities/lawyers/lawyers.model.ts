@@ -10,25 +10,37 @@ import { AppError } from '../../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
 
-type CreateLawyerInput = {
+type CreateProps = {
   query: string;
   values: string | number[];
   specializations: number[];
 };
 
-type UpdateLawyerInput = {
+type GetOneProps = {
+  id: number;
+};
+
+type GetManyProps = {
+  query: string;
+};
+
+type UpdateProps = {
   query: string;
   values: string | number[];
   id: number;
 };
 
-type UpdateLawyerSpecializationsInput = {
+type RemoveProps = {
+  id: number;
+};
+
+type UpdateLawyerSpecializationsProps = {
   lawyerId: number;
   specializationsIds: number[];
 };
 
 export class LawyersProfile {
-  static async create({ query, values, specializations }: CreateLawyerInput) {
+  static async create({ query, values, specializations }: CreateProps) {
     const connection = await pool.getConnection();
 
     try {
@@ -62,7 +74,7 @@ export class LawyersProfile {
     }
   }
 
-  static async getOne(id: number) {
+  static async getOne({ id }: GetOneProps) {
     const [result] = await pool.query<RowDataPacket[]>(getLawyerByIdQuery, [id]);
 
     checkDatabaseOperation({ result: result[0], id, operation: 'get' });
@@ -70,13 +82,25 @@ export class LawyersProfile {
     return result[0];
   }
 
-  static async getMany(query: string) {
+  static async getMany({ query }: GetManyProps) {
     const result = await pool.query(query);
 
     return result[0];
   }
 
-  static async remove(id: number) {
+  static async update({ id, query, values }: UpdateProps) {
+    if (!values.length) {
+      return;
+    }
+
+    const [result] = await pool.query<ResultSetHeader>(query, [...values, id]);
+
+    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });
+
+    return result;
+  }
+
+  static async remove({ id }: RemoveProps) {
     const [result] = await pool.query<ResultSetHeader>(deleteLawyerQuery, [id]);
 
     checkDatabaseOperation({ result: result.affectedRows, id, operation: 'remove' });
@@ -84,7 +108,7 @@ export class LawyersProfile {
     return result;
   }
 
-  static async updateLawyerSpecializations({ lawyerId, specializationsIds }: UpdateLawyerSpecializationsInput) {
+  static async updateLawyerSpecializations({ lawyerId, specializationsIds }: UpdateLawyerSpecializationsProps) {
     const connection = await pool.getConnection();
 
     try {
@@ -108,17 +132,5 @@ export class LawyersProfile {
     } finally {
       connection.release();
     }
-  }
-
-  static async update({ id, query, values }: UpdateLawyerInput) {
-    if (!values.length) {
-      return;
-    }
-
-    const [result] = await pool.query<ResultSetHeader>(query, [...values, id]);
-
-    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });
-
-    return result;
   }
 }

@@ -4,27 +4,27 @@ import pool from '../../config/db.config';
 import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
 import { deleteCaseQuery, getManyCasesQuery, getOneCaseQuery } from './sqlQueries';
 
-type UpdateCaseParams = {
+type CreateProps = {
+  createCaseQuery: string;
+  values: string[];
+};
+
+type GetOneProps = {
+  id: number;
+};
+
+type UpdateProps = {
   updateCaseQuery: string;
   values: (string | undefined)[];
   id: number;
 };
 
-type GetOneCaseParams = {
+type DeleteProps = {
   id: number;
-};
-
-type DeleteCaseParams = {
-  id: number;
-};
-
-type CreateCaseParams = {
-  createCaseQuery: string;
-  values: string[];
 };
 
 export class Case {
-  static async create({ createCaseQuery, values }: CreateCaseParams) {
+  static async create({ createCaseQuery, values }: CreateProps) {
     const [result] = await pool.query<ResultSetHeader>(createCaseQuery, values);
 
     checkDatabaseOperation({ result: result.affectedRows, operation: 'create' });
@@ -32,7 +32,7 @@ export class Case {
     return result.insertId;
   }
 
-  static async getOne({ id }: GetOneCaseParams) {
+  static async getOne({ id }: GetOneProps) {
     const [result] = await pool.query<RowDataPacket[]>(getOneCaseQuery, [id]);
 
     checkDatabaseOperation({ operation: 'get', id, result: result[0] });
@@ -46,7 +46,7 @@ export class Case {
     return result[0];
   }
 
-  static async update({ updateCaseQuery, values, id }: UpdateCaseParams) {
+  static async update({ updateCaseQuery, values, id }: UpdateProps) {
     const [result] = await pool.query<ResultSetHeader>(updateCaseQuery, [...values, id]);
 
     checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });
@@ -54,7 +54,7 @@ export class Case {
     return result;
   }
 
-  static async remove({ id }: DeleteCaseParams) {
+  static async remove({ id }: DeleteProps) {
     const [result] = await pool.query<ResultSetHeader>(deleteCaseQuery, [id]);
 
     checkDatabaseOperation({ result: result.affectedRows, id, operation: 'remove' });

@@ -12,30 +12,6 @@ import { AppError } from '../../utils/errors/AppError';
 import { CreateUserDto } from './dto';
 import { validateId } from '../../utils/validateId';
 
-export const getManyUsersController = async (_req: Request, res: Response, _next: NextFunction) => {
-  const users = await getManyUsersService();
-
-  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-    status: 'success',
-    message: 'Users retrieved successfully.',
-    data: users,
-  });
-};
-
-export const getUserController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
-
-  const { id } = validateId(Number(candidateId));
-
-  const user = await getUserService(id);
-
-  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-    status: 'success',
-    message: 'User retrieved successfully.',
-    data: user,
-  });
-};
-
 export const createUserController = async (req: Request, res: Response, _next: NextFunction) => {
   const { email, password, confirmPassword }: CreateUserDto = req.body;
   const { error, value } = userCreateSchema.validate({ email, password, confirmPassword });
@@ -44,7 +20,7 @@ export const createUserController = async (req: Request, res: Response, _next: N
     throw new AppError(error.message);
   }
 
-  const result = await createUserService(value);
+  const result = await createUserService({ data: value });
 
   return res.status(HTTP_STATUS_CODES.CREATED_201).json({
     status: 'success',
@@ -53,14 +29,28 @@ export const createUserController = async (req: Request, res: Response, _next: N
   });
 };
 
-export const removeUserController = async (req: Request, res: Response, _next: NextFunction) => {
+export const getUserController = async (req: Request, res: Response, _next: NextFunction) => {
   const { id: candidateId } = req.params;
 
   const { id } = validateId(Number(candidateId));
 
-  await removeUserService(id);
+  const user = await getUserService({ id });
 
-  return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).send();
+  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+    status: 'success',
+    message: 'User retrieved successfully.',
+    data: user,
+  });
+};
+
+export const getManyUsersController = async (_req: Request, res: Response, _next: NextFunction) => {
+  const users = await getManyUsersService();
+
+  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+    status: 'success',
+    message: 'Users retrieved successfully.',
+    data: users,
+  });
 };
 
 export const updateUserController = async (req: Request, res: Response, _next: NextFunction) => {
@@ -75,11 +65,21 @@ export const updateUserController = async (req: Request, res: Response, _next: N
     throw new AppError(error.message);
   }
 
-  const result = await updateUserService(id, value);
+  const result = await updateUserService({ id, data: value });
 
   return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
     status: 'success',
     message: 'User updated successfully.',
     data: result,
   });
+};
+
+export const removeUserController = async (req: Request, res: Response, _next: NextFunction) => {
+  const { id: candidateId } = req.params;
+
+  const { id } = validateId(Number(candidateId));
+
+  await removeUserService({ id });
+
+  return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).send();
 };

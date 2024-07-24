@@ -15,7 +15,7 @@ export const protect = asyncErrorCatch(async (req: Request, res: Response, next:
   const { id, iat } = await verifyJWT(token);
 
   // 2. user still exists
-  const user = await User.getOne(id);
+  const user = await User.getOne({ id });
   if (!user) {
     throw new AppError('The user belonging to this token no longer exists', HTTP_STATUS_CODES.UNAUTHORIZED_401);
   }
@@ -32,6 +32,6 @@ export const protect = asyncErrorCatch(async (req: Request, res: Response, next:
 });
 
 function checkPasswordChanged(iat: number, password_changed_at: number | null) {
-  const gracePeriod = 5000;
+  const gracePeriod = 10000;
   return password_changed_at && password_changed_at > iat + gracePeriod;
 }
