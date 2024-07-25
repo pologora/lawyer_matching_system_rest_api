@@ -71,7 +71,6 @@ describe('Test POST /messages', () => {
 
     // eslint-disable-next-line prefer-destructuring
     messageId = response.body.data.messageId;
-    console.log(messageId);
   });
 
   test('Should catch missing required properties', async () => {
