@@ -23,7 +23,7 @@ export const createReviewController = async (req: Request, res: Response, _next:
 
   return res.status(HTTP_STATUS_CODES.CREATED_201).json({
     status: 'success',
-    message: 'Successfully created review',
+    message: 'Successfully created new review',
     data: review,
   });
 };
@@ -71,7 +71,7 @@ export const updateReviewController = async (req: Request, res: Response, _next:
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
-    .json({ status: 'success', message: 'Successfully updated review', data: updatedReview });
+    .json({ status: 'success', message: 'Review updated successfully', data: updatedReview });
 };
 
 export const removeReviewController = async (req: Request, res: Response, _next: NextFunction) => {
