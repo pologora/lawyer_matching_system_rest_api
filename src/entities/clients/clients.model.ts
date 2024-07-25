@@ -7,7 +7,7 @@ export class ClientProfile {
   static async getOne(id: number) {
     const [result] = await pool.query<RowDataPacket[]>(getOneClientQuery, [id]);
 
-    checkDatabaseOperation({ operation: 'get', id, result: result[0] });
+    checkDatabaseOperation({ id, operation: 'get', result: result[0] });
 
     return result[0];
   }
@@ -15,7 +15,7 @@ export class ClientProfile {
   static async create(createUserQuery: string, values: string[]) {
     const [result] = await pool.query<ResultSetHeader>(createUserQuery, values);
 
-    checkDatabaseOperation({ result: result.affectedRows, operation: 'create' });
+    checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
 
     return result.insertId;
   }
@@ -29,7 +29,7 @@ export class ClientProfile {
   static async remove(id: number) {
     const [result] = await pool.query<ResultSetHeader>(deleteClientQuery, [id]);
 
-    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'remove' });
+    checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
 
     return result;
   }
@@ -37,7 +37,7 @@ export class ClientProfile {
   static async update(query: string, values: (string | undefined)[], id: number) {
     const [result] = await pool.query<ResultSetHeader>(query, [...values, id]);
 
-    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });
+    checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
 
     return result;
   }

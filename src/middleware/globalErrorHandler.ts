@@ -5,7 +5,7 @@ import { logger } from '../config/logger/logger';
 
 const sendDevError = (err: AppError, res: Response, statusCode: StatusCodes) => {
   const { status, message, stack } = err;
-  res.status(statusCode).json({ status, message, stack, err });
+  res.status(statusCode).json({ err, message, stack, status });
 };
 
 const sendProductionError = (err: AppError, res: Response, statusCode: StatusCodes) => {
@@ -16,7 +16,7 @@ const sendProductionError = (err: AppError, res: Response, statusCode: StatusCod
     logger.error(err);
   }
 
-  res.status(statusCode).json({ status: status || 'error', message: clientMessage });
+  res.status(statusCode).json({ message: clientMessage, status: status || 'error' });
 };
 
 export const globalErrorHandler = (err: AppError, _req: Request, res: Response, _next: NextFunction) => {

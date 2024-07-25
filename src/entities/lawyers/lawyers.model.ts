@@ -49,7 +49,7 @@ export class LawyersProfile {
 
       const [result] = await connection.execute<ResultSetHeader>(query, values);
 
-      checkDatabaseOperation({ result: result.affectedRows, operation: 'create' });
+      checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
 
       const lawyerId = result.insertId;
 
@@ -59,7 +59,7 @@ export class LawyersProfile {
           specializationId,
         ]);
 
-        checkDatabaseOperation({ result: data.affectedRows, operation: 'create' });
+        checkDatabaseOperation({ operation: 'create', result: data.affectedRows });
       }
 
       await connection.commit();
@@ -78,7 +78,7 @@ export class LawyersProfile {
   static async getOne({ id }: GetOneProps) {
     const [result] = await pool.query<RowDataPacket[]>(getLawyerByIdQuery, [id]);
 
-    checkDatabaseOperation({ result: result[0], id, operation: 'get' });
+    checkDatabaseOperation({ id, operation: 'get', result: result[0] });
 
     return result[0];
   }
@@ -96,7 +96,7 @@ export class LawyersProfile {
 
     const [result] = await pool.query<ResultSetHeader>(query, [...values, id]);
 
-    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });
+    checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
 
     return result;
   }
@@ -104,7 +104,7 @@ export class LawyersProfile {
   static async remove({ id }: RemoveProps) {
     const [result] = await pool.query<ResultSetHeader>(deleteLawyerQuery, [id]);
 
-    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'remove' });
+    checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
 
     return result;
   }
@@ -120,7 +120,7 @@ export class LawyersProfile {
           lawyerId,
           specializationId,
         ]);
-        checkDatabaseOperation({ result: result.affectedRows, operation: 'create' });
+        checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
       }
 
       connection.commit();

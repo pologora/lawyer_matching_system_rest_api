@@ -45,7 +45,7 @@ export const getManyMessagesService = async ({ queryString }: GetManyMessagesSer
 export const updateMessageService = async ({ data, id }: UpdateMessageServiceProps) => {
   const { query: updateMessageQuery, values } = buildUpdateTableRowQuery(data, 'Message');
 
-  await Message.update({ updateMessageQuery, values, id });
+  await Message.update({ id, updateMessageQuery, values });
 
   return await Message.getOne({ id });
 };

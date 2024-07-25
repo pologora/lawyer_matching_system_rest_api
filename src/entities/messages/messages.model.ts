@@ -32,7 +32,7 @@ export class Message {
   static async create({ createMessageQuery, values }: CreateProps) {
     const [result] = await pool.query<ResultSetHeader>(createMessageQuery, values);
 
-    checkDatabaseOperation({ result: result.affectedRows, operation: 'create' });
+    checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
 
     return result.insertId;
   }
@@ -40,7 +40,7 @@ export class Message {
   static async getOne({ id }: GetOneProps) {
     const [result] = await pool.query<RowDataPacket[]>(getMessageQuery, [id]);
 
-    checkDatabaseOperation({ operation: 'get', id, result: result[0] });
+    checkDatabaseOperation({ id, operation: 'get', result: result[0] });
 
     return result[0];
   }
@@ -54,7 +54,7 @@ export class Message {
   static async update({ updateMessageQuery, values, id }: UpdateProps) {
     const [result] = await pool.query<ResultSetHeader>(updateMessageQuery, [...values, id]);
 
-    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });
+    checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
 
     return result;
   }
@@ -62,7 +62,7 @@ export class Message {
   static async remove({ id }: DeleteProps) {
     const [result] = await pool.query<ResultSetHeader>(removeMessageQuery, [id]);
 
-    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'remove' });
+    checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
 
     return result;
   }

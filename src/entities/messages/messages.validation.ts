@@ -1,9 +1,9 @@
 import Joi from 'joi';
 
 export const createMessageSchema = Joi.object({
-  senderId: Joi.number().required(),
-  receiverId: Joi.number().required(),
   message: Joi.string().required(),
+  receiverId: Joi.number().required(),
+  senderId: Joi.number().required(),
 });
 
 export const updateMessageSchema = Joi.object({
@@ -12,13 +12,13 @@ export const updateMessageSchema = Joi.object({
 
 const sortByValues = ['createdAt', 'updatedAt'];
 export const getManyMessagesShema = Joi.object({
+  endDate: Joi.date(),
   limit: Joi.number(),
   page: Joi.number(),
-  senderId: Joi.number(),
   receiverId: Joi.number(),
-  startDate: Joi.date(),
-  endDate: Joi.date(),
+  search: Joi.string(),
+  senderId: Joi.number(),
   sortBy: Joi.valid(...sortByValues),
   sortOrder: Joi.valid('desc', 'asc'),
-  search: Joi.string(),
+  startDate: Joi.date(),
 });

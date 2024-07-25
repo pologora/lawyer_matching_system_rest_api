@@ -2,21 +2,21 @@ import Joi from 'joi';
 import { PASSWORD_MIN_LENGTH } from '../../config/constants';
 
 export const userCreateSchema = Joi.object({
+  confirmPassword: Joi.any().equal(Joi.ref('password')).required().messages({
+    'any.only': 'Confirm password does not match password',
+    'any.required': 'Confirm password is required',
+  }),
   email: Joi.string().email().required().messages({
-    'string.empty': 'Email is required',
     'string.email': 'Email must be a valid email address',
+    'string.empty': 'Email is required',
   }),
   password: Joi.string()
     .min(PASSWORD_MIN_LENGTH)
     .required()
     .messages({
-      'string.min': `Password must be at least ${PASSWORD_MIN_LENGTH} characters`,
       'any.required': 'Password is required',
+      'string.min': `Password must be at least ${PASSWORD_MIN_LENGTH} characters`,
     }),
-  confirmPassword: Joi.any().equal(Joi.ref('password')).required().messages({
-    'any.only': 'Confirm password does not match password',
-    'any.required': 'Confirm password is required',
-  }),
 });
 
 export const userUpdateSchema = Joi.object({

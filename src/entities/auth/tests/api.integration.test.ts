@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 /* eslint-disable max-lines-per-function */
 /* eslint-disable no-magic-numbers */
 
@@ -26,8 +27,8 @@ const registerData = {
 
 const changeMyPasswordData = {
   password: registerData.password,
-  newPassword: 'changeMyPass',
   confirmNewPassword: 'changeMyPass',
+  newPassword: 'changeMyPass',
 };
 
 const newPasswordAfterReset = {

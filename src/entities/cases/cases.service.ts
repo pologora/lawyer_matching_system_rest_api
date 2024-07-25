@@ -39,7 +39,7 @@ export const getManyCasesService = async () => {
 export const updateCaseService = async ({ data, id }: UpdateCaseServiceProps) => {
   const { query: updateCaseQuery, values } = buildUpdateTableRowQuery(data, 'Case');
 
-  await Case.update({ updateCaseQuery, values, id });
+  await Case.update({ id, updateCaseQuery, values });
 
   return await Case.getOne({ id });
 };
