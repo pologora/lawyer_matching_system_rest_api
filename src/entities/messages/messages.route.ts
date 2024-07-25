@@ -17,5 +17,5 @@ messagesRoute
 messagesRoute
   .route('/messages/:id')
   .get(asyncErrorCatch(getMessageController))
-  .patch(updateMessageController)
-  .delete(removeMessageController);
+  .patch(asyncErrorCatch(updateMessageController))
+  .delete(asyncErrorCatch(removeMessageController));
