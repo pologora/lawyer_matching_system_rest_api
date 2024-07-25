@@ -335,8 +335,14 @@ if (decoded) {
 
 ```JavaScript
 {
-  "message": "Login successful",
-  "token": "jwt_token_here"
+  "status": "success",
+  "message": "User login successfully",
+  "token": "JWT",
+  "data": {
+    "userId": 1,
+    "role": "user",
+    "email": "john.doe@example.com"
+  }
 }
 
 ```
@@ -345,10 +351,29 @@ if (decoded) {
 
 ```JavaScript
 {
-  "message": "Invalid email or password",
+  "status": "error",
+  "message": "Email or password is not valid",
 }
 
 ```
+
+- 400 Bad Request (Validation errors)
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Error message",
+}
+
+```
+
+Validation Error Examples:
+
+| Property   | Validation Rule              | Error Message                         |
+| ---------- | ---------------------------- | ------------------------------------- |
+| `email`    | Required, valid email format | `Email is required` ,                 |
+|            |                              | `Email must be a valid email address` |
+| `password` | Required                     | ` Password is required`               |
 
 </details>
 
@@ -367,7 +392,6 @@ if (decoded) {
   "name": "John Doe",
   "email": "john.doe@example.com",
   "password": "securePassword123",
-  "role": "client" // or "lawyer"
 }
 ```
 
@@ -377,27 +401,303 @@ if (decoded) {
 
 ```JavaScript
 {
+  "status":"success",
   "message": "User registered successfully",
-  "user": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "role": "client",
-    "createdAt": "2023-01-01T00:00:00.000Z",
-    "updatedAt": "2023-01-01T00:00:00.000Z"
-  },
-  "token": "jwt_token_here"
+  "token": "JWT"
 }
 
 ```
 
-- 400 Bad Request
+- 400 Bad Request (Validation errors)
 
 ```JavaScript
 {
-  "message": "Validation error"
+  "status": "error",
+  "message": "Error message",
+}
+
+```
+
+Validation Error Examples:
+
+| Property          | Validation Rule                 | Error Message                                                 |
+| ----------------- | ------------------------------- | ------------------------------------------------------------- |
+| `email`           | Required, valid email format    | `Email is required` ,                                         |
+|                   |                                 | `Email must be a valid email address`                         |
+| `password`        | Required, min length            | `Password is required`,                                       |
+|                   |                                 | `Password must be at least ${PASSWORD_MIN_LENGTH} characters` |
+| `confirmPassword` | Required, should match password | `Confirm password is required`,                               |
+|                   |                                 | `Confirm password does not match password`                    |
+
+</details>
+
+#### Forgot Password
+
+<details>
+
+- URL: `api/v1/forgot-password`
+- Method: `POST`
+- Description: Validate user `email` and sed a reset password link
+
+**Request Body:**
+
+```JavaScript
+{
+  "email": "john.doe@example.com"
 }
 ```
+
+**Response:**
+
+- 200 Success
+
+```JavaScript
+{
+  "status": "success",
+  "message": "Reset password link was sent to the user email",
+}
+
+```
+
+- 404 Not Found
+
+```JavaScript
+{
+  "status": "error",
+  "message": "There is no user with this email adress"
+}
+```
+
+- 400 Bad Request (Validation errors)
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Error message",
+}
+
+```
+
+Validation Error Examples:
+
+| Property | Validation Rule              | Error Message                         |
+| -------- | ---------------------------- | ------------------------------------- |
+| `email`  | Required, valid email format | `Email is required` ,                 |
+|          |                              | `Email must be a valid email address` |
+
+</details>
+
+#### Reset Password
+
+<details>
+
+- URL: `api/v1/reset-password/:token`
+- Method: `PATCH`
+- Description: Validate password reset token, set new password and return a `JWT` token
+
+**Request Body:**
+
+```JavaScript
+{
+  "password": "newpassword",
+  "confirmPassword": "newpassword"
+}
+```
+
+**Response:**
+
+- 200 Success
+
+```JavaScript
+{
+  "status": "success",
+  "message": "Password has been changed",
+  "token": "JWT"
+}
+
+```
+
+- 400 Bad Request (Invalid token)
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Error message"
+}
+```
+
+Invalid Token Error Examples:
+
+| Validation Rule | Error Message                                                            |
+| --------------- | ------------------------------------------------------------------------ |
+| Valid token     | `Invalid reset password token`                                           |
+| Expire time     | `The time limit for changing the password has expired. Please try again` |
+
+- 400 Bad Request (Validation errors)
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Error message",
+}
+
+```
+
+Validation Error Examples:
+
+| Property          | Validation Rule               | Error Message                                                 |
+| ----------------- | ----------------------------- | ------------------------------------------------------------- |
+| `password`        | Required, min length          | `Password is required` ,                                      |
+|                   |                               | `Password must be at least ${PASSWORD_MIN_LENGTH} characters` |
+| `confirmPassword` | Required, must match password | `Confirm password is required`,                               |
+|                   |                               | `Confirm password does not match password`                    |
+
+- 500 Internal Server Error
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Password update failed. Please try again later.",
+}
+
+```
+
+</details>
+
+#### Change My Password
+
+<details>
+
+- URL: `api/v1/change-my-password`
+- Method: `PATCH`
+- Description: Validate old password, validate `JWT`, set new password and return a new `JWT` token
+
+**Request Body:**
+
+```JavaScript
+{
+  "password": "oldPassword",
+  "newPassword": "newPassword",
+  "confirmNewPassword": "newpassword"
+}
+```
+
+**Response:**
+
+- 200 Success
+
+```JavaScript
+{
+  "status": "success",
+  "message": "Password has been changed",
+  "token": "JWT"
+}
+
+```
+
+- 401 Unauthorized (Invalid password)
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Invalid password"
+}
+```
+
+- 401 Unauthorized (Invalid JWT token)
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Invalid signature"
+}
+```
+
+- 400 Bad Request (Validation errors)
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Error message",
+}
+
+```
+
+Validation Error Examples:
+
+| Property             | Validation Rule               | Error Message                                                 |
+| -------------------- | ----------------------------- | ------------------------------------------------------------- |
+| `newPassword`        | Required, min length          | `Password is required`,                                       |
+|                      |                               | `Password must be at least ${PASSWORD_MIN_LENGTH} characters` |
+| `confirmNewPassword` | Required, must match password | `Confirm password is required`,                               |
+|                      |                               | `Confirm password does not match password`                    |
+| `password`           | Required                      | `Password is required`                                        |
+
+- 500 Internal Server Error
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Password update failed. Please try again later",
+}
+
+```
+
+</details>
+
+#### Delete Me
+
+<details>
+
+- URL: `api/v1/delete-me`
+- Method: `PATCH`
+- Description: Validate password, validate `JWT`, delete account
+
+**Request Body:**
+
+```JavaScript
+{
+  "password": "password"
+}
+```
+
+**Response:**
+
+- 204 No Content
+
+- 401 Unauthorized (Invalid password)
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Invalid password"
+}
+```
+
+- 401 Unauthorized (Invalid JWT token)
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Invalid signature"
+}
+```
+
+- 400 Bad Request (Validation errors)
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Error message",
+}
+
+```
+
+Validation Error Examples:
+
+| Property   | Validation Rule | Error Message          |
+| ---------- | --------------- | ---------------------- |
+| `password` | Required        | `Password is required` |
 
 </details>
 

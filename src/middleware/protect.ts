@@ -24,7 +24,7 @@ export const protect = asyncErrorCatch(async (req: Request, res: Response, next:
   const passwordChangedAt = user.passwordChangedAt && new Date(user.passwordChangedAt).getTime();
   const isPasswordChangedAfterTokenIssued = checkPasswordChanged(iat, passwordChangedAt);
   if (isPasswordChangedAfterTokenIssued) {
-    throw new AppError('User changed password. Please log in again.', HTTP_STATUS_CODES.UNAUTHORIZED_401);
+    throw new AppError('User changed password. Please log in again', HTTP_STATUS_CODES.UNAUTHORIZED_401);
   }
 
   req.user = user;

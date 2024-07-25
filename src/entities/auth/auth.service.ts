@@ -89,14 +89,14 @@ export const resetPasswordService = async ({ resetToken, password }: ResetPasswo
   // check if token not expired
   const isTokenExpired = checkIfResetTokenExpired(user.resetPasswordTokenExpiration!);
   if (isTokenExpired) {
-    throw new AppError('The time limit for changing the password has expired. Please try again.');
+    throw new AppError('The time limit for changing the password has expired. Please try again');
   }
 
   //3. update changePasswordAt, and set new pass
   const hashedPassword = await hashPassword(password);
   const result = await Auth.updatePassword({ id: user.userId, password: hashedPassword });
   if (!result) {
-    throw new AppError('Password update failed. Please try again later.', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
+    throw new AppError('Password update failed. Please try again later', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
   }
 
   //4. send jwt
@@ -112,7 +112,7 @@ export const changeMyPasswordService = async ({ password, newPassword, user }: C
   const hashedPassword = await hashPassword(newPassword);
   const result = await Auth.updatePassword({ id: user.userId, password: hashedPassword });
   if (!result) {
-    throw new AppError('Password update failed. Please try again later.', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
+    throw new AppError('Password update failed. Please try again later', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
   }
 
   return await createJWT({ id: user.userId });
@@ -127,7 +127,7 @@ export const deleteMeService = async ({ password, user }: DeleteMeDto) => {
   const result = await Auth.deleteMe({ id: user.userId });
   if (!result) {
     throw new AppError(
-      'Failed to delete an account. Please try again later.',
+      'Failed to delete an account. Please try again later',
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500,
     );
   }

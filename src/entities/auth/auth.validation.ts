@@ -3,7 +3,8 @@ import { PASSWORD_MIN_LENGTH } from '../../config/constants';
 
 export const userRegistrationSchema = Joi.object({
   email: Joi.string().email().required().messages({
-    'string.empty': 'Email is required',
+    'any.required': 'Email is required',
+    'string.email': 'Email must be a valid email address',
   }),
   password: Joi.string().required().messages({
     'any.required': 'Password is required',
@@ -12,7 +13,8 @@ export const userRegistrationSchema = Joi.object({
 
 export const forgotPasswordShema = Joi.object({
   email: Joi.string().email().required().messages({
-    'string.empty': 'Email is required',
+    'any.required': 'Email is required',
+    'string.email': 'Email must be a valid email address',
   }),
 });
 
@@ -38,10 +40,13 @@ export const changeMyPasswordSchema = Joi.object({
     'any.only': 'Confirm password does not match password',
     'any.required': 'Confirm password is required',
   }),
-  newPassword: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required().messages({
-    'any.required': 'Password is required',
-    'string.pattern.base': 'Password must be between 3 and 30 characters and contain only alphanumeric characters',
-  }),
+  newPassword: Joi.string()
+    .min(PASSWORD_MIN_LENGTH)
+    .required()
+    .messages({
+      'any.required': 'Password is required',
+      'string.min': `Password must be at least ${PASSWORD_MIN_LENGTH} characters`,
+    }),
   password: Joi.string().required().messages({
     'any.required': 'Password is required',
   }),
