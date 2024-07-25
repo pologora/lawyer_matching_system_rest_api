@@ -1,79 +1,44 @@
-/* eslint-disable max-lines-per-function */
 import supertest from 'supertest';
 import { HTTP_STATUS_CODES } from '../../../utils/statusCodes';
 import { app } from '../../../app';
 import pool from '../../../config/db.config';
 
-let reviewId: number;
-let createReviewData: {
-  clientId?: number;
-  lawyerId?: number;
-  reviewText?: string;
-  rating?: number;
+let messageId: number;
+let createMessageData: {
+  senderId?: number;
+  receiverId?: number;
+  message?: string;
 };
 
-const createUserDataClient = {
+const createUserDataSender = {
   confirmPassword: 'test12345',
-  email: 'reviewclient-test@mail.com',
+  email: 'messagessender-test@mail.com',
   password: 'test12345',
 };
 
-const createUserDataLawyer = {
+const createUserDataReceiver = {
   confirmPassword: 'test12345',
-  email: 'reviewlawyer-test@mail.com',
+  email: 'messagesreceiver-test@mail.com',
   password: 'test12345',
 };
 
 beforeAll(async () => {
-  const userForClient = await supertest(app)
+  const userForSender = await supertest(app)
     .post('/api/v1/users')
-    .send(createUserDataClient)
+    .send(createUserDataSender)
     .expect(HTTP_STATUS_CODES.CREATED_201);
-  const userForClientId = userForClient.body.data.insertId;
+  const userForSenderId = userForSender.body.data.insertId;
 
-  const userForLawyer = await supertest(app)
+  const userForReceiver = await supertest(app)
     .post('/api/v1/users')
-    .send(createUserDataLawyer)
+    .send(createUserDataReceiver)
     .expect(HTTP_STATUS_CODES.CREATED_201);
-  const userForLawyerId = userForLawyer.body.data.insertId;
+  const userForReceiverId = userForReceiver.body.data.insertId;
 
-  const createClientData = {
-    firstName: 'Test review',
-    lastName: 'Test review',
-    userId: userForClientId,
-  };
-
-  const createLawyerData = {
-    bio: 'lorem lem',
-    city: 'City',
-    experience: 2,
-    firstName: 'Test Cases',
-    lastName: 'Lawyer',
-    licenseNumber: '1111',
-    region: 'Alaska',
-    specializations: [1],
-    userId: userForLawyerId,
-  };
-
-  const client = await supertest(app)
-    .post('/api/v1/clients')
-    .send(createClientData)
-    .expect(HTTP_STATUS_CODES.CREATED_201)
-    .expect('Content-Type', /json/);
-  const clientId = client.body.data.clientProfileId;
-
-  const lawyer = await supertest(app)
-    .post('/api/v1/lawyers')
-    .send(createLawyerData)
-    .expect(HTTP_STATUS_CODES.CREATED_201)
-    .expect('Content-Type', /json/);
-  const lawyerId = lawyer.body.data.lawyerProfileId;
-
-  createReviewData = {
-    clientId,
-    lawyerId,
-    rating: 4,
-    reviewText: 'test review',
+  createMessageData = {
+    message: 'test message',
+    receiverId: userForReceiverId,
+    senderId: userForSenderId,
   };
 });
 
@@ -81,40 +46,41 @@ afterAll(async () => {
   await pool.end();
 });
 
-describe('Test GET /reviews', () => {
+describe('Test GET /messages', () => {
   test('Should respond with 200 success', async () => {
     const response = await supertest(app)
-      .get('/api/v1/reviews')
+      .get('/api/v1/messages')
       .expect(HTTP_STATUS_CODES.SUCCESS_200)
       .expect('Content-Type', /json/);
 
     expect(response.body).toHaveProperty('status', 'success');
-    expect(response.body).toHaveProperty('message', 'Reviews retrieved successfully');
+    expect(response.body).toHaveProperty('message', 'Messages retrieved successfully');
   });
 });
 
-describe('Test POST /reviews', () => {
+describe('Test POST /messages', () => {
   test('Should respond with 201 created', async () => {
     const response = await supertest(app)
-      .post('/api/v1/reviews')
-      .send(createReviewData)
+      .post('/api/v1/messages')
+      .send(createMessageData)
       .expect(HTTP_STATUS_CODES.CREATED_201)
       .expect('Content-Type', /json/);
 
     expect(response.body).toHaveProperty('status', 'success');
-    expect(response.body).toHaveProperty('message', 'Successfully created new review');
+    expect(response.body).toHaveProperty('message', 'Successfully created message');
 
     // eslint-disable-next-line prefer-destructuring
-    reviewId = response.body.data.reviewId;
+    messageId = response.body.data.messageId;
   });
 
   test('Should catch missing required properties', async () => {
     const createCaseDataWithMissingProperties = {
-      clientId: createReviewData.clientId,
-      lawyerId: createReviewData.lawyerId,
+      receiverId: createMessageData.receiverId,
+      senderId: createMessageData.senderId,
     };
+
     const response = await supertest(app)
-      .post('/api/v1/reviews')
+      .post('/api/v1/messages')
       .send(createCaseDataWithMissingProperties)
       .expect(HTTP_STATUS_CODES.BAD_REQUEST_400)
       .expect('Content-Type', /json/);
@@ -129,7 +95,7 @@ describe('Test POST /reviews', () => {
       lawyerId: 2,
     };
     const response = await supertest(app)
-      .post('/api/v1/reviews')
+      .post('/api/v1/messages')
       .send(invalidCreateClientData)
       .expect(HTTP_STATUS_CODES.BAD_REQUEST_400)
       .expect('Content-Type', /json/);
@@ -138,22 +104,22 @@ describe('Test POST /reviews', () => {
   });
 });
 
-describe('Test GET /reviews/:id', () => {
+describe('Test GET /messages/:id', () => {
   test('Should respond with 200 success', async () => {
     const response = await supertest(app)
-      .get(`/api/v1/reviews/${reviewId}`)
+      .get(`/api/v1/messages/${messageId}`)
       .expect(HTTP_STATUS_CODES.SUCCESS_200)
       .expect('Content-Type', /json/);
 
     expect(response.body).toHaveProperty('status', 'success');
-    expect(response.body).toHaveProperty('message', 'Review retrieved successfully');
-    expect(response.body.data).toHaveProperty('reviewId', reviewId);
+    expect(response.body).toHaveProperty('message', 'Message retrieved successfully');
+    expect(response.body.data).toHaveProperty('messageId', messageId);
   });
 
-  test('Should catch not existing client id', async () => {
+  test('Should catch not existing message id', async () => {
     const wrongId = 999;
     const response = await supertest(app)
-      .get(`/api/v1/reviews/${wrongId}`)
+      .get(`/api/v1/messages/${wrongId}`)
       .expect(HTTP_STATUS_CODES.NOT_FOUND_404)
       .expect('Content-Type', /json/);
 
@@ -162,31 +128,30 @@ describe('Test GET /reviews/:id', () => {
   });
 });
 
-describe('Test PATCH /reviews/:id', () => {
+describe('Test PATCH /messages/:id', () => {
   test('Should respond with 200 success', async () => {
     const patchData = {
-      rating: 3,
-      reviewText: 'Patch_review_test',
+      message: 'patch message',
     };
     const response = await supertest(app)
-      .patch(`/api/v1/reviews/${reviewId}`)
+      .patch(`/api/v1/messages/${messageId}`)
       .send(patchData)
       .expect(HTTP_STATUS_CODES.SUCCESS_200)
       .expect('Content-Type', /json/);
 
     expect(response.body).toHaveProperty('status', 'success');
-    expect(response.body).toHaveProperty('message', 'Review updated successfully');
-    expect(response.body.data).toHaveProperty('reviewId', reviewId);
-    expect(response.body.data).toHaveProperty('reviewText', patchData.reviewText);
+    expect(response.body).toHaveProperty('message', 'Successfully updated message');
+    expect(response.body.data).toHaveProperty('messageId', messageId);
+    expect(response.body.data).toHaveProperty('message', patchData.message);
   });
 
   test('Should catch not existing client id', async () => {
     const patchData = {
-      reviewText: 'review',
+      message: 'message',
     };
     const wrongId = 999;
     const response = await supertest(app)
-      .patch(`/api/v1/reviews/${wrongId}`)
+      .patch(`/api/v1/messages/${wrongId}`)
       .send(patchData)
       .expect(HTTP_STATUS_CODES.NOT_FOUND_404)
       .expect('Content-Type', /json/);
@@ -196,15 +161,15 @@ describe('Test PATCH /reviews/:id', () => {
   });
 });
 
-describe('Test DELETE /reviews/:id', () => {
+describe('Test DELETE /messages/:id', () => {
   test('Should respond with 204 no content', async () => {
-    await supertest(app).delete(`/api/v1/reviews/${reviewId}`).expect(HTTP_STATUS_CODES.NO_CONTENT_204);
+    await supertest(app).delete(`/api/v1/messages/${messageId}`).expect(HTTP_STATUS_CODES.NO_CONTENT_204);
   });
 
-  test('Should catch not existing client id', async () => {
+  test('Should catch not existing message id', async () => {
     const wrongId = 999;
     const response = await supertest(app)
-      .delete(`/api/v1/reviews/${wrongId}`)
+      .delete(`/api/v1/messages/${wrongId}`)
       .expect(HTTP_STATUS_CODES.NOT_FOUND_404)
       .expect('Content-Type', /json/);
 
