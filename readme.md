@@ -16,6 +16,10 @@
     - [Authentication](#authentication)
       - [Login](#login)
       - [Register](#register)
+      - [Forgot Password](#forgot-password)
+      - [Reset Password](#reset-password)
+      - [Change My Password](#change-my-password)
+      - [Delete Me](#delete-me)
     - [Users](#users)
 
       - [Get All Users](#get-all-users)
