@@ -39,7 +39,7 @@ class User {
   static async create({ email, hashedPassword }: CreateProps) {
     const [result] = await pool.query<ResultSetHeader>(createUserQuery, [email, hashedPassword]);
 
-    checkDatabaseOperation({ result: result.affectedRows, operation: 'create' });
+    checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
 
     return result;
   }
@@ -47,7 +47,7 @@ class User {
   static async getOne({ id }: GetOneProps) {
     const [result] = await pool.query<RowDataPacket[]>(getUserByIdQuery, [id]);
 
-    checkDatabaseOperation({ result: result[0], id, operation: 'get' });
+    checkDatabaseOperation({ id, operation: 'get', result: result[0] });
 
     return result[0] as IUser;
   }
@@ -61,7 +61,7 @@ class User {
   static async update({ query, values, id }: UpdateProps) {
     const [result] = await pool.query<ResultSetHeader>(query, [...values, id]);
 
-    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });
+    checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
 
     return result;
   }
@@ -69,7 +69,7 @@ class User {
   static async remove({ id }: RemoveProps) {
     const [result] = await pool.query<ResultSetHeader>(deleteUserQuery, [id]);
 
-    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'remove' });
+    checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
 
     return result;
   }
@@ -77,7 +77,7 @@ class User {
   static async setRole({ role, id }: SetRoleProps) {
     const [result] = await pool.query<ResultSetHeader>(updateUserRoleQuery, [role, id]);
 
-    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });
+    checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
 
     return result;
   }

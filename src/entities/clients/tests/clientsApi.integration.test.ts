@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 /* eslint-disable max-lines-per-function */
 import supertest from 'supertest';
 import { HTTP_STATUS_CODES } from '../../../utils/statusCodes';

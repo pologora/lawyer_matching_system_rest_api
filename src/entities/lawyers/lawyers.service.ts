@@ -32,21 +32,21 @@ export const createLawyerService = async ({ data }: CreateLawyerServiceProps) =>
 
   const { query, values } = buildCreateTableRowQuery(
     {
-      userId,
-      licenseNumber,
       bio,
+      city,
       experience,
       firstName,
       lastName,
-      city,
+      licenseNumber,
       region,
+      userId,
     },
     'LawyerProfile',
   );
 
-  const lawyerId = await LawyersProfile.create({ query, values, specializations });
+  const lawyerId = await LawyersProfile.create({ query, specializations, values });
 
-  await User.setRole({ role: 'lawyer', id: userId });
+  await User.setRole({ id: userId, role: 'lawyer' });
 
   return await LawyersProfile.getOne({ id: lawyerId! });
 };
@@ -73,7 +73,7 @@ export const updateLawyerService = async ({ data, id }: UpdateLawerServiceProps)
 
   const { query, values } = buildUpdateTableRowQuery(data, 'LawyerProfile');
 
-  await LawyersProfile.update({ query, values, id });
+  await LawyersProfile.update({ id, query, values });
 
   return await LawyersProfile.getOne({ id });
 };

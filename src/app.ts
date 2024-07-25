@@ -19,6 +19,7 @@ import { lawyersRouter } from './entities/lawyers/lawyers.route';
 import { clientsRouter } from './entities/clients/clients.route';
 import { casesRouter } from './entities/cases/cases.route';
 import { messagesRoute } from './entities/messages/messages.route';
+import { reviewsRouter } from './entities/reviews/reviews.route';
 
 process.on('uncaughtException', (err) => {
   logger.error(err);
@@ -52,6 +53,7 @@ app.use('/api/v1', lawyersRouter);
 app.use('/api/v1', clientsRouter);
 app.use('/api/v1', casesRouter);
 app.use('/api/v1', messagesRoute);
+app.use('/api/v1', reviewsRouter);
 
 // route not found on server
 app.use('*', (req: Request, _res: Response, next: NextFunction) => {

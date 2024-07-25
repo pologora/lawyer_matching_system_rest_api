@@ -26,7 +26,7 @@ export const createClientService = async (data: CreateClientDto) => {
 
   const clientId = await ClientProfile.create(query, values);
 
-  await User.setRole({ role: 'client', id: userId });
+  await User.setRole({ id: userId, role: 'client' });
 
   return await ClientProfile.getOne(clientId);
 };

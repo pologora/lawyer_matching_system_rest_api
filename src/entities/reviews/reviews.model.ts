@@ -2,7 +2,7 @@ import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 import pool from '../../config/db.config';
 import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
-import { getMessageQuery, removeMessageQuery } from './sqlQueries';
+import { getReviewQuery, removeReviewQuery } from './sqlQueries';
 
 type CreateProps = {
   createMessageQuery: string;
@@ -28,9 +28,9 @@ type DeleteProps = {
   id: number;
 };
 
-export class Message {
-  static async create({ createMessageQuery, values }: CreateProps) {
-    const [result] = await pool.query<ResultSetHeader>(createMessageQuery, values);
+export class Review {
+  static async create({ createMessageQuery: createReviewQuery, values }: CreateProps) {
+    const [result] = await pool.query<ResultSetHeader>(createReviewQuery, values);
 
     checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
 
@@ -38,7 +38,7 @@ export class Message {
   }
 
   static async getOne({ id }: GetOneProps) {
-    const [result] = await pool.query<RowDataPacket[]>(getMessageQuery, [id]);
+    const [result] = await pool.query<RowDataPacket[]>(getReviewQuery, [id]);
 
     checkDatabaseOperation({ id, operation: 'get', result: result[0] });
 
@@ -60,7 +60,7 @@ export class Message {
   }
 
   static async remove({ id }: DeleteProps) {
-    const [result] = await pool.query<ResultSetHeader>(removeMessageQuery, [id]);
+    const [result] = await pool.query<ResultSetHeader>(removeReviewQuery, [id]);
 
     checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
 

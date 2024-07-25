@@ -9,21 +9,21 @@ const customFormat = printf(({ level, message, timestamp: time, stack }) => {
 });
 
 export const logger = createLogger({
-  level: 'info',
   format: combine(timestamp(), errors({ stack: true }), customFormat),
+  level: 'info',
   transports: [
     new transports.DailyRotateFile({
-      filename: path.join(__dirname, '../../..', 'logs', 'error-%DATE%.log'),
       datePattern: 'YYYY-MM-DD',
+      filename: path.join(__dirname, '../../..', 'logs', 'error-%DATE%.log'),
       level: 'error',
-      maxSize: '20m',
       maxFiles: '14d',
+      maxSize: '20m',
     }),
     new transports.DailyRotateFile({
-      filename: path.join(__dirname, '../../..', 'logs', 'combined-%DATE%.log'),
       datePattern: 'YYYY-MM-DD',
-      maxSize: '20m',
+      filename: path.join(__dirname, '../../..', 'logs', 'combined-%DATE%.log'),
       maxFiles: '14d',
+      maxSize: '20m',
     }),
   ],
 });

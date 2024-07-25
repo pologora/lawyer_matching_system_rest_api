@@ -17,33 +17,33 @@ export const forgotPasswordShema = Joi.object({
 });
 
 export const resetPasswordSchema = Joi.object({
-  resetToken: Joi.string().required().messages({
-    'string.empty': 'Token is required',
+  confirmPassword: Joi.any().equal(Joi.ref('password')).required().messages({
+    'any.only': 'Confirm password does not match password',
+    'any.required': 'Confirm password is required',
   }),
   password: Joi.string()
     .min(PASSWORD_MIN_LENGTH)
     .required()
     .messages({
-      'string.min': `Password must be at least ${PASSWORD_MIN_LENGTH} characters`,
       'any.required': 'Password is required',
+      'string.min': `Password must be at least ${PASSWORD_MIN_LENGTH} characters`,
     }),
-  confirmPassword: Joi.any().equal(Joi.ref('password')).required().messages({
-    'any.only': 'Confirm password does not match password',
-    'any.required': 'Confirm password is required',
+  resetToken: Joi.string().required().messages({
+    'string.empty': 'Token is required',
   }),
 });
 
 export const changeMyPasswordSchema = Joi.object({
-  password: Joi.string().required().messages({
-    'any.required': 'Password is required',
-  }),
-  newPassword: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required().messages({
-    'string.pattern.base': 'Password must be between 3 and 30 characters and contain only alphanumeric characters',
-    'any.required': 'Password is required',
-  }),
   confirmNewPassword: Joi.any().equal(Joi.ref('newPassword')).required().messages({
     'any.only': 'Confirm password does not match password',
     'any.required': 'Confirm password is required',
+  }),
+  newPassword: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required().messages({
+    'any.required': 'Password is required',
+    'string.pattern.base': 'Password must be between 3 and 30 characters and contain only alphanumeric characters',
+  }),
+  password: Joi.string().required().messages({
+    'any.required': 'Password is required',
   }),
 });
 

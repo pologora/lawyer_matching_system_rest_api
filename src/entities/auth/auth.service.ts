@@ -43,7 +43,7 @@ export const loginService = async ({ email: inputEmail, password: candidatePassw
   const { userId, email, role } = user;
   const token = await createJWT({ id: userId });
 
-  return { token, user: { userId, email, role } };
+  return { token, user: { email, role, userId } };
 };
 
 export const forgotPasswordService = async ({ email }: ForgotPasswordDto, req: Request) => {
@@ -56,8 +56,8 @@ export const forgotPasswordService = async ({ email }: ForgotPasswordDto, req: R
   const hashedToken = createPasswordResetHashedToken(resetToken);
 
   await Auth.setResetPasswordToken({
-    hashedToken,
     expirationInMinutes: RESET_PASSWORD_EXPIRATION_IN_MINUTES,
+    hashedToken,
     userId: user.userId,
   });
 
@@ -94,7 +94,7 @@ export const resetPasswordService = async ({ resetToken, password }: ResetPasswo
 
   //3. update changePasswordAt, and set new pass
   const hashedPassword = await hashPassword(password);
-  const result = await Auth.updatePassword({ password: hashedPassword, id: user.userId });
+  const result = await Auth.updatePassword({ id: user.userId, password: hashedPassword });
   if (!result) {
     throw new AppError('Password update failed. Please try again later.', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
   }
@@ -110,7 +110,7 @@ export const changeMyPasswordService = async ({ password, newPassword, user }: C
   }
 
   const hashedPassword = await hashPassword(newPassword);
-  const result = await Auth.updatePassword({ password: hashedPassword, id: user.userId });
+  const result = await Auth.updatePassword({ id: user.userId, password: hashedPassword });
   if (!result) {
     throw new AppError('Password update failed. Please try again later.', HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
   }

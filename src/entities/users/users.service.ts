@@ -42,7 +42,7 @@ export const updateUserService = async ({ id, data }: UpdateUserServiceProps) =>
 
   const { query, values } = patchQueryBuilder(tableName, data, allowedKeys);
 
-  await User.update({ query, values, id });
+  await User.update({ id, query, values });
 
   return await User.getOne({ id });
 };

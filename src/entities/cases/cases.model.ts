@@ -27,7 +27,7 @@ export class Case {
   static async create({ createCaseQuery, values }: CreateProps) {
     const [result] = await pool.query<ResultSetHeader>(createCaseQuery, values);
 
-    checkDatabaseOperation({ result: result.affectedRows, operation: 'create' });
+    checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
 
     return result.insertId;
   }
@@ -35,7 +35,7 @@ export class Case {
   static async getOne({ id }: GetOneProps) {
     const [result] = await pool.query<RowDataPacket[]>(getOneCaseQuery, [id]);
 
-    checkDatabaseOperation({ operation: 'get', id, result: result[0] });
+    checkDatabaseOperation({ id, operation: 'get', result: result[0] });
 
     return result[0];
   }
@@ -49,7 +49,7 @@ export class Case {
   static async update({ updateCaseQuery, values, id }: UpdateProps) {
     const [result] = await pool.query<ResultSetHeader>(updateCaseQuery, [...values, id]);
 
-    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'update' });
+    checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
 
     return result;
   }
@@ -57,7 +57,7 @@ export class Case {
   static async remove({ id }: DeleteProps) {
     const [result] = await pool.query<ResultSetHeader>(deleteCaseQuery, [id]);
 
-    checkDatabaseOperation({ result: result.affectedRows, id, operation: 'remove' });
+    checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
 
     return result;
   }

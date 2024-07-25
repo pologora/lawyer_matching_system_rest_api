@@ -9,23 +9,30 @@ export default [
   ...tseslint.configs.recommended,
   {
     rules: {
-      'no-console': 'warn',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: 'req|res|next' }],
-      'no-magic-numbers': ['error', { ignore: [1], ignoreArrayIndexes: true }],
+      'max-lines-per-function': ['warn', { max: 50 }],
+      'no-console': 'warn',
       'no-else-return': 'error',
-      'prefer-const': 'error',
+      'no-magic-numbers': ['error', { ignore: [1], ignoreArrayIndexes: true }],
+      'no-new-func': 'error',
       'no-shadow': 'error',
       'no-use-before-define': ['error', { functions: false }],
-      'no-new-func': 'error',
+      'prefer-const': 'error',
       'prefer-destructuring': [
         'error',
         {
-          VariableDeclarator: { array: false, object: true },
           AssignmentExpression: { array: true, object: true },
+          VariableDeclarator: { array: false, object: true },
         },
       ],
       'prefer-template': 'error',
-      'max-lines-per-function': ['warn', { max: 50 }],
+      'sort-keys': ['error', 'asc', { caseSensitive: true, minKeys: 2, natural: false }],
+    },
+  },
+  {
+    files: ['**/*controller.ts'],
+    rules: {
+      'sort-keys': 'off',
     },
   },
 ];
