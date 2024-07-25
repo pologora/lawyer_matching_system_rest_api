@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 import { Response } from 'express';
 import { StatusCodes } from '../../../utils/statusCodes';
 import { getCookieExpireDate } from './getCookieExpireDate';
