@@ -11,28 +11,6 @@ import {
 import { clientCreateSchema, clientUpdateSchema } from './clients.validation';
 import { AppError } from '../../utils/errors/AppError';
 
-export const getClientController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
-
-  const { id } = validateId(Number(candidateId));
-
-  const client = await getClientService(id);
-
-  return res
-    .status(HTTP_STATUS_CODES.SUCCESS_200)
-    .json({ status: 'success', message: 'Client profile retrieved successfully', data: client });
-};
-
-export const removeClientController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
-
-  const { id } = validateId(Number(candidateId));
-
-  await removeClientService(id);
-
-  return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
-};
-
 export const createClientController = async (req: Request, res: Response, _next: NextFunction) => {
   const { error, value } = clientCreateSchema.validate(req.body);
 
@@ -46,6 +24,28 @@ export const createClientController = async (req: Request, res: Response, _next:
     status: 'success',
     message: 'Successfully created client profile',
     data: client,
+  });
+};
+
+export const getClientController = async (req: Request, res: Response, _next: NextFunction) => {
+  const { id: candidateId } = req.params;
+
+  const { id } = validateId(Number(candidateId));
+
+  const client = await getClientService(id);
+
+  return res
+    .status(HTTP_STATUS_CODES.SUCCESS_200)
+    .json({ status: 'success', message: 'Client profile retrieved successfully', data: client });
+};
+
+export const getManyClientsController = async (_req: Request, res: Response, _next: NextFunction) => {
+  const clients = await getManyClientsService();
+
+  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+    status: 'success',
+    message: 'Client profiles retrieved successfully',
+    data: clients,
   });
 };
 
@@ -67,12 +67,12 @@ export const updateClientController = async (req: Request, res: Response, _next:
     .json({ status: 'success', message: 'Successfully updated client profile', data: updatedClient });
 };
 
-export const getManyClientsController = async (req: Request, res: Response, _next: NextFunction) => {
-  const clients = await getManyClientsService();
+export const removeClientController = async (req: Request, res: Response, _next: NextFunction) => {
+  const { id: candidateId } = req.params;
 
-  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-    status: 'success',
-    message: 'Client profiles retrieved successfully',
-    data: clients,
-  });
+  const { id } = validateId(Number(candidateId));
+
+  await removeClientService(id);
+
+  return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
 };

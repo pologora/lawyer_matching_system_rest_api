@@ -40,7 +40,7 @@ export const getCaseController = async (req: Request, res: Response, _next: Next
     .json({ status: 'success', message: 'Case retrieved successfully', data: oneCase });
 };
 
-export const getManyCasesController = async (req: Request, res: Response, _next: NextFunction) => {
+export const getManyCasesController = async (_req: Request, res: Response, _next: NextFunction) => {
   const cases = await getManyCasesService();
 
   return res
