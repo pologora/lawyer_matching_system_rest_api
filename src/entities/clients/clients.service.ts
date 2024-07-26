@@ -4,6 +4,17 @@ import { User } from '../users/users.model';
 import { ClientProfile } from './clients.model';
 import { CreateClientDto, UpdateClientDto } from './dto';
 
+export const createClientService = async (data: CreateClientDto) => {
+  const { userId } = data;
+  const { query, values } = buildCreateTableRowQuery(data, 'ClientProfile');
+
+  const clientId = await ClientProfile.create(query, values);
+
+  await User.setRole({ id: userId, role: 'client' });
+
+  return await ClientProfile.getOne(clientId);
+};
+
 export const getClientService = async (id: number) => {
   return await ClientProfile.getOne(id);
 };
@@ -18,17 +29,6 @@ export const updateClientService = async (id: number, data: UpdateClientDto) => 
   await ClientProfile.update(query, values, id);
 
   return await ClientProfile.getOne(id);
-};
-
-export const createClientService = async (data: CreateClientDto) => {
-  const { userId } = data;
-  const { query, values } = buildCreateTableRowQuery(data, 'ClientProfile');
-
-  const clientId = await ClientProfile.create(query, values);
-
-  await User.setRole({ id: userId, role: 'client' });
-
-  return await ClientProfile.getOne(clientId);
 };
 
 export const removeClientService = async (id: number) => {
