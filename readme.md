@@ -211,6 +211,17 @@ The application will be accessible at `http://localhost:5000/api/v1`
   - `index (senderId)`,
   - `index (receiverId)`
 
+- **Region**:
+
+  - `regionId` int primary key
+  - `name` varchar
+
+- **City**:
+
+  - `cityId` int primary key,
+  - `regionId` int foreign key,
+  - `name` varchar
+
 ## Error Handling
 
 1. Custom Error Class: `AppError` class is used to create custom error objects with additional properties for better error management.
