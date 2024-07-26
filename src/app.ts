@@ -21,6 +21,7 @@ import { casesRouter } from './entities/cases/cases.route';
 import { messagesRoute } from './entities/messages/messages.route';
 import { reviewsRouter } from './entities/reviews/reviews.route';
 import { regionsRouter } from './entities/regions/regions.routes';
+import { citiesRouter } from './entities/cities/cities.routes';
 
 process.on('uncaughtException', (err) => {
   logger.error(err);
@@ -56,6 +57,7 @@ app.use('/api/v1', casesRouter);
 app.use('/api/v1', messagesRoute);
 app.use('/api/v1', reviewsRouter);
 app.use('/api/v1', regionsRouter);
+app.use('/api/v1', citiesRouter);
 
 // route not found on server
 app.use('*', (req: Request, _res: Response, next: NextFunction) => {

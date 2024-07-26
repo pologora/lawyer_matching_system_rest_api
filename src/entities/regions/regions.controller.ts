@@ -8,5 +8,5 @@ export const getAllRegionsController = async (_req: Request, res: Response, _nex
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
-    .json({ status: 'success', message: 'Cases retrieved successfully', data: regions });
+    .json({ status: 'success', message: 'Regions retrieved successfully', data: regions });
 };
