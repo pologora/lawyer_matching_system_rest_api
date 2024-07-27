@@ -48,6 +48,18 @@
 
 Platform to match clients with lawyers. When a client has a legal issue, the system suggests available lawyers based on the nature of the case and the client's budget. Ratings and reviews help the client choose a lawyer.
 
+- **Landing Page**: Users can search for lawyers by region, city, and specialization without needing to register.
+- **Search Results**: Users view lawyer profiles and can apply additional filters and sorting options.
+- **Account Creation**: To interact with a lawyer, users must create an account to initiate a Case.
+- **Case Types**: Cases can be either private (directly to a specific lawyer) or public (visible to all lawyers).
+- **Messaging**: Communication between the lawyer and client occurs exclusively through the case.
+- **Lawyer Proposals**: Lawyers can leave messages in public cases to make proposals to clients.
+- **Client Messaging**: Clients can initiate private messaging with lawyers within a case.
+- **Case Privacy**: If a client selects a lawyer, the case is made private for that lawyer.
+- **Reviews and Ratings**: Once a case is completed, clients can leave a review and rating. Reviews are linked to the case for credibility.
+
+
+
 ## Project Management
 
 GitHub projects used to track tasks and progress. Please visit [Project Board](https://github.com/users/pologora/projects/5/views/1)
