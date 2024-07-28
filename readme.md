@@ -46,7 +46,7 @@
 
 ## Description
 
-Platform to match clients with lawyers. When a client has a legal issue, the system suggests available lawyers based on the nature of the case and the client's budget. Ratings and reviews help the client choose a lawyer.
+Platform to match clients with lawyers. When a client has a legal issue, the system suggests available lawyers based on the nature of the case and the lawyer's hourly rate. Ratings and reviews help the client choose a lawyer.
 
 - **Landing Page**: Users can search for lawyers by region, city, and specialization without needing to register.
 - **Search Results**: Users view lawyer profiles and can apply additional filters and sorting options.
@@ -69,8 +69,7 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
 - User Registration and Authentication (clients and lawyers)
 - Profile Management (for both clients and lawyers)
 - Case Posting by Clients
-- Lawyer Search and Matching based on Case Type and Budget
-- Lawyer Availability Management
+- Lawyer Search based on Case Type, City, Region, Hourly Rate
 - Ratings and Reviews System
 - Messaging System for Client-Lawyer Communication
 - Admin Dashboard for Monitoring and Management
@@ -136,7 +135,7 @@ The application will be accessible at `http://localhost:5000/api/v1`
 
 ## Database Schema Design
 
-[Database Schema](https://drawsql.app/teams/noteam-240/diagrams/lawyer-matching-system)
+[Database Schema](https://online.visual-paradigm.com/community/share/lawyer-matching-system)
 
 ![Screenshot](https://github.com/pologora/lawyer_matching_system_rest_api/blob/screenshots/public/screenshots/database_schema.png)
 
