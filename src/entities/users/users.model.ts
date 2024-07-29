@@ -6,7 +6,6 @@ import {
   deleteUserQuery,
   getAllUsersQuery,
   getUserByIdQuery,
-  getUserForProtectQuery,
   updateUserRoleQuery,
 } from './sqlQueries';
 import { UserRole } from '../../types/userRoles';
@@ -34,10 +33,6 @@ type RemoveProps = {
 type SetRoleProps = {
   id: number;
   role: UserRole;
-};
-
-type GetUserForProtectProps = {
-  id: number;
 };
 
 class User {
@@ -85,14 +80,6 @@ class User {
     checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
 
     return result;
-  }
-
-  static async getUserForProtect({ id }: GetUserForProtectProps) {
-    const [result] = await pool.query<RowDataPacket[]>(getUserForProtectQuery, [id]);
-
-    checkDatabaseOperation({ id, operation: 'get', result: result[0] });
-
-    return result[0] as IUser;
   }
 }
 

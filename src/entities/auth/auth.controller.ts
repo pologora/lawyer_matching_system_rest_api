@@ -4,6 +4,7 @@ import {
   changeMyPasswordService,
   deleteMeService,
   forgotPasswordService,
+  getMeService,
   loginService,
   registerService,
   resetPasswordService,
@@ -57,6 +58,20 @@ export const loginController = async (req: Request, res: Response, _next: NextFu
   });
 };
 
+export const getMeController = async (req: Request, res: Response, _next: NextFunction) => {
+  const { user } = req;
+
+  const { role, userId } = user as IUser;
+
+  const profile = await getMeService({ role, userId });
+
+  res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+    status: 'success',
+    message: 'Retrieved user and profile successfully',
+    data: { user, profile },
+  });
+};
+
 export const loginWithGoogleCallbackController = async (req: Request, res: Response, _next: NextFunction) => {
   const { user } = req;
   const { token } = user as IUser;
@@ -67,7 +82,7 @@ export const loginWithGoogleCallbackController = async (req: Request, res: Respo
 };
 
 export const logoutController = async (req: Request, res: Response, _next: NextFunction) => {
-  res.clearCookie('jwt', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
+  res.clearCookie('jwt', cookieOptions);
 
   return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
     status: 'success',

@@ -4,33 +4,50 @@ import { User } from '../users/users.model';
 import { ClientProfile } from './clients.model';
 import { CreateClientDto, UpdateClientDto } from './dto';
 
-export const createClientService = async (data: CreateClientDto) => {
-  const { userId } = data;
-  const { query, values } = buildCreateTableRowQuery(data, 'ClientProfile');
+type CreateClientServiceProps = {
+  data: CreateClientDto;
+};
 
-  const clientId = await ClientProfile.create(query, values);
+type GetClientServiceProps = {
+  id: number;
+};
+
+type UpdateClientServiceProps = {
+  id: number;
+  data: UpdateClientDto;
+};
+
+type RemoveClienServiceProps = {
+  id: number;
+};
+
+export const createClientService = async ({ data }: CreateClientServiceProps) => {
+  const { userId } = data;
+  const { query: createUserQuery, values } = buildCreateTableRowQuery(data, 'ClientProfile');
+
+  const clientId = await ClientProfile.create({ createUserQuery, values });
 
   await User.setRole({ id: userId, role: 'client' });
 
-  return await ClientProfile.getOne(clientId);
+  return await ClientProfile.getOne({ id: clientId });
 };
 
-export const getClientService = async (id: number) => {
-  return await ClientProfile.getOne(id);
+export const getClientService = async ({ id }: GetClientServiceProps) => {
+  return await ClientProfile.getOne({ id });
 };
 
 export const getManyClientsService = async () => {
   return await ClientProfile.getMany();
 };
 
-export const updateClientService = async (id: number, data: UpdateClientDto) => {
+export const updateClientService = async ({ id, data }: UpdateClientServiceProps) => {
   const { query, values } = buildUpdateTableRowQuery(data, 'ClientProfile');
 
-  await ClientProfile.update(query, values, id);
+  await ClientProfile.update({ id, query, values });
 
-  return await ClientProfile.getOne(id);
+  return await ClientProfile.getOne({ id });
 };
 
-export const removeClientService = async (id: number) => {
-  return await ClientProfile.remove(id);
+export const removeClientService = async ({ id }: RemoveClienServiceProps) => {
+  return await ClientProfile.remove({ id });
 };

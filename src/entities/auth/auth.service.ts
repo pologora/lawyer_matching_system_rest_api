@@ -5,6 +5,7 @@ import {
   ChangeMyPasswordDto,
   DeleteMeDto,
   ForgotPasswordDto,
+  GetMeDto,
   LoginUserDto,
   RegisterUserDto,
   ResetPasswordDto,
@@ -18,6 +19,8 @@ import { sendEmail } from '../../utils/email/email';
 import { Request } from 'express';
 import { createPasswordResetHashedToken } from '../../utils/passwordManagement/createHashedPasswordResetToken';
 import { checkIfResetTokenExpired } from '../../helpers/checkIfResetTokenExpired';
+import { ClientProfile } from '../clients/clients.model';
+import { LawyersProfile } from '../lawyers/lawyers.model';
 
 export const registerService = async ({ email, password }: RegisterUserDto) => {
   const hashedPassword = await hashPassword(password);
@@ -76,6 +79,14 @@ export const forgotPasswordService = async ({ email }: ForgotPasswordDto, req: R
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500,
     );
   }
+};
+
+export const getMeService = async ({ role, userId }: GetMeDto) => {
+  return role === 'client'
+    ? await ClientProfile.getOneByUserId({ userId })
+    : role === 'lawyer'
+    ? await LawyersProfile.getOneByUserId({ userId })
+    : null;
 };
 
 export const resetPasswordService = async ({ resetToken, password }: ResetPasswordDto) => {

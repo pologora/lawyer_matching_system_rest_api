@@ -18,7 +18,7 @@ export const createClientController = async (req: Request, res: Response, _next:
     throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
   }
 
-  const client = await createClientService(value);
+  const client = await createClientService({ data: value });
 
   return res.status(HTTP_STATUS_CODES.CREATED_201).json({
     status: 'success',
@@ -32,7 +32,7 @@ export const getClientController = async (req: Request, res: Response, _next: Ne
 
   const { id } = validateId(Number(candidateId));
 
-  const client = await getClientService(id);
+  const client = await getClientService({ id });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -60,7 +60,7 @@ export const updateClientController = async (req: Request, res: Response, _next:
     throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
   }
 
-  const updatedClient = await updateClientService(id, value);
+  const updatedClient = await updateClientService({ id, data: value });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -72,7 +72,7 @@ export const removeClientController = async (req: Request, res: Response, _next:
 
   const { id } = validateId(Number(candidateId));
 
-  await removeClientService(id);
+  await removeClientService({ id });
 
   return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
 };
