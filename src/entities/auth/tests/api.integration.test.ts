@@ -63,10 +63,10 @@ afterAll(async () => {
   await pool.end();
 });
 
-describe('Test POST /register', () => {
+describe('Test POST /auth/register', () => {
   test('Should respond with 201 created', async () => {
     const response = await supertest(app)
-      .post('/api/v1/register')
+      .post('/api/v1/auth/register')
       .send(registerData)
       .expect(HTTP_STATUS_CODES.CREATED_201);
 
@@ -94,7 +94,7 @@ describe('Test POST /register', () => {
     };
 
     const response = await supertest(app)
-      .post('/api/v1/register')
+      .post('/api/v1/auth/register')
       .send(wrongConfirmPasswordData)
       .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
@@ -102,7 +102,7 @@ describe('Test POST /register', () => {
   });
   test('Should catch duplicate email adress', async () => {
     const response = await supertest(app)
-      .post('/api/v1/register')
+      .post('/api/v1/auth/register')
       .send(registerData)
       .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
@@ -110,7 +110,7 @@ describe('Test POST /register', () => {
   });
 });
 
-describe('Test PATCH /change-my-password', () => {
+describe('Test PATCH /auth/change-my-password', () => {
   test('Should catch wrong current password', async () => {
     const wrongCurrentPassword = {
       password: 'wrongCurrentPassword',
@@ -118,7 +118,7 @@ describe('Test PATCH /change-my-password', () => {
       confirmNewPassword: 'changeMyPass',
     };
     const response = await supertest(app)
-      .patch('/api/v1/change-my-password')
+      .patch('/api/v1/auth/change-my-password')
       .set('Cookie', `jwt=${registerJWT}`)
       .send(wrongCurrentPassword)
       .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
@@ -134,7 +134,7 @@ describe('Test PATCH /change-my-password', () => {
       confirmNewPassword: 'changeMyWrong',
     };
     const response = await supertest(app)
-      .patch('/api/v1/change-my-password')
+      .patch('/api/v1/auth/change-my-password')
       .set('Cookie', `jwt=${registerJWT}`)
       .send(wrongCurrentPassword)
       .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -143,7 +143,7 @@ describe('Test PATCH /change-my-password', () => {
   });
   test('Should responde with 200 success', async () => {
     const response = await supertest(app)
-      .patch('/api/v1/change-my-password')
+      .patch('/api/v1/auth/change-my-password')
       .set('Cookie', `jwt=${registerJWT}`)
       .send(changeMyPasswordData)
       .expect(HTTP_STATUS_CODES.SUCCESS_200);
@@ -153,10 +153,10 @@ describe('Test PATCH /change-my-password', () => {
   });
 });
 
-describe('Test POST /fogot-password', () => {
+describe('Test POST /auth/fogot-password', () => {
   test('Should send a reset password link', async () => {
     const response = await supertest(app)
-      .post('/api/v1/forgot-password')
+      .post('/api/v1/auth/forgot-password')
       .send({ email: registerData.email })
       .expect(HTTP_STATUS_CODES.SUCCESS_200);
 
@@ -169,7 +169,7 @@ describe('Test POST /fogot-password', () => {
 
   test('Should catch not existing email adress', async () => {
     const response = await supertest(app)
-      .post('/api/v1/forgot-password')
+      .post('/api/v1/auth/forgot-password')
       .send({ email: 'wrongEmail@mail.com' })
       .expect(HTTP_STATUS_CODES.NOT_FOUND_404);
 
@@ -179,7 +179,7 @@ describe('Test POST /fogot-password', () => {
 
   test('Should catch invalid email adress', async () => {
     const response = await supertest(app)
-      .post('/api/v1/forgot-password')
+      .post('/api/v1/auth/forgot-password')
       .send({ email: 'wrongEmail@mail' })
       .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
@@ -187,10 +187,10 @@ describe('Test POST /fogot-password', () => {
   });
 });
 
-describe('Test PATCH /reset-password', () => {
+describe('Test PATCH /auth/reset-password', () => {
   test('Should reset the password with the valid token', async () => {
     const response = await supertest(app)
-      .patch(`/api/v1/reset-password/${resetPasswordToken}`)
+      .patch(`/api/v1/auth/reset-password/${resetPasswordToken}`)
       .send(newPasswordAfterReset);
 
     expect(response.body).toHaveProperty('status', 'success');
@@ -200,7 +200,7 @@ describe('Test PATCH /reset-password', () => {
   test('Should catch invalid token', async () => {
     const wrongResetPasswordToken = 'wrong-token';
     const response = await supertest(app)
-      .patch(`/api/v1/reset-password/${wrongResetPasswordToken}`)
+      .patch(`/api/v1/auth/reset-password/${wrongResetPasswordToken}`)
       .send(newPasswordAfterReset);
 
     expect(response.body).toHaveProperty('status', 'error');
@@ -208,9 +208,12 @@ describe('Test PATCH /reset-password', () => {
   });
 });
 
-describe('Test POST /login', () => {
+describe('Test POST /auth/login', () => {
   test('Should respond with 200 success', async () => {
-    const response = await supertest(app).post('/api/v1/login').send(logInData).expect(HTTP_STATUS_CODES.SUCCESS_200);
+    const response = await supertest(app)
+      .post('/api/v1/auth/login')
+      .send(logInData)
+      .expect(HTTP_STATUS_CODES.SUCCESS_200);
 
     expect(response.body).toHaveProperty('status', 'success');
     expect(response.body.data).toHaveProperty('userId', userId);
@@ -237,7 +240,7 @@ describe('Test POST /login', () => {
     };
 
     const response = await supertest(app)
-      .post('/api/v1/login')
+      .post('/api/v1/auth/login')
       .send(wrongPasswordData)
       .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
 
@@ -250,7 +253,7 @@ describe('Test POST /login', () => {
     };
 
     const response = await supertest(app)
-      .post('/api/v1/login')
+      .post('/api/v1/auth/login')
       .send(wrongEmailData)
       .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
 
@@ -262,14 +265,14 @@ describe('Test POST /login', () => {
       email: 2,
       password: 'asdkfa',
     };
-    await supertest(app).post('/api/v1/login').send(wrongInputData).expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
+    await supertest(app).post('/api/v1/auth/login').send(wrongInputData).expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
   });
 });
 
-describe('Test PATCH /delete-me', () => {
+describe('Test PATCH /auth/delete-me', () => {
   test('Should response with 204 no content', async () => {
     await supertest(app)
-      .patch('/api/v1/delete-me')
+      .patch('/api/v1/auth/delete-me')
       .set('Cookie', `jwt=${loginJWT}`)
       .send({ password: logInData.password })
       .expect(HTTP_STATUS_CODES.NO_CONTENT_204);

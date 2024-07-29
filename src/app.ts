@@ -50,7 +50,7 @@ app.use(cookieParser());
 
 // api routes
 app.use('/api/v1', usersRouter);
-app.use('/api/v1', authRouter);
+app.use('/api/v1/auth', authRouter);
 app.use('/api/v1', lawyersRouter);
 app.use('/api/v1', clientsRouter);
 app.use('/api/v1', casesRouter);
