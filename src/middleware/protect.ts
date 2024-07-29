@@ -15,9 +15,12 @@ export const protect = asyncErrorCatch(async (req: Request, res: Response, next:
   const { id, iat } = await verifyJWT(token);
 
   // 2. user still exists
-  const user = await User.getOne({ id });
+  const user = await User.getUserForProtect({ id });
   if (!user) {
-    throw new AppError('The user belonging to this token no longer exists', HTTP_STATUS_CODES.UNAUTHORIZED_401);
+    throw new AppError(
+      'The user belonging to this token no longer exists. Please log in or create an account',
+      HTTP_STATUS_CODES.UNAUTHORIZED_401,
+    );
   }
 
   // 3. user didn't change password after token was issued
