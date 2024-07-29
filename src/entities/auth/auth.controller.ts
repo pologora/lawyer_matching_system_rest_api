@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+
 import {
   changeMyPasswordService,
   deleteMeService,
@@ -18,6 +19,8 @@ import {
   userRegistrationSchema,
 } from './auth.validation';
 import { setTokenCookieAndSendResponse } from './helpers/setTokenCookieAndSendResponse';
+import { cookieOptions } from '../../config/cookieOptions/cookieOptions';
+import { IUser } from '../../types/user';
 
 export const registerController = async (req: Request, res: Response, _next: NextFunction) => {
   const { email, password, confirmPassword } = req.body;
@@ -51,6 +54,24 @@ export const loginController = async (req: Request, res: Response, _next: NextFu
     message: 'User login successfully',
     statusCode: HTTP_STATUS_CODES.SUCCESS_200,
     user,
+  });
+};
+
+export const loginWithGoogleCallbackController = async (req: Request, res: Response, _next: NextFunction) => {
+  const { user } = req;
+  const { token } = user as IUser;
+
+  res.cookie('jwt', token, cookieOptions);
+
+  return res.redirect(process.env.FRONTEND_URL!);
+};
+
+export const logoutController = async (req: Request, res: Response, _next: NextFunction) => {
+  res.clearCookie('jwt', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
+
+  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+    status: 'success',
+    message: 'User log out successfully',
   });
 };
 

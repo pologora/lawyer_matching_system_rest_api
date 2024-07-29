@@ -22,7 +22,7 @@ import { checkIfResetTokenExpired } from '../../helpers/checkIfResetTokenExpired
 export const registerService = async ({ email, password }: RegisterUserDto) => {
   const hashedPassword = await hashPassword(password);
 
-  const { insertId } = await Auth.register({ email, password: hashedPassword });
+  const { insertId } = await Auth.registerByEmail({ email, password: hashedPassword });
 
   const token = await createJWT({ id: insertId });
 

@@ -7,12 +7,13 @@ import {
   removeLawyerController,
   updateLawyerController,
 } from './lawyers.controller';
+import { protect } from '../../middleware/protect';
 
 export const lawyersRouter = express.Router();
 
 lawyersRouter
   .route('/lawyers')
-  .get(asyncErrorCatch(getManyLawyersController))
+  .get(protect, asyncErrorCatch(getManyLawyersController))
   .post(asyncErrorCatch(createLawyerController));
 lawyersRouter
   .route('/lawyers/:id')

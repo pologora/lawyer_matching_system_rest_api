@@ -8,4 +8,6 @@ export interface IUser {
   password?: string;
   resetPasswordTokenExpiration: Date | null;
   active: boolean;
+  token?: string;
+  googleId?: string;
 }
