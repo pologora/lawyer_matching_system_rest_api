@@ -1,6 +1,6 @@
-import { patchQueryBuilder } from '../../helpers/patchQueryBuilder';
+import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
 import { hashPassword } from '../../utils/passwordManagement/hashPassword';
-import { CreateUserDto, UpdateUserDto, UpdateUserKey } from './dto';
+import { CreateUserDto, UpdateUserDto } from './dto';
 import { User } from './users.model';
 
 type CreateUserServiceProps = {
@@ -37,10 +37,9 @@ export const getManyUsersService = async () => {
 };
 
 export const updateUserService = async ({ id, data }: UpdateUserServiceProps) => {
-  const allowedKeys: Set<UpdateUserKey> = new Set(['email']);
   const tableName = 'User';
 
-  const { query, values } = patchQueryBuilder(tableName, data, allowedKeys);
+  const { query, values } = buildUpdateTableRowQuery(data, tableName);
 
   await User.update({ id, query, values });
 

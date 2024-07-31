@@ -13,12 +13,15 @@ CREATE TABLE
     IF NOT EXISTS `User` (
         userId INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(100) NOT NULL UNIQUE,
-        password VARCHAR(255) NOT NULL,
+        password VARCHAR(255),
+        googleId VARCHAR(255),
         role ENUM ('user', 'client', 'lawyer', 'admin') DEFAULT 'user',
         resetPasswordToken VARCHAR(255),
         resetPasswordTokenExpiration TIMESTAMP NULL DEFAULT NULL,
         passwordChangedAt TIMESTAMP NULL DEFAULT NULL,
-        active BOOLEAN DEFAULT TRUE,
+        emailVerificationToken VARCHAR(255),
+        emailVerificationTokenExpiration TIMESTAMP,
+        active BOOLEAN DEFAULT FALSE,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );

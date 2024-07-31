@@ -22,6 +22,7 @@ import { messagesRoute } from './entities/messages/messages.route';
 import { reviewsRouter } from './entities/reviews/reviews.route';
 import { regionsRouter } from './entities/regions/regions.routes';
 import { citiesRouter } from './entities/cities/cities.routes';
+import passport from './middleware/passport';
 
 process.on('uncaughtException', (err) => {
   logger.error(err);
@@ -48,9 +49,12 @@ app.use(express.json({ limit: '10kb' }));
 //cookie parser
 app.use(cookieParser());
 
+// passport auth
+app.use(passport.initialize());
+
 // api routes
 app.use('/api/v1', usersRouter);
-app.use('/api/v1', authRouter);
+app.use('/api/v1/auth', authRouter);
 app.use('/api/v1', lawyersRouter);
 app.use('/api/v1', clientsRouter);
 app.use('/api/v1', casesRouter);
@@ -58,6 +62,10 @@ app.use('/api/v1', messagesRoute);
 app.use('/api/v1', reviewsRouter);
 app.use('/api/v1', regionsRouter);
 app.use('/api/v1', citiesRouter);
+
+app.get('/fail', (req, res) => {
+  res.send('Failed');
+});
 
 // route not found on server
 app.use('*', (req: Request, _res: Response, next: NextFunction) => {

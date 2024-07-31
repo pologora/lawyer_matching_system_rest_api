@@ -8,6 +8,7 @@ import { User } from '../entities/users/users.model';
 export const protect = asyncErrorCatch(async (req: Request, res: Response, next: NextFunction) => {
   // 1. get token from request and validate
   const token = req.cookies.jwt;
+
   if (!token) {
     throw new AppError('You are not not logged in. Please log in to get access', HTTP_STATUS_CODES.UNAUTHORIZED_401);
   }
@@ -17,7 +18,10 @@ export const protect = asyncErrorCatch(async (req: Request, res: Response, next:
   // 2. user still exists
   const user = await User.getOne({ id });
   if (!user) {
-    throw new AppError('The user belonging to this token no longer exists', HTTP_STATUS_CODES.UNAUTHORIZED_401);
+    throw new AppError(
+      'The user belonging to this token no longer exists. Please log in or create an account',
+      HTTP_STATUS_CODES.UNAUTHORIZED_401,
+    );
   }
 
   // 3. user didn't change password after token was issued

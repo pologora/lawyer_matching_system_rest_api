@@ -342,7 +342,7 @@ if (decoded) {
 
 <details>
 
-- URL: `api/v1/login`
+- URL: `api/v1/auth/login`
 - Method: `POST`
 - Description: Login a user and return a `JWT` token
 
@@ -407,7 +407,7 @@ Validation Error Examples:
 
 <details>
 
-- URL: `api/v1/register`
+- URL: `api/v1/auth/register`
 - Method: `POST`
 - Description: Register a user and return a `JWT` token
 
@@ -461,7 +461,7 @@ Validation Error Examples:
 
 <details>
 
-- URL: `api/v1/forgot-password`
+- URL: `api/v1/auth/forgot-password`
 - Method: `POST`
 - Description: Validate user `email` and sed a reset password link
 
@@ -517,7 +517,7 @@ Validation Error Examples:
 
 <details>
 
-- URL: `api/v1/reset-password/:token`
+- URL: `api/v1/auth/reset-password/:token`
 - Method: `PATCH`
 - Description: Validate password reset token, set new password and return a `JWT` token
 
@@ -594,7 +594,7 @@ Validation Error Examples:
 
 <details>
 
-- URL: `api/v1/change-my-password`
+- URL: `api/v1/auth/change-my-password`
 - Method: `PATCH`
 - Description: Validate old password, validate `JWT`, set new password and return a new `JWT` token
 
@@ -675,7 +675,7 @@ Validation Error Examples:
 
 <details>
 
-- URL: `api/v1/delete-me`
+- URL: `api/v1/auth/delete-me`
 - Method: `PATCH`
 - Description: Validate password, validate `JWT`, delete account
 

@@ -54,12 +54,11 @@ export const getManyUsersController = async (_req: Request, res: Response, _next
 };
 
 export const updateUserController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { email } = req.body;
   const { id: candidateId } = req.params;
 
   const { id } = validateId(Number(candidateId));
 
-  const { error, value } = userUpdateSchema.validate({ email });
+  const { error, value } = userUpdateSchema.validate(req.body);
 
   if (error) {
     throw new AppError(error.message);

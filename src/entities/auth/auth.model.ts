@@ -1,38 +1,85 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import pool from '../../config/db.config';
 import { IUser } from '../../types/user';
-import { SetResetPasswordTokenDto } from './dto';
 import {
   clearResetPasswordQuery,
   getUserByEmailQuery,
   getUserByResetTokenQuery,
   loginUserQuery,
-  registerNewUserQuery,
+  registerByEmailQuery,
+  registerByGoogleQuery,
   setResetPasswordTokenQuery,
   updateUserPasswordQuery,
 } from './sqlQueries';
 import { deleteMeQuery } from './sqlQueries/deleteMeQuery';
 
+type LoginProps = {
+  email: string;
+};
+
+type RegisterByEmailProps = {
+  email: string;
+  password: string;
+};
+
+type RegisterByGoogle = {
+  email: string;
+  googleId: string;
+};
+
+type GetUserByEmailProps = {
+  email: string;
+};
+
+type SetResetPasswordTokenProps = {
+  hashedToken: string;
+  expirationInMinutes: number;
+  userId: number;
+};
+
+type ClearResetPasswordProps = {
+  id: number;
+};
+
+type UpdatePasswordProps = {
+  password: string;
+  id: number;
+};
+
+type GetUserByResetTokenProps = {
+  hashedToken: string;
+};
+
+type DeleteMeProps = {
+  id: number;
+};
+
 export class Auth {
-  static async login({ email }: { email: string }) {
+  static async login({ email }: LoginProps) {
     const user = await pool.query<RowDataPacket[]>(loginUserQuery, [email]);
 
     return user[0][0];
   }
 
-  static async register({ email, password }: { email: string; password: string }) {
-    const result = await pool.query<ResultSetHeader>(registerNewUserQuery, [email, password]);
+  static async registerByEmail({ email, password }: RegisterByEmailProps) {
+    const result = await pool.query<ResultSetHeader>(registerByEmailQuery, [email, password]);
 
     return result[0];
   }
 
-  static async getUserByEmail({ email }: { email: string }) {
+  static async registerByGoogle({ email, googleId }: RegisterByGoogle) {
+    const result = await pool.query<ResultSetHeader>(registerByGoogleQuery, [email, googleId]);
+
+    return result[0];
+  }
+
+  static async getUserByEmail({ email }: GetUserByEmailProps) {
     const user = await pool.query<RowDataPacket[]>(getUserByEmailQuery, [email]);
 
     return user[0][0] as IUser;
   }
 
-  static async setResetPasswordToken({ hashedToken, expirationInMinutes, userId }: SetResetPasswordTokenDto) {
+  static async setResetPasswordToken({ hashedToken, expirationInMinutes, userId }: SetResetPasswordTokenProps) {
     const result = await pool.query<ResultSetHeader>(setResetPasswordTokenQuery, [
       hashedToken,
       expirationInMinutes,
@@ -42,25 +89,25 @@ export class Auth {
     return result[0].affectedRows;
   }
 
-  static async clearResetPassword({ id }: { id: number }) {
+  static async clearResetPassword({ id }: ClearResetPasswordProps) {
     const result = await pool.query<ResultSetHeader>(clearResetPasswordQuery, [id]);
 
     return result[0].affectedRows;
   }
 
-  static async updatePassword({ password, id }: { password: string; id: number }) {
+  static async updatePassword({ password, id }: UpdatePasswordProps) {
     const result = await pool.query<ResultSetHeader>(updateUserPasswordQuery, [password, id]);
 
     return result[0].affectedRows;
   }
 
-  static async getUserByResetToken({ hashedToken }: { hashedToken: string }) {
+  static async getUserByResetToken({ hashedToken }: GetUserByResetTokenProps) {
     const result = await pool.query<RowDataPacket[]>(getUserByResetTokenQuery, [hashedToken]);
 
     return result[0][0] as IUser;
   }
 
-  static async deleteMe({ id }: { id: number }) {
+  static async deleteMe({ id }: DeleteMeProps) {
     const result = await pool.query<ResultSetHeader>(deleteMeQuery, [id]);
 
     return result[0].affectedRows;

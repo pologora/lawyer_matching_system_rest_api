@@ -1,4 +1,4 @@
-import { millisecondsInDay } from '../../../utils/jwt/helpers/createExpiresIn';
+import { millisecondsInDay } from '../../utils/jwt/helpers/createExpiresIn';
 
 type GetCookieExpireDateInput = {
   days: number;

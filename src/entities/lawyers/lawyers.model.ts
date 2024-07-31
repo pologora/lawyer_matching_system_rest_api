@@ -5,6 +5,7 @@ import {
   deleteLawyerQuery,
   deleteLawyerSpecializationsQuery,
   getLawyerByIdQuery,
+  getLawyerByUserIdQuery,
 } from './sqlQueries';
 import { AppError } from '../../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
@@ -18,6 +19,10 @@ type CreateProps = {
 
 type GetOneProps = {
   id: number;
+};
+
+type GetOneByUserIdProps = {
+  userId: number;
 };
 
 type GetManyProps = {
@@ -79,6 +84,14 @@ export class LawyersProfile {
     const [result] = await pool.query<RowDataPacket[]>(getLawyerByIdQuery, [id]);
 
     checkDatabaseOperation({ id, operation: 'get', result: result[0] });
+
+    return result[0];
+  }
+
+  static async getOneByUserId({ userId }: GetOneByUserIdProps) {
+    const [result] = await pool.query<RowDataPacket[]>(getLawyerByUserIdQuery, [userId]);
+
+    checkDatabaseOperation({ id: userId, operation: 'get', result: result[0] });
 
     return result[0];
   }

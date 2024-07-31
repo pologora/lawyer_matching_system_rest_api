@@ -1,6 +1,8 @@
+import { UserRole } from '../../../types/userRoles';
+
 export interface UpdateUserDto {
-  email?: string;
-  password?: string;
+  role?: UserRole;
+  active?: boolean;
 }
 
 export type UpdateUserKey = keyof UpdateUserDto;
