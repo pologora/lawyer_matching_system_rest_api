@@ -5,6 +5,7 @@ import {
   changeMyPasswordController,
   deleteMeController,
   forgotPasswordController,
+  getMeController,
   loginController,
   loginWithGoogleCallbackController,
   logoutController,
@@ -36,6 +37,7 @@ authRouter.get(
 );
 
 authRouter.get('/logout', asyncErrorCatch(logoutController));
+authRouter.get('/me', protect, asyncErrorCatch(getMeController));
 authRouter.post('/forgot-password', asyncErrorCatch(forgotPasswordController));
 authRouter.patch('/reset-password/:token', asyncErrorCatch(resetPasswordController));
 authRouter.patch('/change-my-password', protect, asyncErrorCatch(changeMyPasswordController));
