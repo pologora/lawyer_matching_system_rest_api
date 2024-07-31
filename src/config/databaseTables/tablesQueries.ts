@@ -8,7 +8,9 @@ CREATE TABLE IF NOT EXISTS User (
     resetPasswordToken VARCHAR(255),
     resetPasswordTokenExpiration TIMESTAMP NULL DEFAULT NULL,
     passwordChangedAt TIMESTAMP NULL DEFAULT NULL,
-    active BOOLEAN DEFAULT TRUE,
+    emailVerificationToken VARCHAR(255),
+    emailVerificationTokenExpiration TIMESTAMP NULL DEFAULT NULL,
+    active BOOLEAN DEFAULT FALSE,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -23,10 +25,12 @@ CREATE TABLE IF NOT EXISTS LawyerProfile(
     experience int,
     firstName VARCHAR(100),
     lastName VARCHAR(100),
-    city VARCHAR(100),
-    region VARCHAR(100),
+    cityId int,
+    regionId int,
     rating DECIMAL(2,1),
     FOREIGN KEY (userId) REFERENCES User(userId) ON DELETE CASCADE,
+    FOREIGN KEY (cityId) REFERENCES City(cityId) ON DELETE SET NULL,
+    FOREIGN KEY (regionId) REFERENCES Region(regionId) ON DELETE SET NULL,
     INDEX (userId)
 );
 `;
@@ -68,11 +72,15 @@ const casesTable = `
     clientId int,
     lawyerId int,
     description text,
+    cityId int,
+    regionId int,
     status ENUM("open", "closed", "pending") DEFAULT "open",
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (clientId) REFERENCES ClientProfile(clientProfileId) ON DELETE SET NULL,
     FOREIGN KEY (lawyerId) REFERENCES LawyerProfile(lawyerProfileId) ON DELETE SET NULL,
+    FOREIGN KEY (cityId) REFERENCES City(cityId) ON DELETE SET NULL,
+    FOREIGN KEY (regionId) REFERENCES Region(regionId) ON DELETE SET NULL,
     INDEX (clientId),
     INDEX (lawyerId)
     );

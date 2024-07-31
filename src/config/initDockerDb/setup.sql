@@ -19,7 +19,9 @@ CREATE TABLE
         resetPasswordToken VARCHAR(255),
         resetPasswordTokenExpiration TIMESTAMP NULL DEFAULT NULL,
         passwordChangedAt TIMESTAMP NULL DEFAULT NULL,
-        active BOOLEAN DEFAULT TRUE,
+        emailVerificationToken VARCHAR(255),
+        emailVerificationTokenExpiration TIMESTAMP,
+        active BOOLEAN DEFAULT FALSE,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );
