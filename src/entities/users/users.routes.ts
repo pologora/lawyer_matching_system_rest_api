@@ -11,6 +11,7 @@ import {
 import { asyncErrorCatch } from '../../utils/errors/asyncErrorCatch';
 import { uploadPhoto } from '../../middleware/uploadPhoto';
 import { protect } from '../../middleware/protect';
+import { resizeUserPhoto } from '../../middleware/resizeUserPhoto';
 
 export const usersRouter = Router();
 
@@ -20,4 +21,6 @@ usersRouter
   .get(asyncErrorCatch(getUserController))
   .delete(asyncErrorCatch(removeUserController))
   .patch(asyncErrorCatch(updateUserController));
-usersRouter.route('/users/:id/upload-photo').patch(protect, uploadPhoto(), asyncErrorCatch(uploadUserPhotoController));
+usersRouter
+  .route('/users/:id/upload-photo')
+  .patch(protect, uploadPhoto(), resizeUserPhoto, asyncErrorCatch(uploadUserPhotoController));
