@@ -4,6 +4,7 @@ import { AppError } from '../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../utils/statusCodes';
 import { Auth } from '../entities/auth/auth.model';
 import { createJWT } from '../utils/jwt/createJWT';
+import { Email } from '../utils/email/Email';
 
 passport.use(
   new GoogleStrategy(
@@ -23,6 +24,7 @@ passport.use(
           let userId = user?.userId;
           if (!user) {
             const result = await Auth.registerByGoogle({ email, googleId });
+            await new Email({ user: { email } }).sendWellcomeSocialRegistration();
             userId = result.insertId;
           }
 

@@ -1,5 +1,6 @@
 import Joi from 'joi';
-import { PASSWORD_MIN_LENGTH } from '../../config/constants';
+
+const PASSWORD_MIN_LENGTH = Number(process.env.PASSWORD_MIN_LENGTH);
 
 export const userCreateSchema = Joi.object({
   confirmPassword: Joi.any().equal(Joi.ref('password')).required().messages({

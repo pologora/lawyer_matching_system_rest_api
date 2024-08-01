@@ -9,23 +9,39 @@ import {
   LoginUserDto,
   RegisterUserDto,
   ResetPasswordDto,
+  VerificateEmailDto,
 } from './dto';
 import { AppError } from '../../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import { comparePasswords } from '../../utils/passwordManagement/comparePasswords';
-import { createPasswordResetToken } from '../../utils/passwordManagement/createPasswordResetToken';
-import { RESET_PASSWORD_EXPIRATION_IN_MINUTES } from '../../config/constants';
-import { sendEmail } from '../../utils/email/email';
+import { createRandomToken } from '../../utils/hashedToken/createRandomToken';
 import { Request } from 'express';
-import { createPasswordResetHashedToken } from '../../utils/passwordManagement/createHashedPasswordResetToken';
-import { checkIfResetTokenExpired } from '../../helpers/checkIfResetTokenExpired';
+import { createHashedToken } from '../../utils/hashedToken/createHashedToken';
+import { isTokenExpired } from '../../helpers/isTokenExpired';
 import { ClientProfile } from '../clients/clients.model';
 import { LawyersProfile } from '../lawyers/lawyers.model';
+import { calculateEmailVerificationExpiraton } from './helpers/calculateEmailVerificationExpirationDate';
+import { Email } from '../../utils/email/Email';
+import { User } from '../users/users.model';
+import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
 
-export const registerService = async ({ email, password }: RegisterUserDto) => {
+export const registerService = async ({ email, password, req }: RegisterUserDto) => {
   const hashedPassword = await hashPassword(password);
 
-  const { insertId } = await Auth.registerByEmail({ email, password: hashedPassword });
+  const emailValidationToken = createRandomToken();
+  const hashedEmailValidationToken = createHashedToken(emailValidationToken);
+
+  const emailVerificationTokenExpiration = calculateEmailVerificationExpiraton();
+
+  const { insertId } = await Auth.registerByEmail({
+    email,
+    emailVerificationTokenExpiration,
+    hashedEmailValidationToken,
+    password: hashedPassword,
+  });
+
+  const url = `${req.protocol}://${req.get('host')}/api/v1/auth/email-verification/${emailValidationToken}`;
+  await new Email({ url, user: { email } }).sendWellcomeEmailRegistration();
 
   const token = await createJWT({ id: insertId });
 
@@ -40,9 +56,7 @@ export const loginService = async ({ email: inputEmail, password: candidatePassw
     throw new AppError('Email or password is not valid', HTTP_STATUS_CODES.UNAUTHORIZED_401);
   }
 
-  // 2) check user role and fetch appropriate data
-
-  // 3) create token, return user info + token
+  // 3) create token, return user  + token
   const { userId, email, role } = user;
   const token = await createJWT({ id: userId });
 
@@ -55,23 +69,20 @@ export const forgotPasswordService = async ({ email }: ForgotPasswordDto, req: R
     throw new AppError('There is no user with this email adress', HTTP_STATUS_CODES.NOT_FOUND_404);
   }
 
-  const resetToken = createPasswordResetToken();
-  const hashedToken = createPasswordResetHashedToken(resetToken);
+  const resetToken = createRandomToken();
+  const hashedToken = createHashedToken(resetToken);
+  const tokenExpirationInMinutes = Number(process.env.RESET_PASSWORD_EXPIRATION_IN_MINUTES!);
 
   await Auth.setResetPasswordToken({
-    expirationInMinutes: RESET_PASSWORD_EXPIRATION_IN_MINUTES,
+    expirationInMinutes: tokenExpirationInMinutes,
     hashedToken,
     userId: user.userId,
   });
 
-  const resetPasswordUrl = `${req.protocol}://${req.get('host')}/api/v1/reset-password/${resetToken}`;
-  const from = 'Lawyer Matching Service <no-reply@lawyer.com';
-  const subject = 'Reset password';
-  const text = `To reset your password, please visit this link, valid for ${RESET_PASSWORD_EXPIRATION_IN_MINUTES} minutes: \n${resetPasswordUrl}`;
-  const toEmail = user.email;
+  const resetPasswordUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/reset-password/${resetToken}`;
 
   try {
-    await sendEmail({ from, subject, text, toEmail });
+    await new Email({ url: resetPasswordUrl, user }).sendResetPassword();
   } catch (err) {
     await Auth.clearResetPassword({ id: user.userId });
     throw new AppError(
@@ -90,7 +101,7 @@ export const getMeService = async ({ role, userId }: GetMeDto) => {
 };
 
 export const resetPasswordService = async ({ resetToken, password }: ResetPasswordDto) => {
-  const hashedToken = createPasswordResetHashedToken(resetToken);
+  const hashedToken = createHashedToken(resetToken);
   //get user by token
   const user = await Auth.getUserByResetToken({ hashedToken });
   if (!user) {
@@ -98,8 +109,8 @@ export const resetPasswordService = async ({ resetToken, password }: ResetPasswo
   }
 
   // check if token not expired
-  const isTokenExpired = checkIfResetTokenExpired(user.resetPasswordTokenExpiration!);
-  if (isTokenExpired) {
+  const isResetTokenExpired = isTokenExpired(user.resetPasswordTokenExpiration!);
+  if (isResetTokenExpired) {
     throw new AppError('The time limit for changing the password has expired. Please try again');
   }
 
@@ -142,4 +153,21 @@ export const deleteMeService = async ({ password, user }: DeleteMeDto) => {
       HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500,
     );
   }
+};
+
+export const verifyEmailService = async ({ token }: VerificateEmailDto) => {
+  const hashedToken = createHashedToken(token);
+
+  const user = await Auth.getUserByEmailVerificationToken({ hashedToken });
+  if (!user) {
+    throw new AppError('Invalid email verification token', HTTP_STATUS_CODES.BAD_REQUEST_400);
+  }
+
+  const isEmailTokenExpired = isTokenExpired(user.emailVerificationTokenExpiration!);
+  if (isEmailTokenExpired) {
+    throw new AppError('The time limit for email verification expired. Please register again');
+  }
+
+  const { query, values } = buildUpdateTableRowQuery({ active: true }, 'User');
+  await User.update({ id: user.userId, query, values });
 };

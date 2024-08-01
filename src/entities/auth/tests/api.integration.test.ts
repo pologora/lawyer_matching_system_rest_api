@@ -8,10 +8,23 @@ import { HTTP_STATUS_CODES } from '../../../utils/statusCodes';
 import pool from '../../../config/db.config';
 import { verifyJWT } from '../../../utils/jwt/verifyJWT';
 import { User } from '../../users/users.model';
-import { sendEmail } from '../../../utils/email/email';
 
-jest.mock('../../../utils/email/email');
-let sentEmailContent: { from: string; subject: string; text: string; toEmail: string };
+jest.mock('../../../utils/email/email', () => {
+  return {
+    Email: jest.fn().mockImplementation(() => {
+      return {
+        sendResetPassword: jest.fn().mockImplementation(async () => {
+          return {
+            from: 'Lawyer Matching System <noreply@example.com>',
+            subject: 'Reset Password Link',
+            text: 'Your reset password link is here',
+            to: 'test@example.com',
+          };
+        }),
+      };
+    }),
+  };
+});
 let resetPasswordToken: string;
 
 const extractTokenFromEmail = ({ text }: { text: string }) => {
@@ -51,11 +64,37 @@ let registerJWT: string;
 let loginJWT: string;
 let userId: number;
 
+interface EmailContent {
+  from: string;
+  subject: string;
+  text: string;
+  to: string;
+}
+
+let sentEmailContent: EmailContent;
+
 beforeAll(async () => {
-  (sendEmail as jest.Mock).mockImplementation((emailOptions) => {
-    sentEmailContent = emailOptions;
+  const emailData = {
+    user: { email: registerData.email },
+    url: '',
+  };
+
+  // Create an instance of the Email class
+  const emailInstance = new Email(emailData);
+
+  // Mock the sendResetPassword method on the instance
+  jest.spyOn(emailInstance, 'sendResetPassword').mockImplementation(async () => {
+    sentEmailContent = {
+      from: emailInstance.from,
+      subject: 'Reset Password Link',
+      text: 'Your reset password link is here', // Assuming the text part of the email
+      to: emailInstance.to,
+    };
     return Promise.resolve();
   });
+
+  // Call the method to trigger the mock
+  await emailInstance.sendResetPassword();
 });
 
 afterAll(async () => {

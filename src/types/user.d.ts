@@ -10,4 +10,6 @@ export interface IUser {
   active: boolean;
   token?: string;
   googleId?: string;
+  emailVerificationToken: string | null;
+  emailVerificationTokenExpiration: Date | null;
 }

@@ -8,6 +8,7 @@ import {
   loginService,
   registerService,
   resetPasswordService,
+  verifyEmailService,
 } from './auth.service';
 import { userCreateSchema } from '../users/users.validation';
 import { AppError } from '../../utils/errors/AppError';
@@ -18,6 +19,7 @@ import {
   forgotPasswordShema,
   resetPasswordSchema,
   userRegistrationSchema,
+  validateEmailSchema,
 } from './auth.validation';
 import { setTokenCookieAndSendResponse } from './helpers/setTokenCookieAndSendResponse';
 import { cookieOptions } from '../../config/cookieOptions/cookieOptions';
@@ -31,7 +33,7 @@ export const registerController = async (req: Request, res: Response, _next: Nex
     throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
   }
 
-  const token = await registerService(value);
+  const token = await registerService({ ...value, req });
 
   setTokenCookieAndSendResponse(res, {
     token,
@@ -154,4 +156,18 @@ export const deleteMeController = async (req: Request, res: Response, _next: Nex
   await deleteMeService({ ...value, user: req.user });
 
   return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
+};
+export const verifyEmailcontroller = async (req: Request, res: Response, _next: NextFunction) => {
+  const { error, value } = validateEmailSchema.validate(req.params);
+
+  if (error) {
+    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
+  }
+
+  await verifyEmailService(value);
+
+  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+    status: 'success',
+    message: 'Email validated successfully',
+  });
 };
