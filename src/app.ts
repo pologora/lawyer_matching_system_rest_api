@@ -23,6 +23,7 @@ import { reviewsRouter } from './entities/reviews/reviews.route';
 import { regionsRouter } from './entities/regions/regions.routes';
 import { citiesRouter } from './entities/cities/cities.routes';
 import passport from './middleware/passport';
+import path from 'node:path/posix';
 
 process.on('uncaughtException', (err) => {
   logger.error(err);
@@ -31,6 +32,9 @@ process.on('uncaughtException', (err) => {
 });
 
 const app = express();
+
+// serve static files from the 'public' directory
+app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 
 // security headers
 app.use('/api', helmet());
@@ -62,10 +66,6 @@ app.use('/api/v1', messagesRoute);
 app.use('/api/v1', reviewsRouter);
 app.use('/api/v1', regionsRouter);
 app.use('/api/v1', citiesRouter);
-
-app.get('/fail', (req, res) => {
-  res.send('Failed');
-});
 
 // route not found on server
 app.use('*', (req: Request, _res: Response, next: NextFunction) => {

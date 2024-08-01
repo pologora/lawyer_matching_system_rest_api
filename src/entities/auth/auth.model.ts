@@ -11,8 +11,10 @@ import {
   registerByEmailQuery,
   registerByGoogleQuery,
   setResetPasswordTokenQuery,
+  setUserVerifiedQuery,
   updateUserPasswordQuery,
 } from './sqlQueries';
+import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
 
 type LoginProps = {
   email: string;
@@ -132,6 +134,14 @@ export class Auth {
 
   static async deleteMe({ id }: DeleteMeProps) {
     const result = await pool.query<ResultSetHeader>(deleteMeQuery, [id]);
+
+    return result[0].affectedRows;
+  }
+
+  static async setUserVerified({ id }: DeleteMeProps) {
+    const result = await pool.query<ResultSetHeader>(setUserVerifiedQuery, [id]);
+
+    checkDatabaseOperation({ id, operation: 'update', result: result[0] });
 
     return result[0].affectedRows;
   }

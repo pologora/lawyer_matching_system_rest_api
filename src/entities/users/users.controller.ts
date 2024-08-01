@@ -6,6 +6,7 @@ import {
   getUserService,
   removeUserService,
   updateUserService,
+  uploadUserPhotoService,
 } from './users.service';
 import { userCreateSchema, userUpdateSchema } from './users.validation';
 import { AppError } from '../../utils/errors/AppError';
@@ -81,4 +82,20 @@ export const removeUserController = async (req: Request, res: Response, _next: N
   await removeUserService({ id });
 
   return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).send();
+};
+
+export const uploadUserPhotoController = async (req: Request, res: Response, _next: NextFunction) => {
+  if (!req.file) {
+    throw new AppError('No file uploaded. Please upload an image file', HTTP_STATUS_CODES.BAD_REQUEST_400);
+  }
+
+  const { id: candidateId } = req.params;
+  const { id } = validateId(Number(candidateId));
+
+  await uploadUserPhotoService({ id, profileImageFileName: req.file.filename });
+
+  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+    status: 'success',
+    message: 'User image uploaded successfully',
+  });
 };

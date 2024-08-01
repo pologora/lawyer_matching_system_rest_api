@@ -47,8 +47,6 @@ class User {
   static async getOne({ id }: GetOneProps) {
     const [result] = await pool.query<RowDataPacket[]>(getUserByIdQuery, [id]);
 
-    checkDatabaseOperation({ id, operation: 'get', result: result[0] });
-
     return result[0] as IUser;
   }
 

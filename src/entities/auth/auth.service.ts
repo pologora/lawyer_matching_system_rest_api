@@ -22,8 +22,6 @@ import { ClientProfile } from '../clients/clients.model';
 import { LawyersProfile } from '../lawyers/lawyers.model';
 import { calculateEmailVerificationExpiraton } from './helpers/calculateEmailVerificationExpirationDate';
 import { Email } from '../../utils/email/Email';
-import { User } from '../users/users.model';
-import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
 
 export const registerService = async ({ email, password, req }: RegisterUserDto) => {
   const hashedPassword = await hashPassword(password);
@@ -168,6 +166,5 @@ export const verifyEmailService = async ({ token }: VerificateEmailDto) => {
     throw new AppError('The time limit for email verification expired. Please register again');
   }
 
-  const { query, values } = buildUpdateTableRowQuery({ active: true }, 'User');
-  await User.update({ id: user.userId, query, values });
+  return await Auth.setUserVerified({ id: user.userId });
 };
