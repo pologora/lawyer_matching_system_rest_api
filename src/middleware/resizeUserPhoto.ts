@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import sharp from 'sharp';
+import fs from 'fs';
+import path from 'path';
 import { IUser } from '../types/user';
 
-export const resizeUserPhoto = (req: Request, res: Response, next: NextFunction) => {
+export const resizeUserPhoto = async (req: Request, res: Response, next: NextFunction) => {
   if (!req.file) {
     return next();
   }
@@ -11,12 +13,19 @@ export const resizeUserPhoto = (req: Request, res: Response, next: NextFunction)
 
   req.file.filename = `user-${user.userId}.jpeg`;
 
+  const uploadPath = path.join(__dirname, '..', '..', 'public', 'img', 'users');
+
+  if (!fs.existsSync(uploadPath)) {
+    fs.mkdirSync(uploadPath, { recursive: true });
+  }
+
   const imageWidthPixel = 250;
-  sharp(req.file.buffer)
+
+  await sharp(req.file.buffer)
     .resize(imageWidthPixel, imageWidthPixel)
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
-    .toFile(`public/img/users/${req.file.filename}`);
+    .toFile(path.join(uploadPath, req.file.filename));
 
   next();
 };
