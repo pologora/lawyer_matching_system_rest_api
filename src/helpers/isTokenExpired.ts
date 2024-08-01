@@ -1,4 +1,4 @@
-export const checkIfResetTokenExpired = (resetTokenExpire: Date) => {
+export const isTokenExpired = (resetTokenExpire: Date) => {
   const now = Date.now();
   const exp = new Date(resetTokenExpire).getTime();
 

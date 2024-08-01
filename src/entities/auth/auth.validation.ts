@@ -1,5 +1,6 @@
 import Joi from 'joi';
-import { PASSWORD_MIN_LENGTH } from '../../config/constants';
+
+const PASSWORD_MIN_LENGTH = Number(process.env.PASSWORD_MIN_LENGTH!);
 
 export const userRegistrationSchema = Joi.object({
   email: Joi.string().email().required().messages({
@@ -55,5 +56,11 @@ export const changeMyPasswordSchema = Joi.object({
 export const deleteMeSchema = Joi.object({
   password: Joi.string().required().messages({
     'any.required': 'Password is required',
+  }),
+});
+
+export const validateEmailSchema = Joi.object({
+  token: Joi.string().required().messages({
+    'any.required': 'Token is required',
   }),
 });

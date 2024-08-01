@@ -3,7 +3,9 @@ import pool from '../../config/db.config';
 import { IUser } from '../../types/user';
 import {
   clearResetPasswordQuery,
+  deleteMeQuery,
   getUserByEmailQuery,
+  getUserByEmailVerificationTokenQuery,
   getUserByResetTokenQuery,
   loginUserQuery,
   registerByEmailQuery,
@@ -11,7 +13,6 @@ import {
   setResetPasswordTokenQuery,
   updateUserPasswordQuery,
 } from './sqlQueries';
-import { deleteMeQuery } from './sqlQueries/deleteMeQuery';
 
 type LoginProps = {
   email: string;
@@ -20,6 +21,8 @@ type LoginProps = {
 type RegisterByEmailProps = {
   email: string;
   password: string;
+  emailVerificationTokenExpiration: Date;
+  hashedEmailValidationToken: string;
 };
 
 type RegisterByGoogle = {
@@ -50,6 +53,10 @@ type GetUserByResetTokenProps = {
   hashedToken: string;
 };
 
+type GetUserByEmailVerificationTokenProps = {
+  hashedToken: string;
+};
+
 type DeleteMeProps = {
   id: number;
 };
@@ -61,8 +68,18 @@ export class Auth {
     return user[0][0];
   }
 
-  static async registerByEmail({ email, password }: RegisterByEmailProps) {
-    const result = await pool.query<ResultSetHeader>(registerByEmailQuery, [email, password]);
+  static async registerByEmail({
+    email,
+    password,
+    hashedEmailValidationToken,
+    emailVerificationTokenExpiration,
+  }: RegisterByEmailProps) {
+    const result = await pool.query<ResultSetHeader>(registerByEmailQuery, [
+      email,
+      password,
+      hashedEmailValidationToken,
+      emailVerificationTokenExpiration,
+    ]);
 
     return result[0];
   }
@@ -103,6 +120,12 @@ export class Auth {
 
   static async getUserByResetToken({ hashedToken }: GetUserByResetTokenProps) {
     const result = await pool.query<RowDataPacket[]>(getUserByResetTokenQuery, [hashedToken]);
+
+    return result[0][0] as IUser;
+  }
+
+  static async getUserByEmailVerificationToken({ hashedToken }: GetUserByEmailVerificationTokenProps) {
+    const result = await pool.query<RowDataPacket[]>(getUserByEmailVerificationTokenQuery, [hashedToken]);
 
     return result[0][0] as IUser;
   }

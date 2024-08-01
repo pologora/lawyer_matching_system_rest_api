@@ -6,3 +6,5 @@ export * from './clearResetPasswordQuery';
 export * from './getUserByResetTokenQuery';
 export * from './updateUserPasswordQuery';
 export * from './registerByGoogleQuery';
+export * from './deleteMeQuery';
+export * from './getUserByEmailVerificationTokenQuery';
