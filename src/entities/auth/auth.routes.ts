@@ -39,7 +39,7 @@ authRouter.get(
 
 authRouter.get('/logout', asyncErrorCatch(logoutController));
 authRouter.get('/me', protect, asyncErrorCatch(getMeController));
-authRouter.get('/email-verification/:token', protect, asyncErrorCatch(verifyEmailcontroller));
+authRouter.get('/email-verification/:token', asyncErrorCatch(verifyEmailcontroller));
 authRouter.post('/forgot-password', asyncErrorCatch(forgotPasswordController));
 authRouter.patch('/reset-password/:token', asyncErrorCatch(resetPasswordController));
 authRouter.patch('/change-my-password', protect, asyncErrorCatch(changeMyPasswordController));
