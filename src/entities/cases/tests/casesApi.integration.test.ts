@@ -10,6 +10,7 @@ let createCaseData: {
   clientId?: number;
   lawyerId?: number;
   description?: string;
+  title?: string;
 };
 
 const createUserDataClient = {
@@ -50,8 +51,8 @@ beforeAll(async () => {
     bio: 'lorem lem',
     firstName: 'Test Cases',
     lastName: 'Lawyer',
-    city: 'City',
-    region: 'Alaska',
+    city: 1,
+    region: 2,
     specializations: [1],
   };
 
@@ -73,6 +74,7 @@ beforeAll(async () => {
     description: 'test description',
     lawyerId,
     clientId,
+    title: 'test title',
   };
 });
 

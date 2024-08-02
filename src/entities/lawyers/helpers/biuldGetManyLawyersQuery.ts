@@ -54,7 +54,7 @@ export const buildGetManyLawyersQuery = (queryString: GetManyLawyersQueryStringD
   }
 
   if (specialization) {
-    filters.push(`s.id = ?`);
+    filters.push(`s.specializationId = ?`);
     values.push(specialization);
   }
 

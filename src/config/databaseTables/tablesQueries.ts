@@ -68,27 +68,30 @@ CREATE TABLE IF NOT EXISTS ClientProfile (
 `;
 
 const casesTable = `
-    CREATE TABLE IF NOT EXISTS \`Case\` (
+CREATE TABLE IF NOT EXISTS \`Case\` (
     caseId INT AUTO_INCREMENT PRIMARY KEY,
-    clientId int,
-    lawyerId int,
-    description text,
-    cityId int,
-    regionId int,
-    status ENUM("open", "closed", "pending") DEFAULT "open",
+    clientId INT,
+    lawyerId INT,
+    specializationId INT,
+    cityId INT,
+    regionId INT,
+    description TEXT,
+    title VARCHAR(255),
+    status ENUM ('open', 'closed', 'pending') DEFAULT 'open',
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (clientId) REFERENCES ClientProfile(clientProfileId) ON DELETE SET NULL,
-    FOREIGN KEY (lawyerId) REFERENCES LawyerProfile(lawyerProfileId) ON DELETE SET NULL,
-    FOREIGN KEY (cityId) REFERENCES City(cityId) ON DELETE SET NULL,
-    FOREIGN KEY (regionId) REFERENCES Region(regionId) ON DELETE SET NULL,
+    FOREIGN KEY (clientId) REFERENCES ClientProfile (clientProfileId) ON DELETE SET NULL,
+    FOREIGN KEY (lawyerId) REFERENCES LawyerProfile (lawyerProfileId) ON DELETE SET NULL,
+    FOREIGN KEY (specializationId) REFERENCES Specialization (specializationId) ON DELETE SET NULL,
+    FOREIGN KEY (cityId) REFERENCES City (cityId) ON DELETE SET NULL,
+    FOREIGN KEY (regionId) REFERENCES Region (regionId) ON DELETE SET NULL,
     INDEX (clientId),
     INDEX (lawyerId)
     );
 `;
 
 const reviewsTable = `
-    CREATE TABLE IF NOT EXISTS Review (
+CREATE TABLE IF NOT EXISTS Review (
     reviewId INT AUTO_INCREMENT PRIMARY KEY,
     clientId int,
     lawyerId int NOT NULL,
@@ -104,7 +107,7 @@ const reviewsTable = `
 `;
 
 const messagesTable = `
-    CREATE TABLE IF NOT EXISTS Message (
+CREATE TABLE IF NOT EXISTS Message (
     messageId INT AUTO_INCREMENT PRIMARY KEY,
     senderId int,
     receiverId int,
