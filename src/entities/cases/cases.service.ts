@@ -1,7 +1,8 @@
 import { buildCreateTableRowQuery } from '../../helpers/buildCreateTableRowQuery';
 import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
 import { Case } from './cases.model';
-import { CreateCaseDto, UpdateCaseDto } from './dto';
+import { CreateCaseDto, GetManyCasesDto, UpdateCaseDto } from './dto';
+import { buildGetManyCasesQuery } from './helpers/buildGetManyCasesQuery';
 
 type CreateCaseServiceProps = {
   data: CreateCaseDto;
@@ -10,6 +11,8 @@ type CreateCaseServiceProps = {
 type GetCaseServiceProps = {
   id: number;
 };
+
+type GetManyCasesProps = GetManyCasesDto;
 
 type UpdateCaseServiceProps = {
   data: UpdateCaseDto;
@@ -32,8 +35,10 @@ export const getCaseService = async ({ id }: GetCaseServiceProps) => {
   return await Case.getOne({ id });
 };
 
-export const getManyCasesService = async () => {
-  return await Case.getMany();
+export const getManyCasesService = async (data: GetManyCasesProps) => {
+  const { query, values } = buildGetManyCasesQuery(data);
+
+  return await Case.getMany({ query, values });
 };
 
 export const updateCaseService = async ({ data, id }: UpdateCaseServiceProps) => {

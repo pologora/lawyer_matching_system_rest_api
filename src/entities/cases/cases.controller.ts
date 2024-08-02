@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { createCaseSchema, updateCaseSchema } from './cases.validation';
+import { createCaseSchema, getManyCasesSchema, updateCaseSchema } from './cases.validation';
 import { AppError } from '../../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import {
@@ -40,8 +40,15 @@ export const getCaseController = async (req: Request, res: Response, _next: Next
     .json({ status: 'success', message: 'Case retrieved successfully', data: oneCase });
 };
 
-export const getManyCasesController = async (_req: Request, res: Response, _next: NextFunction) => {
-  const cases = await getManyCasesService();
+export const getManyCasesController = async (req: Request, res: Response, _next: NextFunction) => {
+  const { query } = req;
+  const { error, value } = getManyCasesSchema.validate(query);
+
+  if (error) {
+    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
+  }
+
+  const cases = await getManyCasesService(value);
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)

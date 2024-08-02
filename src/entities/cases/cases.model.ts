@@ -2,7 +2,7 @@ import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 import pool from '../../config/db.config';
 import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
-import { deleteCaseQuery, getManyCasesQuery, getOneCaseQuery } from './sqlQueries';
+import { deleteCaseQuery, getOneCaseQuery } from './sqlQueries';
 
 type CreateProps = {
   createCaseQuery: string;
@@ -11,6 +11,11 @@ type CreateProps = {
 
 type GetOneProps = {
   id: number;
+};
+
+type GetManyProps = {
+  query: string;
+  values: (string | number)[];
 };
 
 type UpdateProps = {
@@ -40,8 +45,8 @@ export class Case {
     return result[0];
   }
 
-  static async getMany() {
-    const result = await pool.query(getManyCasesQuery);
+  static async getMany({ query, values }: GetManyProps) {
+    const result = await pool.query(query, values);
 
     return result[0];
   }
