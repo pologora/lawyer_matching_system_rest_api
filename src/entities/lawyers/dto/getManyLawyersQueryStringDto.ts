@@ -3,8 +3,8 @@ export interface GetManyLawyersQueryStringDto {
   page?: number;
   experienceMin?: number;
   experienceMax?: number;
-  city?: string;
-  region?: string;
+  cityId?: string;
+  regionId?: string;
   ratingMin?: number;
   ratingMax?: number;
   search?: string;

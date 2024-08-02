@@ -5,7 +5,7 @@ export interface CreateLawyerDto {
   bio: string;
   firstName: string;
   lastName: string;
-  city: string;
-  region: string;
+  cityId: number;
+  regionId: number;
   specializations: number[];
 }
