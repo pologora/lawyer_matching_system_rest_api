@@ -1,4 +1,5 @@
 import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
+import { AppError } from '../../utils/errors/AppError';
 import { hashPassword } from '../../utils/passwordManagement/hashPassword';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { User } from './users.model';
@@ -20,6 +21,11 @@ type RemoveUserServiceProps = {
   id: number;
 };
 
+type UploadUserPhotoService = {
+  id: number;
+  profileImageFileName: string;
+};
+
 export const createUserService = async ({ data }: CreateUserServiceProps) => {
   const { email, password } = data;
 
@@ -29,7 +35,13 @@ export const createUserService = async ({ data }: CreateUserServiceProps) => {
 };
 
 export const getUserService = async ({ id }: GetUserServiceProps) => {
-  return await User.getOne({ id });
+  const user = await User.getOne({ id });
+
+  if (!user) {
+    throw new AppError(`User id: ${id} not exists`);
+  }
+
+  return user;
 };
 
 export const getManyUsersService = async () => {
@@ -48,4 +60,10 @@ export const updateUserService = async ({ id, data }: UpdateUserServiceProps) =>
 
 export const removeUserService = async ({ id }: RemoveUserServiceProps) => {
   return await User.remove({ id });
+};
+
+export const uploadUserPhotoService = async ({ id, profileImageFileName }: UploadUserPhotoService) => {
+  const { query, values } = buildUpdateTableRowQuery({ profileImageFileName }, 'User');
+
+  await User.update({ id, query, values });
 };

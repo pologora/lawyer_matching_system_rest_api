@@ -8,3 +8,4 @@ export * from './updateUserPasswordQuery';
 export * from './registerByGoogleQuery';
 export * from './deleteMeQuery';
 export * from './getUserByEmailVerificationTokenQuery';
+export * from './setUserVeriefiedQuery';

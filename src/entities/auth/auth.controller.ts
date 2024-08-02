@@ -157,6 +157,7 @@ export const deleteMeController = async (req: Request, res: Response, _next: Nex
 
   return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
 };
+
 export const verifyEmailcontroller = async (req: Request, res: Response, _next: NextFunction) => {
   const { error, value } = validateEmailSchema.validate(req.params);
 

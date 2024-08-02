@@ -8,9 +8,9 @@ let userId: number;
 let lawyerId: number;
 
 const createUserData = {
+  confirmPassword: 'test12345',
   email: 'lawyers-test@mail.com',
   password: 'test12345',
-  confirmPassword: 'test12345',
 };
 
 afterAll(async () => {
@@ -35,15 +35,15 @@ describe('Test POST /lawyers', () => {
     userId = user.body.data.insertId;
 
     const createLawyerProfileData = {
-      userId,
-      experience: 2,
-      licenseNumber: '1111',
       bio: 'lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem',
+      cityId: 1,
+      experience: 2,
       firstName: 'John',
       lastName: 'Doe',
-      city: 'City',
-      region: 'Alaska',
+      licenseNumber: '1111',
+      regionId: 2,
       specializations: [1],
+      userId,
     };
 
     const response = await supertest(app)
@@ -74,9 +74,9 @@ describe('Test POST /lawyers', () => {
 
   test('Should catch invalid data properties', async () => {
     const invalidCreateClientData = {
-      userId: 'bad',
       firstName: 'firstname',
       lastName: 'lastname',
+      userId: 'bad',
     };
     const response = await supertest(app)
       .post('/api/v1/lawyers')

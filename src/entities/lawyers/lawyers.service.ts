@@ -28,17 +28,17 @@ type RemoveLawyerServiceProps = {
 };
 
 export const createLawyerService = async ({ data }: CreateLawyerServiceProps) => {
-  const { userId, licenseNumber, bio, experience, firstName, lastName, city, region, specializations } = data;
+  const { userId, licenseNumber, bio, experience, firstName, lastName, cityId, regionId, specializations } = data;
 
   const { query, values } = buildCreateTableRowQuery(
     {
       bio,
-      city,
+      cityId,
       experience,
       firstName,
       lastName,
       licenseNumber,
-      region,
+      regionId,
       userId,
     },
     'LawyerProfile',

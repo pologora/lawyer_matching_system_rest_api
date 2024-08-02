@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS User (
     password VARCHAR(255),
     googleId VARCHAR(255),
     role ENUM('user', 'client', 'lawyer', 'admin') DEFAULT 'user',
-    profileImagePath VARCHAR(255),
+    profileImageFileName VARCHAR(255),
     resetPasswordToken VARCHAR(255),
     resetPasswordTokenExpiration TIMESTAMP NULL DEFAULT NULL,
     passwordChangedAt TIMESTAMP NULL DEFAULT NULL,

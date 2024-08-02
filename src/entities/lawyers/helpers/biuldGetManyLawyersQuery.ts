@@ -8,8 +8,8 @@ export const buildGetManyLawyersQuery = (queryString: GetManyLawyersQueryStringD
   const {
     experienceMin,
     experienceMax,
-    city,
-    region,
+    cityId,
+    regionId,
     ratingMax,
     ratingMin,
     limit,
@@ -33,14 +33,14 @@ export const buildGetManyLawyersQuery = (queryString: GetManyLawyersQueryStringD
     values.push(experienceMax);
   }
 
-  if (city) {
-    filters.push(`lp.city = ?`);
-    values.push(city);
+  if (cityId) {
+    filters.push(`lp.cityId = ?`);
+    values.push(cityId);
   }
 
-  if (region) {
-    filters.push(`lp.region = ?`);
-    values.push(region);
+  if (regionId) {
+    filters.push(`lp.regionId = ?`);
+    values.push(regionId);
   }
 
   if (ratingMax) {
@@ -76,9 +76,9 @@ export const buildGetManyLawyersQuery = (queryString: GetManyLawyersQueryStringD
     lp.experience, 
     lp.firstName, 
     lp.lastName, 
-    lp.city, 
-    lp.region, 
     lp.rating,
+    c.name as city,
+    r.name as region,
     GROUP_CONCAT(s.name) AS specializations
 FROM 
     LawyerProfile lp
@@ -86,12 +86,16 @@ LEFT JOIN
     LawyerSpecialization ls ON lp.lawyerProfileId = ls.lawyerId
 LEFT JOIN 
     Specialization s ON ls.specializationId = s.specializationId
+LEFT JOIN
+    City c on lp.cityId = c.cityId
+LEFT JOIN
+    Region r on lp.regionId = r.regionId
 ${filterString}
 GROUP BY
-    lp.lawyerProfileId, lp.userId, lp.licenseNumber, lp.bio, lp.experience, lp.firstName, lp.lastName, lp.city, lp.region, lp.rating
+    lp.lawyerProfileId, lp.userId, lp.licenseNumber, lp.bio, lp.experience, lp.firstName, lp.lastName, lp.rating, c.name, r.name
 ${sortValue}
 LIMIT ?
-OFFSET ?`;
+OFFSET ?;`;
 
   values.push(limitValue, offsetValue);
 
