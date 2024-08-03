@@ -57,14 +57,18 @@ export const changeMyPasswordSchema = Joi.object({
   }),
 });
 
-export const deleteMeSchema = Joi.object({
+export const loginSchema = Joi.object({
+  email: Joi.string().email().required().messages({
+    'any.required': 'Email is required',
+    'string.email': 'Email must be a valid email address',
+  }),
   password: Joi.string().required().messages({
     'any.required': 'Password is required',
   }),
 });
 
-export const validateEmailSchema = Joi.object({
-  token: Joi.string().required().messages({
-    'any.required': 'Token is required',
+export const deleteMeSchema = Joi.object({
+  password: Joi.string().required().messages({
+    'any.required': 'Password is required',
   }),
 });

@@ -99,7 +99,7 @@ export const resetPasswordController = async (req: Request, res: Response, _next
 };
 
 export const changeMyPasswordController = async (req: Request, res: Response, _next: NextFunction) => {
-  const token = await changeMyPasswordService(req.body);
+  const token = await changeMyPasswordService({ ...req.body, user: req.user });
 
   return setTokenCookieAndSendResponse(res, {
     token,
@@ -109,13 +109,14 @@ export const changeMyPasswordController = async (req: Request, res: Response, _n
 };
 
 export const deleteMeController = async (req: Request, res: Response, _next: NextFunction) => {
-  await deleteMeService(req.body);
+  await deleteMeService({ ...req.body, user: req.user });
 
   return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
 };
 
 export const verifyEmailcontroller = async (req: Request, res: Response, _next: NextFunction) => {
-  await verifyEmailService(req.body);
+  const { token } = req.params;
+  await verifyEmailService({ token });
 
   return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
     status: 'success',

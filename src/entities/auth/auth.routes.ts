@@ -19,15 +19,15 @@ import {
   changeMyPasswordSchema,
   deleteMeSchema,
   forgotPasswordShema,
+  loginSchema,
   userRegistrationSchema,
-  validateEmailSchema,
 } from './auth.validation';
 import { validateReqBody } from '../../middleware/validateReqBody';
 
 export const authRouter = Router();
 
 authRouter.post('/register', validateReqBody(userRegistrationSchema), asyncErrorCatch(registerController));
-authRouter.post('/login', asyncErrorCatch(loginController));
+authRouter.post('/login', validateReqBody(loginSchema), asyncErrorCatch(loginController));
 
 authRouter.get(
   '/google',
@@ -47,11 +47,7 @@ authRouter.get(
 
 authRouter.get('/logout', asyncErrorCatch(logoutController));
 authRouter.get('/me', protect, asyncErrorCatch(getMeController));
-authRouter.get(
-  '/email-verification/:token',
-  validateReqBody(validateEmailSchema),
-  asyncErrorCatch(verifyEmailcontroller),
-);
+authRouter.get('/email-verification/:token', asyncErrorCatch(verifyEmailcontroller));
 authRouter.post('/forgot-password', validateReqBody(forgotPasswordShema), asyncErrorCatch(forgotPasswordController));
 authRouter.patch('/reset-password/:token', asyncErrorCatch(resetPasswordController));
 authRouter.patch(
