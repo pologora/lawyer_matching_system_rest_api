@@ -22,16 +22,8 @@ const sendProductionError = (err: AppError, res: Response, statusCode: StatusCod
 export const globalErrorHandler = (err: AppError, _req: Request, res: Response, _next: NextFunction) => {
   const sqlDuplicateUniqErrorCode = 1062;
   const failedForeignKeyCode = 1452;
-  if (err.errno === sqlDuplicateUniqErrorCode) {
+  if (err.errno === sqlDuplicateUniqErrorCode || err.errno === failedForeignKeyCode) {
     err = new AppError(err.message);
-  }
-
-  if (err.errno === failedForeignKeyCode) {
-    const userFriendlyMessage = 'An error occurred while creating the case information.';
-    err = new AppError(
-      process.env.NODE_ENV === 'development' ? err.message : userFriendlyMessage,
-      HTTP_STATUS_CODES.BAD_REQUEST_400,
-    );
   }
 
   const statusCode = err.statusCode || HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500;
