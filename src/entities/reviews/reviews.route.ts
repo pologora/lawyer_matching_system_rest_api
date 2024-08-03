@@ -7,7 +7,7 @@ import {
   removeReviewController,
   updateReviewController,
 } from './reviews.controller';
-import { createReviewSchema, getManyReviewsShema, updateReviewSchema } from './reviews.validation';
+import { createReviewSchema, getManyReviewsSchema, updateReviewSchema } from './reviews.validation';
 import { validateReqBody } from '../../middleware/validateReqBody';
 import { validateReqQuery } from '../../middleware/validateReqQuery';
 
@@ -15,7 +15,7 @@ export const reviewsRouter = express.Router();
 
 reviewsRouter
   .route('/reviews')
-  .get(validateReqQuery(getManyReviewsShema), asyncErrorCatch(getManyReviewsController))
+  .get(validateReqQuery(getManyReviewsSchema), asyncErrorCatch(getManyReviewsController))
   .post(validateReqBody(createReviewSchema), asyncErrorCatch(createReviewController));
 reviewsRouter
   .route('/reviews/:id')
