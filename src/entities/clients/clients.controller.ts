@@ -8,17 +8,9 @@ import {
   removeClientService,
   updateClientService,
 } from './clients.service';
-import { clientCreateSchema, clientUpdateSchema } from './clients.validation';
-import { AppError } from '../../utils/errors/AppError';
 
 export const createClientController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { error, value } = clientCreateSchema.validate(req.body);
-
-  if (error) {
-    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
-  }
-
-  const client = await createClientService({ data: value });
+  const client = await createClientService({ data: req.body });
 
   return res.status(HTTP_STATUS_CODES.CREATED_201).json({
     status: 'success',
@@ -28,9 +20,7 @@ export const createClientController = async (req: Request, res: Response, _next:
 };
 
 export const getClientController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
-
-  const { id } = validateId(Number(candidateId));
+  const { id } = validateId(Number(req.params.id));
 
   const client = await getClientService({ id });
 
@@ -50,17 +40,9 @@ export const getManyClientsController = async (_req: Request, res: Response, _ne
 };
 
 export const updateClientController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
+  const { id } = validateId(Number(req.params.id));
 
-  const { id } = validateId(Number(candidateId));
-
-  const { error, value } = clientUpdateSchema.validate(req.body);
-
-  if (error) {
-    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
-  }
-
-  const updatedClient = await updateClientService({ id, data: value });
+  const updatedClient = await updateClientService({ id, data: req.body });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -68,9 +50,7 @@ export const updateClientController = async (req: Request, res: Response, _next:
 };
 
 export const removeClientController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
-
-  const { id } = validateId(Number(candidateId));
+  const { id } = validateId(Number(req.params.id));
 
   await removeClientService({ id });
 

@@ -3,6 +3,10 @@ import Joi from 'joi';
 const PASSWORD_MIN_LENGTH = Number(process.env.PASSWORD_MIN_LENGTH!);
 
 export const userRegistrationSchema = Joi.object({
+  confirmPassword: Joi.any().equal(Joi.ref('password')).required().messages({
+    'any.only': 'Confirm password does not match password',
+    'any.required': 'Confirm password is required',
+  }),
   email: Joi.string().email().required().messages({
     'any.required': 'Email is required',
     'string.email': 'Email must be a valid email address',

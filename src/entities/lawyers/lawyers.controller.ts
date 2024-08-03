@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
-import { getManyLawyersQuerySchema, lawyerCreateSchema, lawyerUpdateSchema } from './lawyers.validation';
-import { AppError } from '../../utils/errors/AppError';
 import {
   createLawyerService,
   getLawyerService,
@@ -12,13 +10,7 @@ import {
 import { validateId } from '../../utils/validateId';
 
 export const createLawyerController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { error, value } = lawyerCreateSchema.validate(req.body);
-
-  if (error) {
-    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
-  }
-
-  const lawyer = await createLawyerService({ data: value });
+  const lawyer = await createLawyerService({ data: req.body });
 
   return res.status(HTTP_STATUS_CODES.CREATED_201).json({
     status: 'success',
@@ -28,9 +20,7 @@ export const createLawyerController = async (req: Request, res: Response, _next:
 };
 
 export const getLawyerController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
-
-  const { id } = validateId(Number(candidateId));
+  const { id } = validateId(Number(req.params.id));
 
   const lawyer = await getLawyerService({ id });
 
@@ -40,15 +30,7 @@ export const getLawyerController = async (req: Request, res: Response, _next: Ne
 };
 
 export const getManyLawyersController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { query } = req;
-
-  const { error, value } = getManyLawyersQuerySchema.validate(query);
-
-  if (error) {
-    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
-  }
-
-  const lawyers = await getManyLawyersService({ queryString: value });
+  const lawyers = await getManyLawyersService({ queryString: req.query });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -56,17 +38,9 @@ export const getManyLawyersController = async (req: Request, res: Response, _nex
 };
 
 export const updateLawyerController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
+  const { id } = validateId(Number(req.params.id));
 
-  const { id } = validateId(Number(candidateId));
-
-  const { error, value } = lawyerUpdateSchema.validate(req.body);
-
-  if (error) {
-    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
-  }
-
-  const updatedLawyer = await updateLawyerService({ data: value, id });
+  const updatedLawyer = await updateLawyerService({ data: req.body, id });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -74,9 +48,7 @@ export const updateLawyerController = async (req: Request, res: Response, _next:
 };
 
 export const removeLawyerController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
-
-  const { id } = validateId(Number(candidateId));
+  const { id } = validateId(Number(req.params.id));
 
   await removeLawyerService({ id });
 

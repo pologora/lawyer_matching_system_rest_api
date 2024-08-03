@@ -8,12 +8,19 @@ import {
   updateCaseController,
   getManyCasesController,
 } from './cases.controller';
+import { validateReqBody } from '../../middleware/validateReqBody';
+
+import { createCaseSchema, getManyCasesSchema, updateCaseSchema } from './cases.validation';
+import { validateReqQuery } from '../../middleware/validateReqQuery';
 
 export const casesRouter = express.Router();
 
-casesRouter.route('/cases').get(asyncErrorCatch(getManyCasesController)).post(asyncErrorCatch(createCaseController));
+casesRouter
+  .route('/cases')
+  .get(validateReqQuery(getManyCasesSchema), asyncErrorCatch(getManyCasesController))
+  .post(validateReqBody(createCaseSchema), asyncErrorCatch(createCaseController));
 casesRouter
   .route('/cases/:id')
   .get(asyncErrorCatch(getCaseController))
-  .patch(asyncErrorCatch(updateCaseController))
+  .patch(validateReqBody(updateCaseSchema), asyncErrorCatch(updateCaseController))
   .delete(asyncErrorCatch(removeCaseController));
