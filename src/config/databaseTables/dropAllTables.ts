@@ -2,10 +2,11 @@
 import pool from '../db.config';
 
 export const dropAllTablesQuery = `
-DROP TABLE IF EXISTS \`Case\`,
+DROP TABLE IF EXISTS
+    Message,
+    \`Case\`,
     LawyerSpecialization,
     Specialization,
-    Message,
     Review,
     LawyerProfile,
     ClientProfile,
