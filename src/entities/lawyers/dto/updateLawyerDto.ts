@@ -7,4 +7,6 @@ export interface UpdateLawyerDto {
   city?: string;
   region?: string;
   specializations?: number[];
+  hourlyRate?: number;
+  initialConsultationFee?: number;
 }

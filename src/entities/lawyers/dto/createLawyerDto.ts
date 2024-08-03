@@ -8,4 +8,6 @@ export interface CreateLawyerDto {
   cityId: number;
   regionId: number;
   specializations: number[];
+  initialConsultationFee?: number;
+  hourlyRate?: number;
 }

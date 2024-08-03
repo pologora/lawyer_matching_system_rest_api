@@ -18,10 +18,39 @@ export const buildGetManyLawyersQuery = (queryString: GetManyLawyersQueryStringD
     search,
     sort,
     specialization,
+    initialConsultationFeeMin,
+    initialConsultationFeeMax,
+    hourlyRateMin,
+    hourlyRateMax,
   } = queryString;
 
   const filters = [];
   const values = [];
+
+  if (initialConsultationFeeMin) {
+    filters.push(`lp.initialConsultationFee >= ?`);
+    values.push(initialConsultationFeeMin);
+  }
+
+  if (initialConsultationFeeMax) {
+    filters.push(`lp.initialConsultationFee <= ?`);
+    values.push(initialConsultationFeeMax);
+  }
+
+  if (hourlyRateMin) {
+    filters.push(`lp.hourlyRate >= ?`);
+    values.push(hourlyRateMin);
+  }
+
+  if (hourlyRateMax) {
+    filters.push(`lp.hourlyRate <= ?`);
+    values.push(hourlyRateMax);
+  }
+
+  if (experienceMin) {
+    filters.push(`lp.experience >= ?`);
+    values.push(experienceMin);
+  }
 
   if (experienceMin) {
     filters.push(`lp.experience >= ?`);
@@ -73,7 +102,9 @@ export const buildGetManyLawyersQuery = (queryString: GetManyLawyersQueryStringD
     lp.userId, 
     lp.licenseNumber, 
     lp.bio, 
-    lp.experience, 
+    lp.experience,
+    lp.hourlyRate,
+    lp.initialConsultationFee, 
     lp.firstName, 
     lp.lastName, 
     lp.rating,
@@ -92,7 +123,8 @@ LEFT JOIN
     Region r on lp.regionId = r.regionId
 ${filterString}
 GROUP BY
-    lp.lawyerProfileId, lp.userId, lp.licenseNumber, lp.bio, lp.experience, lp.firstName, lp.lastName, lp.rating, c.name, r.name
+    lp.lawyerProfileId, lp.userId, lp.licenseNumber, lp.bio, lp.experience,lp.experience, 
+    lp.hourlyRate, lp.firstName, lp.lastName, lp.rating, c.name, r.name
 ${sortValue}
 LIMIT ?
 OFFSET ?;`;

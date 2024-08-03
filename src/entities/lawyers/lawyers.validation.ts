@@ -17,6 +17,12 @@ export const lawyerCreateSchema = Joi.object({
     'any.required': 'First name is required.',
     'string.base': 'First name must be a string value.',
   }),
+  hourlyRate: Joi.number().messages({
+    'number.base': 'hourlyRating must be a numeric value.',
+  }),
+  initialConsultationFee: Joi.number().messages({
+    'number.base': 'initialConsultationFee must be a numeric value.',
+  }),
   lastName: Joi.string().required().messages({
     'any.required': 'Last name is required.',
     'string.base': 'Last name must be a string value.',
@@ -52,6 +58,12 @@ export const lawyerUpdateSchema = Joi.object({
   firstName: Joi.string().messages({
     'string.base': 'First name must be a string value.',
   }),
+  hourlyRate: Joi.number().messages({
+    'number.base': 'hourlyRating must be a numeric value.',
+  }),
+  initialConsultationFee: Joi.number().messages({
+    'number.base': 'initialConsultationFee must be a numeric value.',
+  }),
   lastName: Joi.string().messages({
     'string.base': 'Last name must be a string value.',
   }),
@@ -78,6 +90,8 @@ const ALLOWED_SORT_FIELDS = [
   'lastName',
   'createdAt',
   'updatedAt',
+  'initialConsultationFee',
+  'hourlyRate',
 ];
 
 export const getManyLawyersQuerySchema = Joi.object({

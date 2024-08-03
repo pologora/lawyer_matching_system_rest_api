@@ -40,6 +40,8 @@ CREATE TABLE
         city VARCHAR(100),
         region VARCHAR(100),
         rating DECIMAL(2, 1),
+        initialConsultationFee DECIMAL(8, 2) DEFAULT NULL,
+        hourlyRate DECIMAL(8, 2),
         FOREIGN KEY (userId) REFERENCES `User` (userId) ON DELETE CASCADE,
         INDEX (userId)
     );
@@ -120,11 +122,15 @@ CREATE TABLE
         messageId INT AUTO_INCREMENT PRIMARY KEY,
         senderId INT,
         receiverId INT,
+        caseId INT,
+        type ENUM ('private', 'public'),
+        isRead BOOLEAN,
         message TEXT,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (senderId) REFERENCES User (userId) ON DELETE SET NULL,
         FOREIGN KEY (receiverId) REFERENCES User (userId) ON DELETE SET NULL,
+        FOREIGN KEY (caseId) REFERENCES `Case` (caseId) ON DELETE SET NULL,
         INDEX (senderId),
         INDEX (receiverId)
     );

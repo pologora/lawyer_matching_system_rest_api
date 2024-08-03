@@ -11,4 +11,8 @@ export interface GetManyLawyersQueryStringDto {
   sort?: string;
   order?: 'desc' | 'asc';
   specialization?: number;
+  initialConsultationFeeMin?: number;
+  initialConsultationFeeMax?: number;
+  hourlyRateMin?: number;
+  hourlyRateMax?: number;
 }

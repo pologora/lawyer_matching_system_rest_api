@@ -7,6 +7,8 @@ SELECT
     lp.experience, 
     lp.firstName, 
     lp.lastName, 
+    lp.hourlyRate,
+    lp.initialConsultationFee,
     lp.rating,
     c.name as city,
     r.name as region,
