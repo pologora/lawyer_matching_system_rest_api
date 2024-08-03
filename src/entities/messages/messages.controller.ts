@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
-import { AppError } from '../../utils/errors/AppError';
 import { validateId } from '../../utils/validateId';
 import {
   createMessageService,
@@ -10,16 +9,9 @@ import {
   removeMessageService,
   updateMessageService,
 } from './messages.service';
-import { createMessageSchema, getManyMessagesShema, updateMessageSchema } from './messages.validation';
 
 export const createMessageController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { error, value } = createMessageSchema.validate(req.body);
-
-  if (error) {
-    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
-  }
-
-  const message = await createMessageService({ data: value });
+  const message = await createMessageService({ data: req.body });
 
   return res.status(HTTP_STATUS_CODES.CREATED_201).json({
     status: 'success',
@@ -29,9 +21,7 @@ export const createMessageController = async (req: Request, res: Response, _next
 };
 
 export const getMessageController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
-
-  const { id } = validateId(Number(candidateId));
+  const { id } = validateId(Number(req.params.id));
 
   const message = await getMessageService({ id });
 
@@ -41,15 +31,7 @@ export const getMessageController = async (req: Request, res: Response, _next: N
 };
 
 export const getManyMessagesController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { query } = req;
-
-  const { error, value } = getManyMessagesShema.validate(query);
-
-  if (error) {
-    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
-  }
-
-  const messages = await getManyMessagesService({ queryString: value });
+  const messages = await getManyMessagesService({ queryString: req.query });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -57,17 +39,9 @@ export const getManyMessagesController = async (req: Request, res: Response, _ne
 };
 
 export const updateMessageController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
+  const { id } = validateId(Number(req.params.id));
 
-  const { id } = validateId(Number(candidateId));
-
-  const { error, value } = updateMessageSchema.validate(req.body);
-
-  if (error) {
-    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
-  }
-
-  const updatedMessage = await updateMessageService({ data: value, id });
+  const updatedMessage = await updateMessageService({ data: req.body, id });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -75,9 +49,7 @@ export const updateMessageController = async (req: Request, res: Response, _next
 };
 
 export const removeMessageController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
-
-  const { id } = validateId(Number(candidateId));
+  const { id } = validateId(Number(req.params.id));
 
   await removeMessageService({ id });
 

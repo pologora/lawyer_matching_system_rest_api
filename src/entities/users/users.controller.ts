@@ -8,20 +8,11 @@ import {
   updateUserService,
   uploadUserPhotoService,
 } from './users.service';
-import { userCreateSchema, userUpdateSchema } from './users.validation';
 import { AppError } from '../../utils/errors/AppError';
-import { CreateUserDto } from './dto';
 import { validateId } from '../../utils/validateId';
 
 export const createUserController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { email, password, confirmPassword }: CreateUserDto = req.body;
-  const { error, value } = userCreateSchema.validate({ email, password, confirmPassword });
-
-  if (error) {
-    throw new AppError(error.message);
-  }
-
-  const result = await createUserService({ data: value });
+  const result = await createUserService({ data: req.body });
 
   return res.status(HTTP_STATUS_CODES.CREATED_201).json({
     status: 'success',
@@ -31,9 +22,7 @@ export const createUserController = async (req: Request, res: Response, _next: N
 };
 
 export const getUserController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
-
-  const { id } = validateId(Number(candidateId));
+  const { id } = validateId(Number(req.params.id));
 
   const user = await getUserService({ id });
 
@@ -44,8 +33,8 @@ export const getUserController = async (req: Request, res: Response, _next: Next
   });
 };
 
-export const getManyUsersController = async (_req: Request, res: Response, _next: NextFunction) => {
-  const users = await getManyUsersService();
+export const getManyUsersController = async (req: Request, res: Response, _next: NextFunction) => {
+  const users = await getManyUsersService(req.query);
 
   return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
     status: 'success',
@@ -55,17 +44,9 @@ export const getManyUsersController = async (_req: Request, res: Response, _next
 };
 
 export const updateUserController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
+  const { id } = validateId(Number(req.params.id));
 
-  const { id } = validateId(Number(candidateId));
-
-  const { error, value } = userUpdateSchema.validate(req.body);
-
-  if (error) {
-    throw new AppError(error.message);
-  }
-
-  const result = await updateUserService({ id, data: value });
+  const result = await updateUserService({ id, data: req.body });
 
   return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
     status: 'success',
@@ -75,9 +56,7 @@ export const updateUserController = async (req: Request, res: Response, _next: N
 };
 
 export const removeUserController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
-
-  const { id } = validateId(Number(candidateId));
+  const { id } = validateId(Number(req.params.id));
 
   await removeUserService({ id });
 
@@ -89,8 +68,7 @@ export const uploadUserPhotoController = async (req: Request, res: Response, _ne
     throw new AppError('No file uploaded. Please upload an image file', HTTP_STATUS_CODES.BAD_REQUEST_400);
   }
 
-  const { id: candidateId } = req.params;
-  const { id } = validateId(Number(candidateId));
+  const { id } = validateId(Number(req.params.id));
 
   await uploadUserPhotoService({ id, profileImageFileName: req.file.filename });
 

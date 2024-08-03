@@ -3,6 +3,10 @@ import Joi from 'joi';
 const PASSWORD_MIN_LENGTH = Number(process.env.PASSWORD_MIN_LENGTH!);
 
 export const userRegistrationSchema = Joi.object({
+  confirmPassword: Joi.any().equal(Joi.ref('password')).required().messages({
+    'any.only': 'Confirm password does not match password',
+    'any.required': 'Confirm password is required',
+  }),
   email: Joi.string().email().required().messages({
     'any.required': 'Email is required',
     'string.email': 'Email must be a valid email address',
@@ -53,14 +57,18 @@ export const changeMyPasswordSchema = Joi.object({
   }),
 });
 
-export const deleteMeSchema = Joi.object({
+export const loginSchema = Joi.object({
+  email: Joi.string().email().required().messages({
+    'any.required': 'Email is required',
+    'string.email': 'Email must be a valid email address',
+  }),
   password: Joi.string().required().messages({
     'any.required': 'Password is required',
   }),
 });
 
-export const validateEmailSchema = Joi.object({
-  token: Joi.string().required().messages({
-    'any.required': 'Token is required',
+export const deleteMeSchema = Joi.object({
+  password: Joi.string().required().messages({
+    'any.required': 'Password is required',
   }),
 });

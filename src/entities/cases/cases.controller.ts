@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { createCaseSchema, getManyCasesSchema, updateCaseSchema } from './cases.validation';
-import { AppError } from '../../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import {
   createCaseService,
@@ -13,13 +11,7 @@ import {
 import { validateId } from '../../utils/validateId';
 
 export const createCaseController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { error, value } = createCaseSchema.validate(req.body);
-
-  if (error) {
-    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
-  }
-
-  const newCase = await createCaseService({ data: value });
+  const newCase = await createCaseService({ data: req.body });
 
   res.status(HTTP_STATUS_CODES.CREATED_201).json({
     status: 'success',
@@ -29,9 +21,7 @@ export const createCaseController = async (req: Request, res: Response, _next: N
 };
 
 export const getCaseController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
-
-  const { id } = validateId(Number(candidateId));
+  const { id } = validateId(Number(req.params.id));
 
   const oneCase = await getCaseService({ id });
 
@@ -41,14 +31,7 @@ export const getCaseController = async (req: Request, res: Response, _next: Next
 };
 
 export const getManyCasesController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { query } = req;
-  const { error, value } = getManyCasesSchema.validate(query);
-
-  if (error) {
-    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
-  }
-
-  const cases = await getManyCasesService(value);
+  const cases = await getManyCasesService(req.query);
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -56,17 +39,9 @@ export const getManyCasesController = async (req: Request, res: Response, _next:
 };
 
 export const updateCaseController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
+  const { id } = validateId(Number(req.params.id));
 
-  const { id } = validateId(Number(candidateId));
-
-  const { error, value } = updateCaseSchema.validate(req.body);
-
-  if (error) {
-    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
-  }
-
-  const updatedCase = await updateCaseService({ data: value, id });
+  const updatedCase = await updateCaseService({ data: req.body, id });
 
   return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
     status: 'success',
@@ -76,9 +51,7 @@ export const updateCaseController = async (req: Request, res: Response, _next: N
 };
 
 export const removeCaseController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id: candidateId } = req.params;
-
-  const { id } = validateId(Number(candidateId));
+  const { id } = validateId(Number(req.params.id));
 
   await removeCaseService({ id });
 

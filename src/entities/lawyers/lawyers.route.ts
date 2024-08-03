@@ -7,15 +7,18 @@ import {
   removeLawyerController,
   updateLawyerController,
 } from './lawyers.controller';
+import { getManyLawyersQuerySchema, lawyerCreateSchema, lawyerUpdateSchema } from './lawyers.validation';
+import { validateReqBody } from '../../middleware/validateReqBody';
+import { validateReqQuery } from '../../middleware/validateReqQuery';
 
 export const lawyersRouter = express.Router();
 
 lawyersRouter
   .route('/lawyers')
-  .get(asyncErrorCatch(getManyLawyersController))
-  .post(asyncErrorCatch(createLawyerController));
+  .get(validateReqQuery(getManyLawyersQuerySchema), asyncErrorCatch(getManyLawyersController))
+  .post(validateReqBody(lawyerCreateSchema), asyncErrorCatch(createLawyerController));
 lawyersRouter
   .route('/lawyers/:id')
   .get(asyncErrorCatch(getLawyerController))
   .delete(asyncErrorCatch(removeLawyerController))
-  .patch(asyncErrorCatch(updateLawyerController));
+  .patch(validateReqBody(lawyerUpdateSchema), asyncErrorCatch(updateLawyerController));

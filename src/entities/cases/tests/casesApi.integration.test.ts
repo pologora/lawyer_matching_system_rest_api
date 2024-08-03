@@ -51,8 +51,8 @@ beforeAll(async () => {
     bio: 'lorem lem',
     firstName: 'Test Cases',
     lastName: 'Lawyer',
-    city: 1,
-    region: 2,
+    cityId: 1,
+    regionId: 2,
     specializations: [1],
   };
 

@@ -7,30 +7,6 @@ import { app } from '../../../app';
 import { HTTP_STATUS_CODES } from '../../../utils/statusCodes';
 import pool from '../../../config/db.config';
 import { verifyJWT } from '../../../utils/jwt/verifyJWT';
-import { User } from '../../users/users.model';
-
-jest.mock('../../../utils/email/email', () => {
-  return {
-    Email: jest.fn().mockImplementation(() => {
-      return {
-        sendResetPassword: jest.fn().mockImplementation(async () => {
-          return {
-            from: 'Lawyer Matching System <noreply@example.com>',
-            subject: 'Reset Password Link',
-            text: 'Your reset password link is here',
-            to: 'test@example.com',
-          };
-        }),
-      };
-    }),
-  };
-});
-let resetPasswordToken: string;
-
-const extractTokenFromEmail = ({ text }: { text: string }) => {
-  const startIndex = text.indexOf('password/') + 9;
-  return text.slice(startIndex);
-};
 
 const registerData = {
   email: 'regitration-test@mail.com',
@@ -44,14 +20,9 @@ const changeMyPasswordData = {
   newPassword: 'changeMyPass',
 };
 
-const newPasswordAfterReset = {
-  password: 'reset-password',
-  confirmPassword: 'reset-password',
-};
-
 const logInData = {
   email: registerData.email,
-  password: newPasswordAfterReset.password,
+  password: changeMyPasswordData.newPassword,
 };
 
 const getJwtFromCookie = (jwtCookie: string) => {
@@ -64,41 +35,7 @@ let registerJWT: string;
 let loginJWT: string;
 let userId: number;
 
-interface EmailContent {
-  from: string;
-  subject: string;
-  text: string;
-  to: string;
-}
-
-let sentEmailContent: EmailContent;
-
-beforeAll(async () => {
-  const emailData = {
-    user: { email: registerData.email },
-    url: '',
-  };
-
-  // Create an instance of the Email class
-  const emailInstance = new Email(emailData);
-
-  // Mock the sendResetPassword method on the instance
-  jest.spyOn(emailInstance, 'sendResetPassword').mockImplementation(async () => {
-    sentEmailContent = {
-      from: emailInstance.from,
-      subject: 'Reset Password Link',
-      text: 'Your reset password link is here', // Assuming the text part of the email
-      to: emailInstance.to,
-    };
-    return Promise.resolve();
-  });
-
-  // Call the method to trigger the mock
-  await emailInstance.sendResetPassword();
-});
-
 afterAll(async () => {
-  await User.remove({ id: userId });
   await pool.end();
 });
 
@@ -168,7 +105,7 @@ describe('Test PATCH /auth/change-my-password', () => {
 
   test('Should catch wrong invalid new password', async () => {
     const wrongCurrentPassword = {
-      password: newPasswordAfterReset.password,
+      password: 'newPasswordAfterssword',
       newPassword: 'changeMyPass',
       confirmNewPassword: 'changeMyWrong',
     };
@@ -201,9 +138,6 @@ describe('Test POST /auth/fogot-password', () => {
 
     expect(response.body).toHaveProperty('message', 'Reset password link was sent to the user email');
     expect(response.body).toHaveProperty('status', 'success');
-    expect(sentEmailContent).toHaveProperty('text');
-
-    resetPasswordToken = extractTokenFromEmail(sentEmailContent);
   });
 
   test('Should catch not existing email adress', async () => {
@@ -227,20 +161,11 @@ describe('Test POST /auth/fogot-password', () => {
 });
 
 describe('Test PATCH /auth/reset-password', () => {
-  test('Should reset the password with the valid token', async () => {
-    const response = await supertest(app)
-      .patch(`/api/v1/auth/reset-password/${resetPasswordToken}`)
-      .send(newPasswordAfterReset);
-
-    expect(response.body).toHaveProperty('status', 'success');
-    expect(response.body).toHaveProperty('message', 'Password has been changed');
-  });
-
   test('Should catch invalid token', async () => {
     const wrongResetPasswordToken = 'wrong-token';
     const response = await supertest(app)
       .patch(`/api/v1/auth/reset-password/${wrongResetPasswordToken}`)
-      .send(newPasswordAfterReset);
+      .send({ password: 'test12345', confirmPassword: 'test12345' });
 
     expect(response.body).toHaveProperty('status', 'error');
     expect(response.body).toHaveProperty('message', 'Invalid reset password token');

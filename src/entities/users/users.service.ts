@@ -1,7 +1,9 @@
 import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
 import { AppError } from '../../utils/errors/AppError';
 import { hashPassword } from '../../utils/passwordManagement/hashPassword';
-import { CreateUserDto, UpdateUserDto } from './dto';
+import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
+import { CreateUserDto, GetManyUsersDto, UpdateUserDto } from './dto';
+import { buildGetManyUsersQuery } from './helpers/buildGetManyUsersQuery';
 import { User } from './users.model';
 
 type CreateUserServiceProps = {
@@ -11,6 +13,8 @@ type CreateUserServiceProps = {
 type GetUserServiceProps = {
   id: number;
 };
+
+type GetManyUsersServiceProps = GetManyUsersDto;
 
 type UpdateUserServiceProps = {
   id: number;
@@ -38,14 +42,16 @@ export const getUserService = async ({ id }: GetUserServiceProps) => {
   const user = await User.getOne({ id });
 
   if (!user) {
-    throw new AppError(`User id: ${id} not exists`);
+    throw new AppError(`User id: ${id} not exists`, HTTP_STATUS_CODES.NOT_FOUND_404);
   }
 
   return user;
 };
 
-export const getManyUsersService = async () => {
-  return await User.getMany();
+export const getManyUsersService = async (queryString: GetManyUsersServiceProps) => {
+  const { query, values } = buildGetManyUsersQuery(queryString);
+
+  return await User.getMany({ query, values });
 };
 
 export const updateUserService = async ({ id, data }: UpdateUserServiceProps) => {

@@ -4,8 +4,8 @@ import { IUser } from '../../types/user';
 import {
   createUserQuery,
   deleteUserQuery,
-  getAllUsersQuery,
   getUserByIdQuery,
+  getUserForAuthQuery,
   updateUserRoleQuery,
 } from './sqlQueries';
 import { UserRole } from '../../types/userRoles';
@@ -18,6 +18,15 @@ type CreateProps = {
 
 type GetOneProps = {
   id: number;
+};
+
+type GetOneForAuthProps = {
+  id: number;
+};
+
+type GetManyProps = {
+  values: (string | number)[];
+  query: string;
 };
 
 type UpdateProps = {
@@ -50,8 +59,14 @@ class User {
     return result[0] as IUser;
   }
 
-  static async getMany() {
-    const result = await pool.query(getAllUsersQuery);
+  static async getOneForAuth({ id }: GetOneForAuthProps) {
+    const [result] = await pool.query<RowDataPacket[]>(getUserForAuthQuery, [id]);
+
+    return result[0] as IUser;
+  }
+
+  static async getMany({ query, values }: GetManyProps) {
+    const result = await pool.query(query, values);
 
     return result[0];
   }

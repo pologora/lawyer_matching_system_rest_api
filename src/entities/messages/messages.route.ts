@@ -7,15 +7,18 @@ import {
   removeMessageController,
   updateMessageController,
 } from './messages.controller';
+import { createMessageSchema, getManyMessagesShema, updateMessageSchema } from './messages.validation';
+import { validateReqBody } from '../../middleware/validateReqBody';
+import { validateReqQuery } from '../../middleware/validateReqQuery';
 
 export const messagesRoute = express.Router();
 
 messagesRoute
   .route('/messages')
-  .get(asyncErrorCatch(getManyMessagesController))
-  .post(asyncErrorCatch(createMessageController));
+  .get(validateReqQuery(getManyMessagesShema), asyncErrorCatch(getManyMessagesController))
+  .post(validateReqBody(createMessageSchema), asyncErrorCatch(createMessageController));
 messagesRoute
   .route('/messages/:id')
   .get(asyncErrorCatch(getMessageController))
-  .patch(asyncErrorCatch(updateMessageController))
+  .patch(validateReqBody(updateMessageSchema), asyncErrorCatch(updateMessageController))
   .delete(asyncErrorCatch(removeMessageController));
