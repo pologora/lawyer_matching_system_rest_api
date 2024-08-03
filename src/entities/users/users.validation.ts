@@ -20,6 +20,42 @@ export const userCreateSchema = Joi.object({
     }),
 });
 
+const ALLOWED_SORT_FIELDS = ['userId', 'email', 'googleId', 'role', 'active', 'createdAt', 'updatedAt'];
+
+export const getManyUsersSchema = Joi.object({
+  active: Joi.boolean().messages({
+    'boolean.base': 'Active must be a boolean',
+  }),
+  columns: Joi.string().messages({
+    'string.base': 'Columns must be a string',
+  }),
+  limit: Joi.number().integer().positive().messages({
+    'number.base': 'Limit must be a number',
+    'number.integer': 'Limit must be an integer',
+    'number.positive': 'Limit must be a positive number',
+  }),
+  order: Joi.string().valid('desc', 'asc').messages({
+    'any.only': 'Order must be one of the following values: desc, asc',
+  }),
+  page: Joi.number().integer().positive().messages({
+    'number.base': 'Page must be a number',
+    'number.integer': 'Page must be an integer',
+    'number.positive': 'Page must be a positive number',
+  }),
+  role: Joi.string().valid('admin', 'client', 'lawyer', 'user').messages({
+    'any.only': 'Role must be one of the following values: admin, client, lawyer, user',
+  }),
+  search: Joi.string().messages({
+    'string.base': 'Search must be a string',
+  }),
+  sort: Joi.string()
+    .valid(...ALLOWED_SORT_FIELDS)
+    .messages({
+      'any.only': `Sort must be one of the following values: ${ALLOWED_SORT_FIELDS.join(', ')}`,
+      'string.base': 'Sort must be a string',
+    }),
+});
+
 export const userUpdateSchema = Joi.object({
   active: Joi.boolean().messages({
     'any.active': 'Active must be boolean',

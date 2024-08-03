@@ -8,7 +8,7 @@ import {
   updateUserService,
   uploadUserPhotoService,
 } from './users.service';
-import { userCreateSchema, userUpdateSchema } from './users.validation';
+import { getManyUsersSchema, userCreateSchema, userUpdateSchema } from './users.validation';
 import { AppError } from '../../utils/errors/AppError';
 import { CreateUserDto } from './dto';
 import { validateId } from '../../utils/validateId';
@@ -44,8 +44,16 @@ export const getUserController = async (req: Request, res: Response, _next: Next
   });
 };
 
-export const getManyUsersController = async (_req: Request, res: Response, _next: NextFunction) => {
-  const users = await getManyUsersService();
+export const getManyUsersController = async (req: Request, res: Response, _next: NextFunction) => {
+  const { query } = req;
+
+  const { error, value } = getManyUsersSchema.validate(query);
+
+  if (error) {
+    throw new AppError(error.message, HTTP_STATUS_CODES.BAD_REQUEST_400);
+  }
+
+  const users = await getManyUsersService(value);
 
   return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
     status: 'success',

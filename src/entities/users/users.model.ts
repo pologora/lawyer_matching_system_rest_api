@@ -4,7 +4,6 @@ import { IUser } from '../../types/user';
 import {
   createUserQuery,
   deleteUserQuery,
-  getAllUsersQuery,
   getUserByIdQuery,
   getUserForAuthQuery,
   updateUserRoleQuery,
@@ -23,6 +22,11 @@ type GetOneProps = {
 
 type GetOneForAuthProps = {
   id: number;
+};
+
+type GetManyProps = {
+  values: (string | number)[];
+  query: string;
 };
 
 type UpdateProps = {
@@ -61,8 +65,8 @@ class User {
     return result[0] as IUser;
   }
 
-  static async getMany() {
-    const result = await pool.query(getAllUsersQuery);
+  static async getMany({ query, values }: GetManyProps) {
+    const result = await pool.query(query, values);
 
     return result[0];
   }
