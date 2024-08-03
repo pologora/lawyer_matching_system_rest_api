@@ -14,19 +14,32 @@
 10. [API Documentation](#api-documentation)
 
     - [Authentication](#authentication)
+
       - [Login](#login)
       - [Register](#register)
       - [Forgot Password](#forgot-password)
       - [Reset Password](#reset-password)
       - [Change My Password](#change-my-password)
       - [Delete Me](#delete-me)
+      - [Logout](#logout)
+      - [Verify Email](#verify-email)
+
     - [Users](#users)
 
-      - [Get All Users](#get-all-users)
+      - [Get Many Users](#get-many-users)
       - [Create User](#create-user)
       - [Get User By ID](#get-user-by-id)
       - [Update User](#update-user)
       - [Delete User](#delete-user)
+      - [Upload User Photo](#upload-user-photo)
+
+    - [Lawyer Profile](#Lawyers)
+
+      - [Create Profile Lawyer](#create-lawyer-profile)
+      - [Get Lawyer Profile By ID](#get-lawyer-profile-by-id)
+      - [Get Many Lawyer Profiles](#get-all-lawyers)
+      - [Update Lawyer Profile](#update-lawyer)
+      - [Delete Lawyer Profile](#delete-lawyer)
 
     - [Cases](#cases)
 
@@ -779,6 +792,8 @@ Validation Error Examples:
 }
 ```
 
+</details>
+
 #### Logout
 
 <details>
@@ -798,6 +813,8 @@ Validation Error Examples:
 }
 ```
 
+</details>
+
 ### Users
 
 #### Create User
@@ -812,10 +829,9 @@ Validation Error Examples:
 
 ```json
 {
-  "name": "John Doe",
   "email": "john.doe@example.com",
   "password": "securePassword123",
-  "role": "client" // or "lawyer"
+  "confirmPassword": "securePassword123"
 }
 ```
 
@@ -826,68 +842,50 @@ Validation Error Examples:
 ```JavaScript
 {
   "message": "User created successfully",
-  "user": {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "role": "client",
-    "createdAt": "2023-01-01T00:00:00.000Z",
-    "updatedAt": "2023-01-01T00:00:00.000Z"
-  }
+  "data": {
+        "fieldCount": 0,
+        "affectedRows": 1,
+        "insertId": 7,
+        "info": "",
+        "serverStatus": 2,
+        "warningStatus": 0,
+        "changedRows": 0
+    }
 }
 ```
 
-- 400 Bad Request
+- 400 Bad Request (Duplicate Entry)
 
 ```JavaScript
 {
-  "message": "Validation error"
+  "status": "error",
+  "message": "Duplicate entry 'john.doe@example.com' for key 'email'"
 }
-```
-
-</details>
-
-#### Get All Users
-
-<details>
-
-- **URL**: `api/v1/users`
-- **Method**: `GET`
-- **Description**: Get all users.
-
-**Response:**
-
-- 200 OK
-
-```JavaScript
-[
-  {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "role": "client",
-    "createdAt": "2023-01-01T00:00:00.000Z",
-    "updatedAt": "2023-01-01T00:00:00.000Z"
-  },
-  {
-    "id": 2,
-    "name": "Jane Smith",
-    "email": "jane.smith@example.com",
-    "role": "lawyer",
-    "createdAt": "2023-01-02T00:00:00.000Z",
-    "updatedAt": "2023-01-02T00:00:00.000Z"
-  }
-]
 
 ```
 
-- 400 Bad Request
+- 400 Bad Request (Validation errors)
 
 ```JavaScript
 {
-  "message": "Bad request"
+  "status": "error",
+  "message": "Confirm password does not match password."
 }
+
 ```
+
+Validation Error Examples:
+
+Validation Error Examples:
+
+| Property          | Validation Rule                 | Error Message                                                 |
+| ----------------- | ------------------------------- | ------------------------------------------------------------- |
+| `email`           | Required, valid email format    | `Email is required`,                                          |
+|                   |                                 | `Email must be a valid email address`                         |
+| `password`        | Required, min length            | `Password is required`,                                       |
+|                   |                                 | `Password must be at least ${PASSWORD_MIN_LENGTH} characters` |
+| `confirmPassword` | Required, should match password | `Confirm password is required`,                               |
+|                   |                                 | `Confirm password does not match password`                    |
 
 </details>
 
@@ -895,10 +893,10 @@ Validation Error Examples:
 
 <details>
 
-- **URL**: `api/v1/users:id`
+- **URL**: `api/v1/users/:id`
 - **Method**: `GET`
 - **Description**: Get details of a user by ID.
-- **Parameters**: id (integer): ID of the user.
+- **Parameters**: `userId` (integer): ID of the user.
 
 **Response:**
 
@@ -906,12 +904,19 @@ Validation Error Examples:
 
 ```JavaScript
   {
-    "id": 1,
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "role": "client",
-    "createdAt": "2023-01-01T00:00:00.000Z",
-    "updatedAt": "2023-01-01T00:00:00.000Z"
+    "userId": 1,
+    "email": "mail22@mail.com",
+    "googleId": null,
+    "role": "user",
+    "profileImageFileName": null,
+    "resetPasswordToken": null,
+    "resetPasswordTokenExpiration": null,
+    "passwordChangedAt": null,
+    "emailVerificationToken": null,
+    "emailVerificationTokenExpiration": null,
+    "active": 0,
+    "createdAt": "2024-08-03T13:29:28.000Z",
+    "updatedAt": "2024-08-03T13:29:44.000Z"
   }
 ```
 
@@ -927,9 +932,91 @@ Validation Error Examples:
 
 ```JavaScript
 {
-  "message": "User not found"
+  "status": "error",
+  "message": "User id: ${userId} not exists",
 }
 ```
+
+</details>
+
+#### Get Many Users
+
+<details>
+
+- **URL**: `api/v1/users`
+- **Method**: `GET`
+- **Description**: Get all users.
+
+**Query Parameters:**
+
+- `role` (optional): Filter users by role. Possible values: `admin`, `user`, `client`, `lawyer`.
+- `limit` (optional): Limit the number of users returned.
+- `page` (optional): Specify the page number for pagination.
+- `sort` (optional): Sort users by a specific field.
+- `order` (optional): Order of sorting. Possible values: `desc`, `asc`.
+- `search` (optional): Search users by email or other searchable fields.
+- `active` (optional): Filter users by their active status.
+- `columns` (optional): Specify which columns to return in the response.
+
+```plaintext
+GET /api/v1/users?role=client&limit=10&page=2&sort=createdAt&order=desc&search=john&active=true&columns=userId,email,role,createdAt
+```
+
+**Response:**
+
+- 200 OK
+
+```JavaScript
+{
+    "status": "success",
+    "message": "Users retrieved successfully.",
+    "data": [
+        {
+            "userId": 1,
+            "email": "mail22@mail.com",
+            "googleId": null,
+            "role": "lawyer",
+            "active": 0,
+            "createdAt": "2024-08-03T13:29:28.000Z",
+            "updatedAt": "2024-08-03T13:29:44.000Z",
+            "profileImageFileName": null
+        },
+        {
+            "userId": 2,
+            "email": "mail@mail.com",
+            "googleId": null,
+            "role": "client",
+            "active": 0,
+            "createdAt": "2024-08-03T13:29:36.000Z",
+            "updatedAt": "2024-08-03T13:30:05.000Z",
+            "profileImageFileName": null
+        },
+    ]
+}
+
+```
+
+- 400 Bad Request (Validation errors)
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Error message"
+}
+```
+
+Validation Error Examples:
+
+| Property  | Validation Rule                                                                            | Error Message                                                                                                                        |
+| --------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `active`  | Must be a boolean                                                                          | `Active must be a boolean.`                                                                                                          |
+| `columns` | Must be a string                                                                           | `Columns must be a string.`                                                                                                          |
+| `limit`   | Must be a positive integer                                                                 | `Limit must be a number.`<br>`Limit must be an integer.`<br>`Limit must be a positive number.`                                       |
+| `order`   | Must be 'desc' or 'asc'                                                                    | `Order must be one of the following values: desc, asc.`<br>`Order must be a string value.`                                           |
+| `page`    | Must be a positive integer                                                                 | `Page must be a number.`<br>`Page must be an integer.`<br>`Page must be a positive number.`                                          |
+| `role`    | Must be one of ['admin', 'client', 'lawyer', 'user']                                       | `Role must be one of the following values: admin, client, lawyer, user.`<br>`Role must be a string value.`                           |
+| `search`  | Must be a string                                                                           | `Search must be a string.`                                                                                                           |
+| `sort`    | Must be one of ['userId', 'email', 'googleId', 'role', 'active', 'createdAt', 'updatedAt'] | `Sort must be one of the following values: userId, email, googleId, role, active, createdAt, updatedAt.`<br>`Sort must be a string.` |
 
 </details>
 
@@ -937,18 +1024,22 @@ Validation Error Examples:
 
 <details>
 
-- **URL**: `api/v1/users:id`
+- **URL**: `api/v1/users/:id`
 - **Method**: `PATCH`
 - **Description**: Update details of a user by ID.
-- **Parameters**: id (integer): ID of the user.
+- **Parameters**: `userId` (integer): ID of the user.
+
+**Allowed columns:**
+
+- `role`
+- `active`
 
 **Request Body**:
 
 ```JavaScript
 {
-  "name": "Updated Name",
-  "email": "updated.email@example.com",
-  "password": "newPassword123"
+  "role": "admin",
+  "active": true
 }
 ```
 
@@ -957,13 +1048,24 @@ Validation Error Examples:
 - 200 OK
 
 ```JavaScript
- {
-  "id": 1,
-  "name": "Updated Name",
-  "email": "updated.email@example.com",
-  "role": "client",
-  "createdAt": "2023-01-01T00:00:00.000Z",
-  "updatedAt": "2023-01-02T00:00:00.000Z"
+{
+    "status": "success",
+    "message": "User updated successfully.",
+    "data": {
+        "userId": 2,
+        "email": "mail@mail.com",
+        "googleId": null,
+        "role": "admin",
+        "profileImageFileName": null,
+        "resetPasswordToken": null,
+        "resetPasswordTokenExpiration": null,
+        "passwordChangedAt": null,
+        "emailVerificationToken": null,
+        "emailVerificationTokenExpiration": null,
+        "active": 1,
+        "createdAt": "2024-08-03T13:29:36.000Z",
+        "updatedAt": "2024-08-03T15:23:39.000Z"
+    }
 }
 
 ```
@@ -972,16 +1074,20 @@ Validation Error Examples:
 
 ```JavaScript
 {
-  "message": "Bad request"
+  "status": "error",
+  "message": "\"email\" is not allowed"
 }
+
 ```
 
 - 404 Not Found
 
 ```JavaScript
 {
-  "message": "User not found"
+  "status": "error",
+  "message": "Failed to Update. No record found with ID: ${userId}"
 }
+
 ```
 
 </details>
@@ -990,16 +1096,61 @@ Validation Error Examples:
 
 <details>
 
-- **URL**: `api/v1/users:id`
+- **URL**: `api/v1/users/:id`
 - **Method**: `DELETE`
 - **Description**: Delete a user by ID.
-- **Parameters**: id (integer): ID of the user.
+- **Parameters**: `userId` (integer): ID of the user.
 
 **Response:**
 
 - 204 No Content
 
+- 404 Not Found
+
 ```JavaScript
+{
+  "status": "error",
+  "message": "Failed to Remove. No record found with ID: ${userId}"
+}
+
+```
+
+</details>
+
+#### Upload User Photo
+
+<details>
+
+- **URL**: `api/v1/users/:id/upload-photo`
+- **Method**: `PATCH`
+- **Description**: Upload and resize profile photo for user.
+- **Parameters**: `userId` (integer): ID of the user.
+
+**Request Body:**
+
+- Content-Type: `multipart/form-data`
+- Form Data:
+  - `photo` (file): The profile photo to be uploaded.
+
+**Response:**
+
+- 200 OK
+
+```JavaScript
+{
+    "status": "success",
+    "message": "User image uploaded successfully"
+}
+
+```
+
+- 404 Not Found
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Failed to Update. No record found with ID: ${userId}"
+}
 
 ```
 
@@ -1007,7 +1158,412 @@ Validation Error Examples:
 
 ```JavaScript
 {
-  "message": "Bad request"
+  "status": "error",
+  "message": "Not an image! Please upload only images"
+}
+
+```
+
+</details>
+
+### Lawyer Profile
+
+#### Create Lawyer Profile
+
+<details>
+
+- **URL**: `api/v1/lawyers`
+- **Method**: `POST`
+- **Description**: Create a new lawyer profile.
+
+**Request Body**:
+
+```JavaScript
+{
+  "userId": 2,
+  "licenseNumber": "12345",
+  "bio": "Experienced lawyer in family law.",
+  "experience": 10,
+  "firstName": "John",
+  "lastName": "Doe",
+  "cityId": 1,
+  "regionId": 2,
+  "specializations": [1, 2, 3],
+  "initialConsultationFee": 100.00,
+  "hourlyRate": 200.00
+}
+
+```
+
+| Field                    | Type             | Required | Error Messages                                                                        |
+| ------------------------ | ---------------- | -------- | ------------------------------------------------------------------------------------- |
+| `bio`                    | string           | Yes      | - 'Bio is required.'<br>- 'Bio must be a string value.'                               |
+| `cityId`                 | number           | Yes      | - 'City ID is required.'<br>- 'City ID must be a numeric value.'                      |
+| `experience`             | number           | Yes      | - 'Experience is required.'<br>- 'Experience must be a numeric value.'                |
+| `firstName`              | string           | Yes      | - 'First name is required.'<br>- 'First name must be a string value.'                 |
+| `hourlyRate`             | number           | No       | - 'hourlyRating must be a numeric value.'                                             |
+| `initialConsultationFee` | number           | No       | - 'initialConsultationFee must be a numeric value.'                                   |
+| `lastName`               | string           | Yes      | - 'Last name is required.'<br>- 'Last name must be a string value.'                   |
+| `licenseNumber`          | string           | Yes      | - 'License number is required.'<br>- 'License number must be a string value.'         |
+| `regionId`               | number           | Yes      | - 'Region ID is required.'<br>- 'Region ID must be a numeric value.'                  |
+| `specializations`        | array of numbers | Yes      | - 'Specializations are required.'<br>- 'Specializations must be an array of numbers.' |
+| `userId`                 | number           | Yes      | - 'User ID is required.'<br>- 'User ID must be a numeric value.'                      |
+
+- 400 Bad Request
+
+```JavaScript
+{
+  "status": "error",
+  "message": "error message from table"
+}
+
+```
+
+</details>
+
+#### Get Lawyer Profile by ID
+
+<details>
+
+- **URL**: `api/v1/lawyer/:id`
+- **Method**: `GET`
+- **Description**: Get lawyer profile of a user by ID.
+- **Parameters**: `lawyerProfileId` (integer): ID of the lawyer profile.
+
+**Response:**
+
+- 200 OK
+
+```JavaScript
+  "lawyerProfileId": 4,
+        "userId": 3,
+        "licenseNumber": "licenseNumber",
+        "bio": "Some bio",
+        "experience": 2,
+        "firstName": "John",
+        "lastName": "Doe",
+        "hourlyRate": null,
+        "initialConsultationFee": null,
+        "rating": null,
+        "city": "Bolesławiec",
+        "region": "DOLNOŚLĄSKIE",
+        "specializations": "Corporate Law,Tax Law,Family Law"
+```
+
+- 404 Not Found
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Failed to Get. No record found with ID: 42",
+}
+```
+
+</details>
+
+#### Get Many Lawyer Profiles
+
+<details>
+
+- **URL**: `api/v1/lawyers`
+- **Method**: `GET`
+- **Description**: Get many lawyer profiles.
+
+**Query Parameters:**
+
+### Fields
+
+- `cityId` (optional): Filter by city ID.
+- `experienceMax` (optional): Maximum years of experience.
+- `experienceMin` (optional): Minimum years of experience.
+- `limit` (optional): Limit the number of lawyers returned.
+- `order` (optional): Order of sorting. Possible values: `desc`, `asc`.
+- `page` (optional): Specify the page number for pagination.
+- `ratingMax` (optional): Maximum rating.
+- `ratingMin` (optional): Minimum rating.
+- `regionId` (optional): Filter by region ID.
+- `search` (optional): Search lawyers by name, bio, or other searchable fields.
+- `sort` (optional): Sort lawyers by a specific field. Possible values: `experience`, `cityId`, `regionId`, `rating`, `firstName`, `lastName`, `createdAt`, `updatedAt`, `initialConsultationFee`, `hourlyRate`.
+- `specialization` (optional): Filter by specialization ID.
+
+```plaintext
+GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=desc&page=2&ratingMax=5&ratingMin=3&regionId=2&search=family&sort=experience&specialization=1
+
+```
+
+**Response:**
+
+- 200 OK
+
+```JavaScript
+{
+    "status": "success",
+    "message": "Lawyer profiles retrieved successfully",
+    "data": [
+        {
+            "lawyerProfileId": 4,
+            "userId": 3,
+            "licenseNumber": "1111",
+            "bio": "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+            "experience": 2,
+            "hourlyRate": null,
+            "initialConsultationFee": null,
+            "firstName": "John",
+            "lastName": "Doe",
+            "rating": null,
+            "city": "Bolesławiec",
+            "region": "DOLNOŚLĄSKIE",
+            "specializations": "Family Law,Corporate Law,Tax Law"
+        },
+        {
+            "lawyerProfileId": 5,
+            "userId": 1,
+            "licenseNumber": "1111",
+            "bio": "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+            "experience": 2,
+            "hourlyRate": null,
+            "initialConsultationFee": null,
+            "firstName": "John",
+            "lastName": "Doe",
+            "rating": null,
+            "city": "Bolesławiec",
+            "region": "DOLNOŚLĄSKIE",
+            "specializations": "Family Law,Corporate Law,Tax Law"
+        }
+    ]
+}
+
+```
+
+- 400 Bad Request (Validation errors)
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Error message"
+}
+```
+
+| Property         | Validation Rule                    | Error Message                                                                                                                                                                                      |
+| ---------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `cityId`         | Must be a number                   | `City ID must be a numeric value.`                                                                                                                                                                 |
+| `experienceMax`  | Must be a number                   | `Maximum experience must be a numeric value.`                                                                                                                                                      |
+| `experienceMin`  | Must be a number                   | `Minimum experience must be a numeric value.`                                                                                                                                                      |
+| `limit`          | Must be a number                   | `Limit must be a numeric value.`                                                                                                                                                                   |
+| `order`          | Must be 'desc' or 'asc'            | `Order must be either "desc" or "asc".`                                                                                                                                                            |
+| `page`           | Must be a number                   | `Page must be a numeric value.`                                                                                                                                                                    |
+| `ratingMax`      | Must be a number                   | `Maximum rating must be a numeric value.`                                                                                                                                                          |
+| `ratingMin`      | Must be a number                   | `Minimum rating must be a numeric value.`                                                                                                                                                          |
+| `regionId`       | Must be a number                   | `Region ID must be a numeric value.`                                                                                                                                                               |
+| `search`         | Must be a string                   | `Search must be a string value.`                                                                                                                                                                   |
+| `sort`           | Must be one of ALLOWED_SORT_FIELDS | `Sort must be one of the following values: experience, cityId, regionId, rating, firstName, lastName, createdAt, updatedAt, initialConsultationFee, hourlyRate.`<br>`Sort must be a string value.` |
+| `specialization` | Must be a number                   | `Specialization ID must be a numeric value.`                                                                                                                                                       |
+
+</details>
+
+#### Update Lawyer Profile
+
+<details>
+
+- **URL**: `api/v1/lawyers/:id`
+- **Method**: `PATCH`
+- **Description**: Update details of a lawyer profile by ID.
+- **Parameters**: `lawyerProfileId` (integer): ID of the lawyer profile.
+
+**Allowed columns:**
+
+- `bio`
+- `cityId`
+- `experience`
+- `firstName`
+- `hourlyRate`
+- `initialConsultationFee`
+- `lastName`
+- `licenseNumber`
+- `rating`
+- `regionId`
+- `specializations`
+
+**Request Body**:
+
+```JavaScript
+{
+  "bio": "New bio ",
+}
+```
+
+**Response:**
+
+- 200 OK
+
+```JavaScript
+{
+    "status": "success",
+    "message": "Successfully updated lawyer profile",
+    "data": {
+        "lawyerProfileId": 5,
+        "userId": 1,
+        "licenseNumber": "1111",
+        "bio": "New bio",
+        "experience": 2,
+        "firstName": "Lina",
+        "lastName": "Lee",
+        "hourlyRate": null,
+        "initialConsultationFee": null,
+        "rating": null,
+        "city": "Bielawa",
+        "region": "KUJAWSKO-POMORSKIE",
+        "specializations": "Criminal Law,Real Estate Law"
+    }
+}
+
+```
+
+- 404 Not Found
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Failed to Get. No record found with ID: ${lawyerProfileId}",
+}
+
+```
+
+- 400 Bad Request
+
+```JavaScript
+{
+  "status": "error",
+  "message": "error message"
+}
+
+```
+
+**Validation Error Messages**
+
+| Property                 | Validation Rule             | Error Message                                     |
+| ------------------------ | --------------------------- | ------------------------------------------------- |
+| `bio`                    | Must be a string            | `Bio must be a string value.`                     |
+| `cityId`                 | Must be a number            | `City ID must be a numeric value.`                |
+| `experience`             | Must be a number            | `Experience must be a numeric value.`             |
+| `firstName`              | Must be a string            | `First name must be a string value.`              |
+| `hourlyRate`             | Must be a number            | `hourlyRating must be a numeric value.`           |
+| `initialConsultationFee` | Must be a number            | `initialConsultationFee must be a numeric value.` |
+| `lastName`               | Must be a string            | `Last name must be a string value.`               |
+| `licenseNumber`          | Must be a string            | `License number must be a string value.`          |
+| `rating`                 | Must be a number            | `Rating must be a numeric value.`                 |
+| `regionId`               | Must be a number            | `Region ID must be a numeric value.`              |
+| `specializations`        | Must be an array of numbers | `Specializations must be an array of numbers.`    |
+
+</details>
+
+#### Delete Lawyer Profile
+
+<details>
+
+- **URL**: `api/v1/lawyers/:id`
+- **Method**: `DELETE`
+- **Description**: Delete a lawyer profile by ID.
+- **Parameters**: `lawyerProfileId` (integer): ID of the lawyer profile.
+
+**Response:**
+
+- 204 No Content
+
+- 404 Not Found
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Failed to Remove. No record found with ID: ${lawyerProfileId}"
+}
+
+```
+
+</details>
+
+### Client Profiles
+
+#### Create Client Profile
+
+<details>
+
+- **URL**: `api/v1/clients`
+- **Method**: `POST`
+- **Description**: Create a new client profile.
+
+**Request Body:**
+
+```JavaScript
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "userId": 1
+}
+```
+
+**Response:**
+
+- 201 Created
+
+```JavaScript
+{
+    "status": "success",
+    "message": "Successfully created client profile",
+    "data": {
+        "userId": 2,
+        "clientProfileId": 2,
+        "firstName": "John",
+        "lastName": "Doe"
+    }
+}
+```
+
+- 400 Bad Request (Validation errors)
+
+```JavaScript
+{
+  "status": "error",
+  "message": "errro message"
+}
+
+```
+
+**Validation Error Messages**
+
+### Validation Error Messages
+
+| Property    | Validation Rule  | Error Message                                                     |
+| ----------- | ---------------- | ----------------------------------------------------------------- |
+| `firstName` | Required, string | `First name is required.`<br>`First name must be a string value.` |
+| `lastName`  | Required, string | `Last name is required.`<br>`Last name must be a string value.`   |
+| `userId`    | Required, number | `User ID is required.`<br>`User ID must be a numeric value.`      |
+
+</details>
+
+#### Get Client Profile by ID
+
+<details>
+
+- **URL**: `api/v1/clients/:id`
+- **Method**: `GET`
+- **Description**: Get client profile of a user by ID.
+- **Parameters**: `clientProfileId` (integer): ID of the client profile.
+
+**Response:**
+
+- 200 OK
+
+```JavaScript
+  {
+    "status": "success",
+    "message": "Client profile retrieved successfully",
+    "data": {
+        "userId": 2,
+        "clientProfileId": 2,
+        "firstName": "John",
+        "lastName": "Doe"
+    }
 }
 ```
 
@@ -1015,8 +1571,140 @@ Validation Error Examples:
 
 ```JavaScript
 {
-  "message": "User not found"
+  "status": "error",
+  "message": "Failed to Get. No record found with ID: 42",
 }
+```
+
+</details>
+
+#### Get Many Client Profiles
+
+<details>
+
+- **URL**: `api/v1/clients`
+- **Method**: `GET`
+- **Description**: Get many client profiles.
+
+**Response:**
+
+- 200 OK
+
+```JavaScript
+ {
+    "status": "success",
+    "message": "Client profiles retrieved successfully",
+    "data": [
+        {
+            "userId": 2,
+            "clientProfileId": 1,
+            "firstName": "John",
+            "lastName": "Doe"
+        },
+        {
+            "userId": 2,
+            "clientProfileId": 2,
+            "firstName": "John",
+            "lastName": "Doe"
+        },
+    ]
+}
+```
+
+</details>
+
+#### Update Client Profile
+
+<details>
+
+- **URL**: `api/v1/clients/:id`
+- **Method**: `PATCH`
+- **Description**: Update details of a client profile by ID.
+- **Parameters**: `clientProfileId` (integer): ID of the client profile.
+
+**Allowed columns:**
+
+- `firstName`
+- `lastName`
+
+**Request Body**:
+
+```JavaScript
+{
+  "firstName": "Jane",
+  "lastName": "Doe"
+}
+
+```
+
+**Response:**
+
+- 200 OK
+
+```JavaScript
+{
+    "status": "success",
+    "message": "Successfully updated client profile",
+    "data": {
+        "userId": 2,
+        "clientProfileId": 2,
+        "firstName": "Jane",
+        "lastName": "Doe"
+    }
+}
+
+```
+
+- 404 Not Found
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Failed to Get. No record found with ID: ${clientProfileId}",
+}
+
+```
+
+- 400 Bad Request
+
+```JavaScript
+{
+  "status": "error",
+  "message": "error message"
+}
+
+```
+
+**Validation Error Messages**
+
+| Property    | Validation Rule | Error Message                        |
+| ----------- | --------------- | ------------------------------------ |
+| `firstName` | string          | `First name must be a string value.` |
+| `lastName`  | string          | `Last name must be a string value.`  |
+
+</details>
+
+#### Delete Client Profile
+
+<details>
+
+- **URL**: `api/v1/lawyers/:id`
+- **Method**: `DELETE`
+- **Description**: Delete a lawyer profile by ID.
+- **Parameters**: `lawyerProfileId` (integer): ID of the lawyer profile.
+
+**Response:**
+
+- 204 No Content
+
+- 404 Not Found
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Failed to Remove. No record found with ID: ${lawyerProfileId}"
+}
+
 ```
 
 </details>

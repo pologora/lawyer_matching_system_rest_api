@@ -1,5 +1,18 @@
 const dev = `
-SELECT *
+SELECT
+ userId, 
+  email, 
+  googleId, 
+  role, 
+  profileImageFileName, 
+  resetPasswordToken, 
+  resetPasswordTokenExpiration, 
+  passwordChangedAt, 
+  emailVerificationToken, 
+  emailVerificationTokenExpiration, 
+  active, 
+  createdAt, 
+  updatedAt 
 FROM User where userId = ?;
 `;
 

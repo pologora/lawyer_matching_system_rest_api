@@ -66,6 +66,8 @@ export const getManyLawyersService = async ({ queryString }: GetManyLawyersServi
 export const updateLawyerService = async ({ data, id }: UpdateLawerServiceProps) => {
   const { specializations } = data;
 
+  await LawyersProfile.getOne({ id });
+
   if (specializations?.length) {
     await LawyersProfile.updateLawyerSpecializations({ lawyerId: id, specializationsIds: specializations });
     delete data.specializations;
