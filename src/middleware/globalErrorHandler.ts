@@ -40,7 +40,7 @@ export const globalErrorHandler = (err: AppError, _req: Request, res: Response, 
     logger.error(err);
   }
 
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
     sendDevError(err, res, statusCode);
   } else {
     sendProductionError(err, res, statusCode);

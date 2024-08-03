@@ -45,12 +45,12 @@ beforeAll(async () => {
 
   const createLawyerData = {
     bio: 'lorem lem',
-    city: 'City',
+    cityId: 1,
     experience: 2,
     firstName: 'Test Cases',
     lastName: 'Lawyer',
     licenseNumber: '1111',
-    region: 'Alaska',
+    regionId: 2,
     specializations: [1],
     userId: userForLawyerId,
   };

@@ -8,4 +8,4 @@ SELECT userId, email, role, createdAt, updatedAt, active, googleId, passwordChan
 FROM User where userId = ?;
 `;
 
-export const getUserByIdQuery = process.env.NODE_ENV === 'development' ? dev : prod;
+export const getUserByIdQuery = process.env.NODE_ENV === 'production' ? prod : dev;

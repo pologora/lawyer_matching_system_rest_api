@@ -6,6 +6,7 @@ import {
   deleteUserQuery,
   getAllUsersQuery,
   getUserByIdQuery,
+  getUserForAuthQuery,
   updateUserRoleQuery,
 } from './sqlQueries';
 import { UserRole } from '../../types/userRoles';
@@ -17,6 +18,10 @@ type CreateProps = {
 };
 
 type GetOneProps = {
+  id: number;
+};
+
+type GetOneForAuthProps = {
   id: number;
 };
 
@@ -46,6 +51,12 @@ class User {
 
   static async getOne({ id }: GetOneProps) {
     const [result] = await pool.query<RowDataPacket[]>(getUserByIdQuery, [id]);
+
+    return result[0] as IUser;
+  }
+
+  static async getOneForAuth({ id }: GetOneForAuthProps) {
+    const [result] = await pool.query<RowDataPacket[]>(getUserForAuthQuery, [id]);
 
     return result[0] as IUser;
   }

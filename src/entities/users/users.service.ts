@@ -1,6 +1,7 @@
 import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
 import { AppError } from '../../utils/errors/AppError';
 import { hashPassword } from '../../utils/passwordManagement/hashPassword';
+import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { User } from './users.model';
 
@@ -38,7 +39,7 @@ export const getUserService = async ({ id }: GetUserServiceProps) => {
   const user = await User.getOne({ id });
 
   if (!user) {
-    throw new AppError(`User id: ${id} not exists`);
+    throw new AppError(`User id: ${id} not exists`, HTTP_STATUS_CODES.NOT_FOUND_404);
   }
 
   return user;
