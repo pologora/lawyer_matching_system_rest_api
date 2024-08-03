@@ -58,8 +58,6 @@ Platform to match clients with lawyers. When a client has a legal issue, the sys
 - **Case Privacy**: If a client selects a lawyer, the case is made private for that lawyer.
 - **Reviews and Ratings**: Once a case is completed, clients can leave a review and rating. Reviews are linked to the case for credibility.
 
-
-
 ## Project Management
 
 GitHub projects used to track tasks and progress. Please visit [Project Board](https://github.com/users/pologora/projects/5/views/1)
@@ -145,27 +143,35 @@ The application will be accessible at `http://localhost:5000/api/v1`
 
   - `userId` int primary key,
   - `email` varchar unique not null,
+  - `password` varchar,
+  - `googleId` varchar,
   - `role` enum ('admin', 'user', 'client', 'lawyer') default 'user',
-  - `active` boolean default `true`,
+  - `profileImagePath` varchar,
   - `resetPasswordToken` varchar,
-  - `resetPasswordTokenExpirations` timestamp,
+  - `resetPasswordTokenExpiration` timestamp,
   - `passwordChangedAt` timestamp,
+  - `emailVerificationToken` varchar,
+  - `emailVerificationTokenExpiration` timestamp,
+  - `active` boolean default `true`,
   - `createdAt` timestamp default current_timestamp,
   - `updatedAt` timestamp default current_timestamp on update current_timestamp
 
 - **LawyerProfile**:
 
-  - `id` int primary key,
-  - `userId` foreign key (User) not null unique on delete cascade,
-  - `experience` int,
-  - `licenseNumber` varchar,
-  - `rating` decimal(2,1),
+  - `lawyerProfileId` int primary key,
+  - `userId` int not null unique,
+  - `licenseNumber` varchar(255),
   - `bio` text,
-  - `firstName` varchar,
-  - `lastName` varchar,
-  - `city` varchar,
-  - `region` varchar
-  - `index (userId)`
+  - `experience` int,
+  - `firstName` varchar(100),
+  - `lastName` varchar(100),
+  - `city` varchar(100),
+  - `region` varchar(100),
+  - `rating` decimal(2, 1),
+  - `initialConsultationFee` decimal(8, 2) default null,
+  - `hourlyRate` decimal(8, 2),
+  - `FOREIGN KEY (userId) REFERENCES User(userId) ON DELETE CASCADE`,
+  - `INDEX (userId)`
 
 - **Specialization**:
 
@@ -175,52 +181,61 @@ The application will be accessible at `http://localhost:5000/api/v1`
 - **LawyerSpecialization**:
 
   - `lawyerSpecializationId` int primary key,
-  - `lawyerId` foreign key (LawyerProfile) not null on delete cascade,
-  - `specializationId` foreign key (Specialization) on delete cascade,
-  - `uniqueSpecialization` unique key (lawyerId, specializationId),
-  - `index (lawyerId)`,
-  - `index (specializationId)`
+  - `lawyerId` int not null, foreign key (LawyerProfile) on delete cascade,
+  - `specializationId` int not null, foreign key (Specialization) on delete cascade,
+  - `UNIQUE KEY uniqueSpecialization (lawyerId, specializationId)`,
+  - `INDEX (lawyerId)`,
+  - `INDEX (specializationId)`
 
 - **ClientProfile**:
 
   - `clientProfileId` int primary key,
-  - `userId` int foreign key (users) not null unique on delete cascade,
-  - `firstName` varchar,
-  - `lastName` varchar,
-  - `index (userId)`
+  - `userId` int not null unique, foreign key (User) on delete cascade,
+  - `firstName` varchar(100),
+  - `lastName` varchar(100),
+  - `INDEX (userId)`
 
 - **Case**:
 
   - `caseId` int primary key,
-  - `clientId` int foreign key (ClientProfile) on delete set null,
-  - `lawyerId` int foreign key (LawyerProfile) on delete set null,
+  - `clientId` int, foreign key (ClientProfile) on delete set null,
+  - `lawyerId` int, foreign key (LawyerProfile) on delete set null,
+  - `specializationId` int, foreign key (Specialization) on delete set null,
+  - `cityId` int, foreign key (City) on delete set null,
+  - `regionId` int, foreign key (Region) on delete set null,
   - `description` text,
-  - `status` enum ('open', 'closed', 'pending') default open,
+  - `title` varchar(255),
+  - `status` enum('open', 'closed', 'pending') default 'open',
   - `createdAt` timestamp default current_timestamp,
-  - `updatesAt` timestamp default current_timestamp on update current_timestamp,
-  - `index (clientId)`,
-  - `index (lawyerId)`
+  - `updatedAt` timestamp default current_timestamp on update current_timestamp,
+  - `INDEX (clientId)`,
+  - `INDEX (lawyerId)`
 
 - **Review**:
 
   - `reviewId` int primary key,
-  - `clientId` int foreign key (ClientProfile) on delete set null
-  - `lawyerId` int foreign key (LawyerProfile) on delete cascade,
-  - `review` text,
+  - `clientId` int, foreign key (ClientProfile) on delete set null,
+  - `lawyerId` int not null, foreign key (LawyerProfile) on delete cascade,
+  - `reviewText` text,
   - `rating` int,
-  - `index (clientId)`,
-  - `index (lawyerId)`
+  - `createdAt` timestamp default current_timestamp,
+  - `updatedAt` timestamp default current_timestamp on update current_timestamp,
+  - `INDEX (clientId)`,
+  - `INDEX (lawyerId)`
 
 - **Message**:
 
   - `messageId` int primary key,
-  - `senderId` int foreign key (User) on delete set null
-  - `receiverId` int foreign key (User) on delete set null,
+  - `senderId` int, foreign key (User) on delete set null,
+  - `receiverId` int, foreign key (User) on delete set null,
+  - `caseId` int, foreign key (Case) on delete set null,
+  - `type` enum('private', 'public'),
+  - `isRead` boolean,
   - `message` text,
   - `createdAt` timestamp default current_timestamp,
-  - `updatesAt` timestamp default current_timestamp on update current_timestamp,
-  - `index (senderId)`,
-  - `index (receiverId)`
+  - `updatedAt` timestamp default current_timestamp on update current_timestamp,
+  - `INDEX (senderId)`,
+  - `INDEX (receiverId)`
 
 - **Region**:
 
@@ -230,7 +245,7 @@ The application will be accessible at `http://localhost:5000/api/v1`
 - **City**:
 
   - `cityId` int primary key,
-  - `regionId` int foreign key,
+  - `regionId` int foreign key (Region) on delete cascade,
   - `name` varchar
 
 ## Error Handling
@@ -726,6 +741,62 @@ Validation Error Examples:
 | `password` | Required        | `Password is required` |
 
 </details>
+
+#### Verify Email
+
+<details>
+
+- URL: `api/v1/auth/verify-email/:token`
+- Method: `POST`
+- Description: Verify a user's email using the provided token, update User active column to `true`
+
+**Response:**
+
+- 200 OK
+
+```JavaScript
+{
+  "status": "success",
+  "message": "Email validated successfully"
+}
+```
+
+- 400 Bad Request (Validation errors)
+
+```JavaScript
+{
+  "status": "error",
+  "message": "Invalid email verification token"
+}
+```
+
+- 400 Bad Request (Expired Token)
+
+```JavaScript
+{
+  "status": "error",
+  "message": "The time limit for email verification expired. Please register again"
+}
+```
+
+#### Logout
+
+<details>
+
+- URL: `api/v1/auth/logout`
+- Method: `POST`
+- Description: Logout a user by removing the JWT token from cookies
+
+**Response:**
+
+- 200 OK
+
+```JavaScript
+{
+  "status": "success",
+  "message": "User logged out successfully"
+}
+```
 
 ### Users
 

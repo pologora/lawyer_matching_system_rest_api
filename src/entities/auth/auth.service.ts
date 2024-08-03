@@ -163,7 +163,10 @@ export const verifyEmailService = async ({ token }: VerificateEmailDto) => {
 
   const isEmailTokenExpired = isTokenExpired(user.emailVerificationTokenExpiration!);
   if (isEmailTokenExpired) {
-    throw new AppError('The time limit for email verification expired. Please register again');
+    throw new AppError(
+      'The time limit for email verification expired. Please register again',
+      HTTP_STATUS_CODES.BAD_REQUEST_400,
+    );
   }
 
   return await Auth.setUserVerified({ id: user.userId });
