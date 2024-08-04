@@ -39,25 +39,49 @@
 
       - [Create Profile Lawyer](#create-lawyer-profile)
       - [Get Lawyer Profile By ID](#get-lawyer-profile-by-id)
-      - [Get Many Lawyer Profiles](#get-all-lawyers)
+      - [Get Many Lawyer Profiles](#get-many-lawyer-profiles)
       - [Update Lawyer Profile](#update-lawyer)
       - [Delete Lawyer Profile](#delete-lawyer)
+
+    - [Client Profile](#client-profile)
+
+      - [Create Client Profile](#create-client-profile)
+      - [Get Client Profile By ID](#get-client-profile-by-id)
+      - [Get Many Client Profiles](#get-many-client-profiles)
+      - [Update Client Profile](#update-client-profile)
+      - [Delete Client Profile](#delete-client-profile)
 
     - [Cases](#cases)
 
       - [Create Case](#create-case)
       - [Get Case by ID](#get-case-by-id)
+      - [Get Many Cases](#get-many-cases)
       - [Update Case](#update-case)
       - [Delete Case](#delete-case)
 
     - [Reviews](#reviews)
+
       - [Create Review](#create-review)
-      - [Get Reviews by Lawyer ID](#get-reviews-by-lawyer-id)
+      - [Get Reviews by ID](#get-review-by-id)
+      - [Get Many Reviews](#get-many-reviews)
       - [Update Review](#update-review)
       - [Delete Review](#delete-review)
+
     - [Messages](#messages)
-      - [Send Message](#send-message)
-      - [Get Messages by User ID](#get-messages-by-user-id)
+
+      - [Create Message](#create-message)
+      - [Get Messages by ID](#get-message-by-id)
+      - [Get Many Messages](#get-many-messages)
+      - [Update Message](#update-message)
+      - [Delete Message](#delete-message)
+
+    - [Cities](#cities)
+
+      - [Get Cities by Region ID](#get-cities-by-region)
+
+    - [Regions](#regions)
+
+      - [Get all Regions](#get-all-regions)
 
 ## Description
 
@@ -2391,7 +2415,7 @@ GET /api/v1/reviews?clientId=2&limit=10&page=1&sortBy=createdAt&sortOrder=desc
 
 </details>
 
-#### Get Review by Id
+#### Get Message by Id
 
 <details>
 
@@ -2589,6 +2613,89 @@ GET /api/v1/messages?receiverId=2&limit=10&page=1&sortBy=createdAt&sortOrder=des
 {
   "status": "error",
   "message": "Failed to Remove. No record found with ID: ${messageId}"
+}
+```
+
+</details>
+
+### Cities
+
+#### Get Cities by Region
+
+<details>
+
+- **URL**: `api/v1/cities`
+- **Method**: `GET`
+- **Description**: Retrieve a list of cities by region ID.
+- **Query Parameters:** - `regionId` (integer, required): id of the region.
+
+**Example Request:**
+
+```plaintext
+GET /api/v1/cities?regionId=1
+```
+
+**Response:**
+
+- 200 OK
+
+```json
+{
+  "status": "success",
+  "message": "Cities retrieved successfully.",
+  "data": [
+    {
+      "cityId": 1,
+      "name": "City Name",
+      "regionId": 1
+    }
+    // more city objects
+  ]
+}
+```
+
+- 400 Bad Request
+
+```json
+{
+  "status": "error",
+  "message": "Validation error message"
+}
+```
+
+**Validation Error Messages**
+
+| Property   | Validation Rule   | Error Message                                                                                |
+| ---------- | ----------------- | -------------------------------------------------------------------------------------------- |
+| `regionId` | Required, integer | `Region id is required.`<br>`Region id must be a number.`<br>`Region id must be an integer.` |
+
+</details>
+
+### Regions
+
+#### Get All Regions
+
+<details>
+
+- **URL**: `api/v1/regions`
+- **Method**: `GET`
+- **Description**: Retrieve a list of all regions.
+
+**Response:**
+
+- 200 OK
+
+```json
+{
+  "status": "success",
+  "message": "Regions retrieved successfully.",
+  "data": [
+    {
+      "regionId": 2,
+      "name": "Region Name"
+    }
+    // more region objects
+  ]
 }
 ```
 
