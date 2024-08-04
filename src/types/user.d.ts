@@ -12,4 +12,6 @@ export interface IUser {
   googleId?: string;
   emailVerificationToken: string | null;
   emailVerificationTokenExpiration: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

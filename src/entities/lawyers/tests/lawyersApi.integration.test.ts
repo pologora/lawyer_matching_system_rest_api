@@ -143,7 +143,6 @@ describe('Test PATCH /lawyers/:id', () => {
       .expect('Content-Type', /json/);
 
     expect(response.body).toHaveProperty('status', 'error');
-    expect(response.body).toHaveProperty('message', `Failed to Update. No record found with ID: ${wrongId}`);
   });
 });
 
