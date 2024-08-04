@@ -17,6 +17,8 @@
 
       - [Login](#login)
       - [Register](#register)
+      - [Register/Login with Google](#registerlogin-with-google)
+      - [Get Me](#get-me)
       - [Forgot Password](#forgot-password)
       - [Reset Password](#reset-password)
       - [Change My Password](#change-my-password)
@@ -362,6 +364,17 @@ if (decoded) {
 | 429 | Too Many Requests     | The user has sent too many requests in a given amount of time ("rate limiting").                           |
 | 500 | Internal Server Error | The server has encountered a situation it does not know how to handle.                                     |
 
+In all API endpoints, any unexpected fields in query parameters that are not defined in the schema will result in:
+
+- 400 Bad Request
+
+```json
+{
+  "status": "error",
+  "message": "\"fieldname\" is not allowed"
+}
+```
+
 ## API Endpoints
 
 ### Authentication
@@ -376,7 +389,7 @@ if (decoded) {
 
 **Request Body:**
 
-```JavaScript
+```json
 {
   "email": "john.doe@example.com",
   "password": "securePassword123"
@@ -387,7 +400,7 @@ if (decoded) {
 
 - 200 OK
 
-```JavaScript
+```json
 {
   "status": "success",
   "message": "User login successfully",
@@ -398,27 +411,24 @@ if (decoded) {
     "email": "john.doe@example.com"
   }
 }
-
 ```
 
 - 401 Unauthorized
 
-```JavaScript
+```json
 {
   "status": "error",
-  "message": "Email or password is not valid",
+  "message": "Email or password is not valid"
 }
-
 ```
 
 - 400 Bad Request (Validation errors)
 
-```JavaScript
+```json
 {
   "status": "error",
-  "message": "Error message",
+  "message": "Error message"
 }
-
 ```
 
 Validation Error Examples:
@@ -441,11 +451,11 @@ Validation Error Examples:
 
 **Request Body:**
 
-```JavaScript
+```json
 {
   "name": "John Doe",
   "email": "john.doe@example.com",
-  "password": "securePassword123",
+  "password": "securePassword123"
 }
 ```
 
@@ -453,23 +463,21 @@ Validation Error Examples:
 
 - 201 Created
 
-```JavaScript
+```json
 {
-  "status":"success",
+  "status": "success",
   "message": "User registered successfully",
   "token": "JWT"
 }
-
 ```
 
 - 400 Bad Request (Validation errors)
 
-```JavaScript
+```json
 {
   "status": "error",
-  "message": "Error message",
+  "message": "Error message"
 }
-
 ```
 
 Validation Error Examples:
@@ -485,6 +493,73 @@ Validation Error Examples:
 
 </details>
 
+#### Register/Login with Google
+
+<details>
+
+- URL: `api/v1/auth/google`
+- Method: `GET`
+- Description: Register or login a user with their Google account.
+
+**Response:**
+
+- Assigns JWT token to cookies and redirects the user.
+
+</details>
+
+#### Get Me
+
+<details>
+
+- URL: `api/v1/auth/me`
+- Method: `GET`
+- Description: Get `user` and `profile` by `JWT` token
+
+**Request Body:**
+
+JWT token in cookies.
+
+**Response:**
+
+- 200 Success
+
+```json
+{
+  "status": "success",
+  "message": "Retrieved user and profile successfully",
+  "data": {
+    "role": "lawyer",
+    "userId": 3,
+    "googleId": null,
+    "active": 0,
+    "email": "mail2@mail.com",
+    "createdAt": "2024-08-03T13:29:39.000Z",
+    "updatedAt": "2024-08-03T13:30:25.000Z",
+    "lawyerProfileId": 4,
+    "licenseNumber": "1111",
+    "bio": "lorem",
+    "experience": 2,
+    "firstName": "John",
+    "lastName": "Doe",
+    "rating": null,
+    "city": "Bolesławiec",
+    "region": "DOLNOŚLĄSKIE",
+    "specializations": "Criminal Law,Real Estate Law"
+  }
+}
+```
+
+- 401 Unauthorized
+
+```json
+{
+  "status": "error",
+  "message": "The user belonging to this token no longer exists. Please log in or create an account"
+}
+```
+
+</details>
+
 #### Forgot Password
 
 <details>
@@ -495,7 +570,7 @@ Validation Error Examples:
 
 **Request Body:**
 
-```JavaScript
+```json
 {
   "email": "john.doe@example.com"
 }
@@ -505,17 +580,16 @@ Validation Error Examples:
 
 - 200 Success
 
-```JavaScript
+```json
 {
   "status": "success",
-  "message": "Reset password link was sent to the user email",
+  "message": "Reset password link was sent to the user email"
 }
-
 ```
 
 - 404 Not Found
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "There is no user with this email adress"
@@ -524,12 +598,11 @@ Validation Error Examples:
 
 - 400 Bad Request (Validation errors)
 
-```JavaScript
+```json
 {
   "status": "error",
-  "message": "Error message",
+  "message": "Error message"
 }
-
 ```
 
 Validation Error Examples:
@@ -551,7 +624,7 @@ Validation Error Examples:
 
 **Request Body:**
 
-```JavaScript
+```json
 {
   "password": "newpassword",
   "confirmPassword": "newpassword"
@@ -562,18 +635,17 @@ Validation Error Examples:
 
 - 200 Success
 
-```JavaScript
+```json
 {
   "status": "success",
   "message": "Password has been changed",
   "token": "JWT"
 }
-
 ```
 
 - 400 Bad Request (Invalid token)
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Error message"
@@ -589,12 +661,11 @@ Invalid Token Error Examples:
 
 - 400 Bad Request (Validation errors)
 
-```JavaScript
+```json
 {
   "status": "error",
-  "message": "Error message",
+  "message": "Error message"
 }
-
 ```
 
 Validation Error Examples:
@@ -608,12 +679,11 @@ Validation Error Examples:
 
 - 500 Internal Server Error
 
-```JavaScript
+```json
 {
   "status": "error",
-  "message": "Password update failed. Please try again later.",
+  "message": "Password update failed. Please try again later."
 }
-
 ```
 
 </details>
@@ -628,7 +698,7 @@ Validation Error Examples:
 
 **Request Body:**
 
-```JavaScript
+```json
 {
   "password": "oldPassword",
   "newPassword": "newPassword",
@@ -640,18 +710,17 @@ Validation Error Examples:
 
 - 200 Success
 
-```JavaScript
+```json
 {
   "status": "success",
   "message": "Password has been changed",
   "token": "JWT"
 }
-
 ```
 
 - 401 Unauthorized (Invalid password)
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Invalid password"
@@ -660,7 +729,7 @@ Validation Error Examples:
 
 - 401 Unauthorized (Invalid JWT token)
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Invalid signature"
@@ -669,12 +738,11 @@ Validation Error Examples:
 
 - 400 Bad Request (Validation errors)
 
-```JavaScript
+```json
 {
   "status": "error",
-  "message": "Error message",
+  "message": "Error message"
 }
-
 ```
 
 Validation Error Examples:
@@ -689,12 +757,11 @@ Validation Error Examples:
 
 - 500 Internal Server Error
 
-```JavaScript
+```json
 {
   "status": "error",
-  "message": "Password update failed. Please try again later",
+  "message": "Password update failed. Please try again later"
 }
-
 ```
 
 </details>
@@ -709,7 +776,7 @@ Validation Error Examples:
 
 **Request Body:**
 
-```JavaScript
+```json
 {
   "password": "password"
 }
@@ -721,7 +788,7 @@ Validation Error Examples:
 
 - 401 Unauthorized (Invalid password)
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Invalid password"
@@ -730,7 +797,7 @@ Validation Error Examples:
 
 - 401 Unauthorized (Invalid JWT token)
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Invalid signature"
@@ -739,12 +806,11 @@ Validation Error Examples:
 
 - 400 Bad Request (Validation errors)
 
-```JavaScript
+```json
 {
   "status": "error",
-  "message": "Error message",
+  "message": "Error message"
 }
-
 ```
 
 Validation Error Examples:
@@ -767,7 +833,7 @@ Validation Error Examples:
 
 - 200 OK
 
-```JavaScript
+```json
 {
   "status": "success",
   "message": "Email validated successfully"
@@ -776,7 +842,7 @@ Validation Error Examples:
 
 - 400 Bad Request (Validation errors)
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Invalid email verification token"
@@ -785,7 +851,7 @@ Validation Error Examples:
 
 - 400 Bad Request (Expired Token)
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "The time limit for email verification expired. Please register again"
@@ -806,7 +872,7 @@ Validation Error Examples:
 
 - 200 OK
 
-```JavaScript
+```json
 {
   "status": "success",
   "message": "User logged out successfully"
@@ -839,39 +905,37 @@ Validation Error Examples:
 
 - 201 Created
 
-```JavaScript
+```json
 {
   "message": "User created successfully",
   "data": {
-        "fieldCount": 0,
-        "affectedRows": 1,
-        "insertId": 7,
-        "info": "",
-        "serverStatus": 2,
-        "warningStatus": 0,
-        "changedRows": 0
-    }
+    "fieldCount": 0,
+    "affectedRows": 1,
+    "insertId": 7,
+    "info": "",
+    "serverStatus": 2,
+    "warningStatus": 0,
+    "changedRows": 0
+  }
 }
 ```
 
 - 400 Bad Request (Duplicate Entry)
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Duplicate entry 'john.doe@example.com' for key 'email'"
 }
-
 ```
 
 - 400 Bad Request (Validation errors)
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Confirm password does not match password."
 }
-
 ```
 
 Validation Error Examples:
@@ -902,27 +966,27 @@ Validation Error Examples:
 
 - 200 OK
 
-```JavaScript
-  {
-    "userId": 1,
-    "email": "mail22@mail.com",
-    "googleId": null,
-    "role": "user",
-    "profileImageFileName": null,
-    "resetPasswordToken": null,
-    "resetPasswordTokenExpiration": null,
-    "passwordChangedAt": null,
-    "emailVerificationToken": null,
-    "emailVerificationTokenExpiration": null,
-    "active": 0,
-    "createdAt": "2024-08-03T13:29:28.000Z",
-    "updatedAt": "2024-08-03T13:29:44.000Z"
-  }
+```json
+{
+  "userId": 1,
+  "email": "mail22@mail.com",
+  "googleId": null,
+  "role": "user",
+  "profileImageFileName": null,
+  "resetPasswordToken": null,
+  "resetPasswordTokenExpiration": null,
+  "passwordChangedAt": null,
+  "emailVerificationToken": null,
+  "emailVerificationTokenExpiration": null,
+  "active": 0,
+  "createdAt": "2024-08-03T13:29:28.000Z",
+  "updatedAt": "2024-08-03T13:29:44.000Z"
+}
 ```
 
 - 400 Bad Request
 
-```JavaScript
+```json
 {
   "message": "Bad request"
 }
@@ -930,10 +994,10 @@ Validation Error Examples:
 
 - 404 Not Found
 
-```JavaScript
+```json
 {
   "status": "error",
-  "message": "User id: ${userId} not exists",
+  "message": "User id: ${userId} not exists"
 }
 ```
 
@@ -966,39 +1030,38 @@ GET /api/v1/users?role=client&limit=10&page=2&sort=createdAt&order=desc&search=j
 
 - 200 OK
 
-```JavaScript
+```json
 {
-    "status": "success",
-    "message": "Users retrieved successfully.",
-    "data": [
-        {
-            "userId": 1,
-            "email": "mail22@mail.com",
-            "googleId": null,
-            "role": "lawyer",
-            "active": 0,
-            "createdAt": "2024-08-03T13:29:28.000Z",
-            "updatedAt": "2024-08-03T13:29:44.000Z",
-            "profileImageFileName": null
-        },
-        {
-            "userId": 2,
-            "email": "mail@mail.com",
-            "googleId": null,
-            "role": "client",
-            "active": 0,
-            "createdAt": "2024-08-03T13:29:36.000Z",
-            "updatedAt": "2024-08-03T13:30:05.000Z",
-            "profileImageFileName": null
-        },
-    ]
+  "status": "success",
+  "message": "Users retrieved successfully.",
+  "data": [
+    {
+      "userId": 1,
+      "email": "mail22@mail.com",
+      "googleId": null,
+      "role": "lawyer",
+      "active": 0,
+      "createdAt": "2024-08-03T13:29:28.000Z",
+      "updatedAt": "2024-08-03T13:29:44.000Z",
+      "profileImageFileName": null
+    },
+    {
+      "userId": 2,
+      "email": "mail@mail.com",
+      "googleId": null,
+      "role": "client",
+      "active": 0,
+      "createdAt": "2024-08-03T13:29:36.000Z",
+      "updatedAt": "2024-08-03T13:30:05.000Z",
+      "profileImageFileName": null
+    }
+  ]
 }
-
 ```
 
 - 400 Bad Request (Validation errors)
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Error message"
@@ -1036,7 +1099,7 @@ Validation Error Examples:
 
 **Request Body**:
 
-```JavaScript
+```json
 {
   "role": "admin",
   "active": true
@@ -1047,47 +1110,44 @@ Validation Error Examples:
 
 - 200 OK
 
-```JavaScript
+```json
 {
-    "status": "success",
-    "message": "User updated successfully.",
-    "data": {
-        "userId": 2,
-        "email": "mail@mail.com",
-        "googleId": null,
-        "role": "admin",
-        "profileImageFileName": null,
-        "resetPasswordToken": null,
-        "resetPasswordTokenExpiration": null,
-        "passwordChangedAt": null,
-        "emailVerificationToken": null,
-        "emailVerificationTokenExpiration": null,
-        "active": 1,
-        "createdAt": "2024-08-03T13:29:36.000Z",
-        "updatedAt": "2024-08-03T15:23:39.000Z"
-    }
+  "status": "success",
+  "message": "User updated successfully.",
+  "data": {
+    "userId": 2,
+    "email": "mail@mail.com",
+    "googleId": null,
+    "role": "admin",
+    "profileImageFileName": null,
+    "resetPasswordToken": null,
+    "resetPasswordTokenExpiration": null,
+    "passwordChangedAt": null,
+    "emailVerificationToken": null,
+    "emailVerificationTokenExpiration": null,
+    "active": 1,
+    "createdAt": "2024-08-03T13:29:36.000Z",
+    "updatedAt": "2024-08-03T15:23:39.000Z"
+  }
 }
-
 ```
 
 - 400 Bad Request
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "\"email\" is not allowed"
 }
-
 ```
 
 - 404 Not Found
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Failed to Update. No record found with ID: ${userId}"
 }
-
 ```
 
 </details>
@@ -1107,12 +1167,11 @@ Validation Error Examples:
 
 - 404 Not Found
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Failed to Remove. No record found with ID: ${userId}"
 }
-
 ```
 
 </details>
@@ -1136,32 +1195,29 @@ Validation Error Examples:
 
 - 200 OK
 
-```JavaScript
+```json
 {
-    "status": "success",
-    "message": "User image uploaded successfully"
+  "status": "success",
+  "message": "User image uploaded successfully"
 }
-
 ```
 
 - 404 Not Found
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Failed to Update. No record found with ID: ${userId}"
 }
-
 ```
 
 - 400 Bad Request
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Not an image! Please upload only images"
 }
-
 ```
 
 </details>
@@ -1178,7 +1234,7 @@ Validation Error Examples:
 
 **Request Body**:
 
-```JavaScript
+```json
 {
   "userId": 2,
   "licenseNumber": "12345",
@@ -1189,10 +1245,9 @@ Validation Error Examples:
   "cityId": 1,
   "regionId": 2,
   "specializations": [1, 2, 3],
-  "initialConsultationFee": 100.00,
-  "hourlyRate": 200.00
+  "initialConsultationFee": 100.0,
+  "hourlyRate": 200.0
 }
-
 ```
 
 | Field                    | Type             | Required | Error Messages                                                                        |
@@ -1211,12 +1266,11 @@ Validation Error Examples:
 
 - 400 Bad Request
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "error message from table"
 }
-
 ```
 
 </details>
@@ -1234,7 +1288,7 @@ Validation Error Examples:
 
 - 200 OK
 
-```JavaScript
+```json
   "lawyerProfileId": 4,
         "userId": 3,
         "licenseNumber": "licenseNumber",
@@ -1252,10 +1306,10 @@ Validation Error Examples:
 
 - 404 Not Found
 
-```JavaScript
+```json
 {
   "status": "error",
-  "message": "Failed to Get. No record found with ID: 42",
+  "message": "Failed to Get. No record found with ID: 42"
 }
 ```
 
@@ -1295,49 +1349,48 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 
 - 200 OK
 
-```JavaScript
+```json
 {
-    "status": "success",
-    "message": "Lawyer profiles retrieved successfully",
-    "data": [
-        {
-            "lawyerProfileId": 4,
-            "userId": 3,
-            "licenseNumber": "1111",
-            "bio": "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
-            "experience": 2,
-            "hourlyRate": null,
-            "initialConsultationFee": null,
-            "firstName": "John",
-            "lastName": "Doe",
-            "rating": null,
-            "city": "Bolesławiec",
-            "region": "DOLNOŚLĄSKIE",
-            "specializations": "Family Law,Corporate Law,Tax Law"
-        },
-        {
-            "lawyerProfileId": 5,
-            "userId": 1,
-            "licenseNumber": "1111",
-            "bio": "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
-            "experience": 2,
-            "hourlyRate": null,
-            "initialConsultationFee": null,
-            "firstName": "John",
-            "lastName": "Doe",
-            "rating": null,
-            "city": "Bolesławiec",
-            "region": "DOLNOŚLĄSKIE",
-            "specializations": "Family Law,Corporate Law,Tax Law"
-        }
-    ]
+  "status": "success",
+  "message": "Lawyer profiles retrieved successfully",
+  "data": [
+    {
+      "lawyerProfileId": 4,
+      "userId": 3,
+      "licenseNumber": "1111",
+      "bio": "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+      "experience": 2,
+      "hourlyRate": null,
+      "initialConsultationFee": null,
+      "firstName": "John",
+      "lastName": "Doe",
+      "rating": null,
+      "city": "Bolesławiec",
+      "region": "DOLNOŚLĄSKIE",
+      "specializations": "Family Law,Corporate Law,Tax Law"
+    },
+    {
+      "lawyerProfileId": 5,
+      "userId": 1,
+      "licenseNumber": "1111",
+      "bio": "lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem lorem",
+      "experience": 2,
+      "hourlyRate": null,
+      "initialConsultationFee": null,
+      "firstName": "John",
+      "lastName": "Doe",
+      "rating": null,
+      "city": "Bolesławiec",
+      "region": "DOLNOŚLĄSKIE",
+      "specializations": "Family Law,Corporate Law,Tax Law"
+    }
+  ]
 }
-
 ```
 
 - 400 Bad Request (Validation errors)
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Error message"
@@ -1386,9 +1439,9 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 
 **Request Body**:
 
-```JavaScript
+```json
 {
-  "bio": "New bio ",
+  "bio": "New bio "
 }
 ```
 
@@ -1396,47 +1449,44 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 
 - 200 OK
 
-```JavaScript
+```json
 {
-    "status": "success",
-    "message": "Successfully updated lawyer profile",
-    "data": {
-        "lawyerProfileId": 5,
-        "userId": 1,
-        "licenseNumber": "1111",
-        "bio": "New bio",
-        "experience": 2,
-        "firstName": "Lina",
-        "lastName": "Lee",
-        "hourlyRate": null,
-        "initialConsultationFee": null,
-        "rating": null,
-        "city": "Bielawa",
-        "region": "KUJAWSKO-POMORSKIE",
-        "specializations": "Criminal Law,Real Estate Law"
-    }
+  "status": "success",
+  "message": "Successfully updated lawyer profile",
+  "data": {
+    "lawyerProfileId": 5,
+    "userId": 1,
+    "licenseNumber": "1111",
+    "bio": "New bio",
+    "experience": 2,
+    "firstName": "Lina",
+    "lastName": "Lee",
+    "hourlyRate": null,
+    "initialConsultationFee": null,
+    "rating": null,
+    "city": "Bielawa",
+    "region": "KUJAWSKO-POMORSKIE",
+    "specializations": "Criminal Law,Real Estate Law"
+  }
 }
-
 ```
 
 - 404 Not Found
 
-```JavaScript
+```json
 {
   "status": "error",
-  "message": "Failed to Get. No record found with ID: ${lawyerProfileId}",
+  "message": "Failed to Get. No record found with ID: ${lawyerProfileId}"
 }
-
 ```
 
 - 400 Bad Request
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "error message"
 }
-
 ```
 
 **Validation Error Messages**
@@ -1472,12 +1522,11 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 
 - 404 Not Found
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Failed to Remove. No record found with ID: ${lawyerProfileId}"
 }
-
 ```
 
 </details>
@@ -1494,7 +1543,7 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 
 **Request Body:**
 
-```JavaScript
+```json
 {
   "firstName": "John",
   "lastName": "Doe",
@@ -1506,27 +1555,26 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 
 - 201 Created
 
-```JavaScript
+```json
 {
-    "status": "success",
-    "message": "Successfully created client profile",
-    "data": {
-        "userId": 2,
-        "clientProfileId": 2,
-        "firstName": "John",
-        "lastName": "Doe"
-    }
+  "status": "success",
+  "message": "Successfully created client profile",
+  "data": {
+    "userId": 2,
+    "clientProfileId": 2,
+    "firstName": "John",
+    "lastName": "Doe"
+  }
 }
 ```
 
 - 400 Bad Request (Validation errors)
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "errro message"
 }
-
 ```
 
 **Validation Error Messages**
@@ -1554,25 +1602,25 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 
 - 200 OK
 
-```JavaScript
-  {
-    "status": "success",
-    "message": "Client profile retrieved successfully",
-    "data": {
-        "userId": 2,
-        "clientProfileId": 2,
-        "firstName": "John",
-        "lastName": "Doe"
-    }
+```json
+{
+  "status": "success",
+  "message": "Client profile retrieved successfully",
+  "data": {
+    "userId": 2,
+    "clientProfileId": 2,
+    "firstName": "John",
+    "lastName": "Doe"
+  }
 }
 ```
 
 - 404 Not Found
 
-```JavaScript
+```json
 {
   "status": "error",
-  "message": "Failed to Get. No record found with ID: 42",
+  "message": "Failed to Get. No record found with ID: 42"
 }
 ```
 
@@ -1590,24 +1638,24 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 
 - 200 OK
 
-```JavaScript
- {
-    "status": "success",
-    "message": "Client profiles retrieved successfully",
-    "data": [
-        {
-            "userId": 2,
-            "clientProfileId": 1,
-            "firstName": "John",
-            "lastName": "Doe"
-        },
-        {
-            "userId": 2,
-            "clientProfileId": 2,
-            "firstName": "John",
-            "lastName": "Doe"
-        },
-    ]
+```json
+{
+  "status": "success",
+  "message": "Client profiles retrieved successfully",
+  "data": [
+    {
+      "userId": 2,
+      "clientProfileId": 1,
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    {
+      "userId": 2,
+      "clientProfileId": 2,
+      "firstName": "John",
+      "lastName": "Doe"
+    }
+  ]
 }
 ```
 
@@ -1629,50 +1677,46 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 
 **Request Body**:
 
-```JavaScript
+```json
 {
   "firstName": "Jane",
   "lastName": "Doe"
 }
-
 ```
 
 **Response:**
 
 - 200 OK
 
-```JavaScript
+```json
 {
-    "status": "success",
-    "message": "Successfully updated client profile",
-    "data": {
-        "userId": 2,
-        "clientProfileId": 2,
-        "firstName": "Jane",
-        "lastName": "Doe"
-    }
+  "status": "success",
+  "message": "Successfully updated client profile",
+  "data": {
+    "userId": 2,
+    "clientProfileId": 2,
+    "firstName": "Jane",
+    "lastName": "Doe"
+  }
 }
-
 ```
 
 - 404 Not Found
 
-```JavaScript
+```json
 {
   "status": "error",
-  "message": "Failed to Get. No record found with ID: ${clientProfileId}",
+  "message": "Failed to Get. No record found with ID: ${clientProfileId}"
 }
-
 ```
 
 - 400 Bad Request
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "error message"
 }
-
 ```
 
 **Validation Error Messages**
@@ -1699,12 +1743,324 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 
 - 404 Not Found
 
-```JavaScript
+```json
 {
   "status": "error",
   "message": "Failed to Remove. No record found with ID: ${clientProfileId}"
 }
+```
 
+</details>
+
+### Cases
+
+#### Create Case
+
+<details>
+
+- **URL:** `api/v1/cases`
+- **Method:** `POST`
+- **Description:** Create a new case.
+
+**Request Body:**
+
+```json
+{
+  "cityId": 1,
+  "clientId": 2,
+  "description": "Description of the case",
+  "lawyerId": 3,
+  "regionId": 4,
+  "title": "Title of the case"
+}
+```
+
+**Response:**
+
+- 201 Created
+
+```json
+{
+  "status": "success",
+  "message": "Successfully created new case",
+  "data": {
+    "caseId": 2,
+    "clientId": 2,
+    "lawyerId": 5,
+    "description": "Description of the case",
+    "status": "open",
+    "title": "Title of the case",
+    "createdAt": "2024-08-04T09:16:54.000Z",
+    "updatedAt": "2024-08-04T09:16:54.000Z",
+    "region": null,
+    "city": "Nowogrodziec"
+  }
+}
+```
+
+- 400 Bad Request (Validation errors)
+
+```json
+{
+  "status": "error",
+  "message": "Confirm password does not match password."
+}
+```
+
+**Validation Error Examples**:
+
+| Property | Validation Rule | Error ### Validation Error Messages
+
+| Property      | Validation Rule  | Error Message                                                       |
+| ------------- | ---------------- | ------------------------------------------------------------------- |
+| `cityId`      | number           | `City ID must be a numeric value.`                                  |
+| `clientId`    | required, number | `Client ID is required.`<br>`Client ID must be a numeric value.`    |
+| `description` | required, string | `Description is required.`<br>`Description must be a string value.` |
+| `lawyerId`    | required, number | `Lawyer ID is required.`<br>`Lawyer ID must be a numeric value.`    |
+| `regionId`    | number           | `Region ID must be a numeric value.`                                |
+| `title`       | required, string | `Title is required.`<br>`Title must be a string value.`             |
+
+</details>
+
+#### Get Case by Id
+
+<details>
+
+- **URL:** `api/v1/cases/:id`
+- **Method:** `GET`
+- **Description:** Retrieve details of a case by Id.
+- **Parameters:** `caseId`(integer): Id of the case.
+
+**Response:**
+
+- 200 OK
+
+```json
+{
+  "status": "success",
+  "message": "Case retrieved successfully.",
+  "data": {
+    "caseId": 1,
+    "cityId": 1,
+    "clientId": 2,
+    "description": "Description of the case",
+    "lawyerId": 3,
+    "regionId": 4,
+    "title": "Title of the case",
+    "status": "open",
+    "createdAt": "2024-08-03T13:29:28.000Z",
+    "updatedAt": "2024-08-03T13:29:28.000Z"
+  }
+}
+```
+
+- 404 Not Found
+
+```json
+{
+  "status": "error",
+  "message": "Failed to Get. No record found with ID: ${caseId}"
+}
+```
+
+</details>
+
+#### Get Many Cases
+
+<details>
+
+- **URL:** `api/v1/cases`
+- **Method:** `GET`
+- **Description:** Retrieve a list of cases.
+
+**Query Parameters:**
+
+- `cityId` (optional): Filter by city ID.
+- `clientId` (optional): Filter by client ID.
+- `lawyerId` (optional): Filter by lawyer ID.
+- `limit` (optional): Limit the number of results.
+- `order` (optional): Order of sorting. Possible values: `desc`, `asc`.
+- `page` (optional): Page number for pagination.
+- `regionId` (optional): Filter by region ID.
+- `searchDescription` (optional): Search by case description.
+- `searchTitle` (optional): Search by case title.
+- `sort` (optional): Sort by specific fields. Possible values: `cityId`, `clientId`, `lawyerId`, `regionId`, `createdAt`, `updatedAt`, `title`.
+- `specializationId` (optional): Filter by specialization ID.
+- `status` (optional): Filter by case status.
+
+**Example Request:**
+
+```plaintext
+GET /api/v1/cases?clientId=2&limit=10&page=1&sort=createdAt&order=desc
+
+```
+
+**Response:**
+
+- 200 OK
+
+```json
+{
+  "status": "success",
+  "message": "Cases retrieved successfully",
+  "data": [
+    {
+      "caseId": 2,
+      "clientId": 2,
+      "lawyerId": 5,
+      "description": "Case description",
+      "status": "open",
+      "title": "Very important case 1",
+      "createdAt": "2024-08-04T09:16:54.000Z",
+      "updatedAt": "2024-08-04T09:17:44.000Z",
+      "region": "LUBUSKIE",
+      "city": "Nowogrodziec"
+    },
+    {
+      "caseId": 4,
+      "clientId": 3,
+      "lawyerId": 22,
+      "description": "Updated description",
+      "status": "closed",
+      "title": "Very important case 2",
+      "createdAt": "2024-08-04T09:16:54.000Z",
+      "updatedAt": "2024-08-04T09:17:44.000Z",
+      "region": "LUBUSKIE",
+      "city": "Nowogrodziec"
+    }
+  ]
+}
+```
+
+- 400 Bad Request
+
+```json
+{
+  "status": "error",
+  "message": "error message"
+}
+```
+
+**Validation Error Messages:**
+
+| Property            | Validation Rule                    | Error Message                                                                                                                                    |
+| ------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `cityId`            | Must be a number                   | `City ID must be a numeric value.`                                                                                                               |
+| `clientId`          | Must be a number                   | `Client ID must be a numeric value.`                                                                                                             |
+| `lawyerId`          | Must be a number                   | `Lawyer ID must be a numeric value.`                                                                                                             |
+| `limit`             | Must be a number                   | `Limit must be a numeric value.`                                                                                                                 |
+| `order`             | Must be 'desc' or 'asc'            | `Order must be either "desc" or "asc".`                                                                                                          |
+| `page`              | Must be a number                   | `Page must be a numeric value.`                                                                                                                  |
+| `regionId`          | Must be a number                   | `Region ID must be a numeric value.`                                                                                                             |
+| `searchDescription` | Must be a string                   | `Search description must be a string value.`                                                                                                     |
+| `searchTitle`       | Must be a string                   | `Search title must be a string value.`                                                                                                           |
+| `sort`              | Must be one of ALLOWED_SORT_FIELDS | `Sort must be one of the following values: cityId, clientId, lawyerId, regionId, createdAt, updatedAt, title.`<br>`Sort must be a string value.` |
+| `specializationId`  | Must be a number                   | `Specialization ID must be a numeric value.`                                                                                                     |
+| `status`            | Must be a string                   | `Status must be a string value.`                                                                                                                 |
+
+</details>
+
+#### Update Case
+
+<details>
+
+- **URL**: `api/v1/cases/:id`
+- **Method**: `PATCH`
+- **Description**: Update details of a case profile by ID.
+- **Parameters**: `caseId` (integer): ID of the case.
+
+**Allowed columns:**
+
+- `cityId`
+- `description`
+- `regionId`
+- `status`
+
+**Request Body**:
+
+```json
+{
+  "cityId": 1,
+  "description": "Updated description of the case",
+  "regionId": 4,
+  "status": "closed"
+}
+```
+
+**Response:**
+
+- 200 OK
+
+```json
+{
+  "status": "success",
+  "message": "Case updated successfully.",
+  "data": {
+    "caseId": 1,
+    "cityId": 1,
+    "clientId": 2,
+    "description": "Updated description of the case",
+    "lawyerId": 3,
+    "regionId": 4,
+    "title": "Title of the case",
+    "status": "closed",
+    "createdAt": "2024-08-03T13:29:28.000Z",
+    "updatedAt": "2024-08-03T15:23:39.000Z"
+  }
+}
+```
+
+- 404 Not Found
+
+```json
+{
+  "status": "error",
+  "message": "Failed to Get. No record found with ID: ${caseId}"
+}
+```
+
+- 400 Bad Request
+
+```json
+{
+  "status": "error",
+  "message": "Validation error message"
+}
+```
+
+**Validation Error Messages**
+
+### Validation Error Messages
+
+| Property      | Validation Rule           | Error Message                                                                                             |
+| ------------- | ------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `cityId`      | Must be a number          | `City ID must be a numeric value.`                                                                        |
+| `description` | Must be a string          | `Description must be a string value.`                                                                     |
+| `regionId`    | Must be a number          | `Region ID must be a numeric value.`                                                                      |
+| `status`      | Must be one of [statuses] | `Status must be one of the following values: ${statuses.join(', ')}.`<br>`Status must be a string value.` |
+
+</details>
+
+#### Delete Case
+
+<details>
+
+- **URL**: `api/v1/case/:id`
+- **Method**: `DELETE`
+- **Description**: Delete a case by ID.
+- **Parameters**: `caseId` (integer): ID of the case.
+
+**Response:**
+
+- 204 No Content
+
+- 404 Not Found
+
+```json
+{
+  "status": "error",
+  "message": "Failed to Remove. No record found with ID: ${caseId}"
+}
 ```
 
 </details>
