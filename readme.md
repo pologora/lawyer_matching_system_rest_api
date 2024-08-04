@@ -5,7 +5,7 @@
 1. [Description](#description)
 2. [Project Management](#project-management)
 3. [Technical Requirements](#technical-requirements)
-4. [Installation]()
+4. [Installation](#installation)
 5. [Database Schema](#database-schema-design)
 6. [Error Handling](#error-handling)
 7. [Security](#security)
@@ -87,6 +87,8 @@
 
 Platform to match clients with lawyers. When a client has a legal issue, the system suggests available lawyers based on the nature of the case and the lawyer's hourly rate. Ratings and reviews help the client choose a lawyer.
 
+## Possible User Flow:
+
 - **Landing Page**: Users can search for lawyers by region, city, and specialization without needing to register.
 - **Search Results**: Users view lawyer profiles and can apply additional filters and sorting options.
 - **Account Creation**: To interact with a lawyer, users must create an account to initiate a Case.
@@ -103,7 +105,8 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
 
 ## Core Features:
 
-- User Registration and Authentication (clients and lawyers)
+- User Registration and Authentication by email or Google account (clients and lawyers)
+- Email Verification after first registration by email
 - Profile Management (for both clients and lawyers)
 - Case Posting by Clients
 - Lawyer Search based on Case Type, City, Region, Hourly Rate
@@ -113,16 +116,9 @@ GitHub projects used to track tasks and progress. Please visit [Project Board](h
 
 ## Technical requirements
 
-- Backend:
-
-  - Programming language - `Typescript`
-  - API development - `Node.js` with `Express`
-  - Database - `MariaDB` (fork of the MySQL)
-
-- Frontend:
-  - Programming language -`Typescript`
-  - Framework - `React`
-  - Component Library - `Chakra UI`
+- Programming language - `Typescript`
+- API development - `Node.js` with `Express`
+- Database - `MariaDB` (fork of the MySQL)
 
 ## Installation
 
