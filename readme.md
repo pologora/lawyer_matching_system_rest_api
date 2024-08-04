@@ -1482,7 +1482,7 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 
 </details>
 
-### Client Profiles
+### Client Profile
 
 #### Create Client Profile
 
@@ -1688,10 +1688,10 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 
 <details>
 
-- **URL**: `api/v1/lawyers/:id`
+- **URL**: `api/v1/clients/:id`
 - **Method**: `DELETE`
-- **Description**: Delete a lawyer profile by ID.
-- **Parameters**: `lawyerProfileId` (integer): ID of the lawyer profile.
+- **Description**: Delete a client profile by ID.
+- **Parameters**: `lawyerProfileId` (integer): ID of the client profile.
 
 **Response:**
 
@@ -1702,7 +1702,7 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 ```JavaScript
 {
   "status": "error",
-  "message": "Failed to Remove. No record found with ID: ${lawyerProfileId}"
+  "message": "Failed to Remove. No record found with ID: ${clientProfileId}"
 }
 
 ```
