@@ -2015,7 +2015,7 @@ GET /api/v1/cases?clientId=2&limit=10&page=1&sort=createdAt&order=desc
 ```json
 {
   "status": "error",
-  "message": "Failed to Get. No record found with ID: ${caseId}"
+  "message": "Failed to Update. No record found with ID: ${caseId}"
 }
 ```
 
@@ -2030,8 +2030,6 @@ GET /api/v1/cases?clientId=2&limit=10&page=1&sort=createdAt&order=desc
 
 **Validation Error Messages**
 
-### Validation Error Messages
-
 | Property      | Validation Rule           | Error Message                                                                                             |
 | ------------- | ------------------------- | --------------------------------------------------------------------------------------------------------- |
 | `cityId`      | Must be a number          | `City ID must be a numeric value.`                                                                        |
@@ -2045,7 +2043,7 @@ GET /api/v1/cases?clientId=2&limit=10&page=1&sort=createdAt&order=desc
 
 <details>
 
-- **URL**: `api/v1/case/:id`
+- **URL**: `api/v1/cases/:id`
 - **Method**: `DELETE`
 - **Description**: Delete a case by ID.
 - **Parameters**: `caseId` (integer): ID of the case.
@@ -2060,6 +2058,537 @@ GET /api/v1/cases?clientId=2&limit=10&page=1&sort=createdAt&order=desc
 {
   "status": "error",
   "message": "Failed to Remove. No record found with ID: ${caseId}"
+}
+```
+
+</details>
+
+### Reviews
+
+#### Create Review
+
+<details>
+
+- **URL:** `api/v1/reviews`
+- **Method:** `POST`
+- **Description:** Create a new review.
+
+**Request Body:**
+
+```json
+{
+  "clientId": 1,
+  "lawyerId": 2,
+  "rating": 5,
+  "reviewText": "Excellent lawyer, highly recommended!"
+}
+```
+
+**Response:**
+
+- 201 Created
+
+```json
+{
+  "status": "success",
+  "message": "Successfully created new review",
+  "data": {
+    "reviewId": 2,
+    "clientId": 2,
+    "lawyerId": 5,
+    "reviewText": "Excellent lawyer, highly recommended!",
+    "rating": 5
+  }
+}
+```
+
+- 400 Bad Request (Validation errors)
+
+```json
+{
+  "status": "error",
+  "message": "Validation error."
+}
+```
+
+**Validation Error Examples**:
+
+| Property     | Validation Rule                  | Error Message                                                                                                             |
+| ------------ | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `clientId`   | Required, number                 | `Client ID is required.`<br>`Client ID must be a numeric value.`                                                          |
+| `lawyerId`   | Required, number                 | `Lawyer ID is required.`<br>`Lawyer ID must be a numeric value.`                                                          |
+| `rating`     | Required, number, min: 1, max: 5 | `Rating is required.`<br>`Rating must be a numeric value.`<br>`Rating must be at most 5.`<br>`Rating must be at least 1.` |
+| `reviewText` | Required, string                 | `Review text is required.`<br>`Review text must be a string.`                                                             |
+
+</details>
+
+#### Get Review by Id
+
+<details>
+
+- **URL:** `api/v1/reviews/:id`
+- **Method:** `GET`
+- **Description:** Retrieve details of a review by Id.
+- **Parameters:** `reviewId`(integer): Id of the review.
+
+**Response:**
+
+- 200 OK
+
+```json
+{
+  "status": "success",
+  "message": "Review retrieved successfully",
+  "data": {
+    "reviewId": 2,
+    "clientId": 2,
+    "lawyerId": 5,
+    "reviewText": "Excellent lawyer, highly recommended!",
+    "rating": 5
+  }
+}
+```
+
+- 404 Not Found
+
+```json
+{
+  "status": "error",
+  "message": "Failed to Get. No record found with ID: ${reviewId}"
+}
+```
+
+</details>
+
+#### Get Many Reviews
+
+<details>
+
+- **URL:** `api/v1/reviews`
+- **Method:** `GET`
+- **Description:** Retrieve a list of reviews.
+
+**Query Parameters:**
+
+- `clientId` (optional): Filter by client ID.
+- `endDate` (optional): Filter reviews by end date.
+- `lawyerId` (optional): Filter by lawyer ID.
+- `limit` (optional): Limit the number of reviews returned.
+- `page` (optional): Specify the page number for pagination.
+- `ratingMax` (optional): Maximum rating filter.
+- `ratingMin` (optional): Minimum rating filter.
+- `search` (optional): Search reviews by content.
+- `sortBy` (optional): Sort reviews by specific fields. Possible values: `createdAt`, `rating`.
+- `sortOrder` (optional): Order of sorting. Possible values: `desc`, `asc`.
+- `startDate` (optional): Filter reviews by start date.
+
+**Example Request:**
+
+```plaintext
+GET /api/v1/reviews?clientId=2&limit=10&page=1&sortBy=createdAt&sortOrder=desc
+
+```
+
+**Response:**
+
+- 200 OK
+
+```json
+{
+  "status": "success",
+  "message": "Reviews retrieved successfully.",
+  "data": [
+    {
+      "reviewId": 1,
+      "clientId": 2,
+      "lawyerId": 3,
+      "rating": 5,
+      "reviewText": "Excellent lawyer, highly recommended!",
+      "createdAt": "2024-08-03T13:29:28.000Z",
+      "updatedAt": "2024-08-03T13:29:28.000Z"
+    }
+    // more review objects
+  ]
+}
+```
+
+- 400 Bad Request
+
+```json
+{
+  "status": "error",
+  "message": "Validation error message"
+}
+```
+
+**Validation Error Messages:**
+
+| Property    | Validation Rule                    | Error Message                                                                                                            |
+| ----------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `clientId`  | Must be a number                   | `Client ID must be a numeric value.`                                                                                     |
+| `endDate`   | Must be a valid date               | `End date must be a valid date.`                                                                                         |
+| `lawyerId`  | Must be a number                   | `Lawyer ID must be a numeric value.`                                                                                     |
+| `limit`     | Must be a number                   | `Limit must be a numeric value.`                                                                                         |
+| `page`      | Must be a number                   | `Page must be a numeric value.`                                                                                          |
+| `ratingMax` | Must be a number, min: 1, max: 5   | `Maximum rating must be a numeric value.`<br>`Maximum rating must be at most 5.`<br>`Maximum rating must be at least 1.` |
+| `ratingMin` | Must be a number, min: 1, max: 5   | `Minimum rating must be a numeric value.`<br>`Minimum rating must be at most 5.`<br>`Minimum rating must be at least 1.` |
+| `search`    | Must be a string                   | `Search must be a string.`                                                                                               |
+| `sortBy`    | Must be one of [createdAt, rating] | `Sort by must be one of the following values: createdAt, rating.`<br>`Sort by must be a string.`                         |
+| `sortOrder` | Must be 'desc' or 'asc'            | `Sort order must be either "desc" or "asc".`<br>`Sort order must be a string.`                                           |
+| `startDate` | Must be a valid date               | `Start date must be a valid date.`                                                                                       |
+
+</details>
+
+#### Update Review
+
+<details>
+
+- **URL**: `api/v1/reviws/:id`
+- **Method**: `PATCH`
+- **Description**: Update details of a review by ID.
+- **Parameters**: `reviewId` (integer): ID of the review.
+
+**Allowed columns:**
+
+- `rating`
+- `reviewText`
+
+**Request Body**:
+
+```json
+{
+  "rating": 4,
+  "reviewText": "Very good lawyer, would recommend."
+}
+```
+
+**Response:**
+
+- 200 OK
+
+```json
+{
+  "status": "success",
+  "message": "Review updated successfully.",
+  "data": {
+    "reviewId": 1,
+    "clientId": 2,
+    "lawyerId": 3,
+    "rating": 4,
+    "reviewText": "Very good lawyer, would recommend.",
+    "createdAt": "2024-08-03T13:29:28.000Z",
+    "updatedAt": "2024-08-03T15:23:39.000Z"
+  }
+}
+```
+
+- 404 Not Found
+
+```json
+{
+  "status": "error",
+  "message": "Failed to Update. No record found with ID: ${reviewId}"
+}
+```
+
+- 400 Bad Request
+
+```json
+{
+  "status": "error",
+  "message": "Validation error message"
+}
+```
+
+**Validation Error Messages**
+
+| Property     | Validation Rule                  | Error Message                                                                                    |
+| ------------ | -------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `rating`     | Must be a number, min: 1, max: 5 | `Rating must be a numeric value.`<br>`Rating must be at most 5.`<br>`Rating must be at least 1.` |
+| `reviewText` | Must be a string                 | `Review text must be a string.`                                                                  |
+
+</details>
+
+#### Delete Review
+
+<details>
+
+- **URL**: `api/v1/reviews/:id`
+- **Method**: `DELETE`
+- **Description**: Delete a review by ID.
+- **Parameters**: `reviewId` (integer): ID of the review.
+
+**Response:**
+
+- 204 No Content
+
+- 404 Not Found
+
+```json
+{
+  "status": "error",
+  "message": "Failed to Remove. No record found with ID: ${reviewId}"
+}
+```
+
+</details>
+
+### Messages
+
+#### Create Message
+
+<details>
+
+- **URL:** `api/v1/message`
+- **Method:** `POST`
+- **Description:** Create a new message.
+
+**Request Body:**
+
+```json
+{
+  "message": "Hello, I need some legal advice.",
+  "receiverId": 2,
+  "senderId": 1
+}
+```
+
+**Response:**
+
+- 201 Created
+
+```json
+{
+  "status": "success",
+  "message": "Successfully created message",
+  "data": {
+    "messageId": 1,
+    "senderId": 1,
+    "receiverId": 2,
+    "message": "Hello, I need some legal advice.",
+    "createdAt": "2024-08-04T09:59:12.000Z",
+    "updatedAt": "2024-08-04T09:59:12.000Z"
+  }
+}
+```
+
+- 400 Bad Request (Validation errors)
+
+```json
+{
+  "status": "error",
+  "message": "Validation error."
+}
+```
+
+**Validation Error Examples**:
+
+| Property     | Validation Rule  | Error Message                                                 |
+| ------------ | ---------------- | ------------------------------------------------------------- |
+| `message`    | Required, string | `Message is required.`<br>`Message must be a string.`         |
+| `receiverId` | Required, number | `Receiver ID is required.`<br>`Receiver ID must be a number.` |
+| `senderId`   | Required, number | `Sender ID is required.`<br>`Sender ID must be a number.`     |
+
+</details>
+
+#### Get Review by Id
+
+<details>
+
+- **URL:** `api/v1/messages/:id`
+- **Method:** `GET`
+- **Description:** Retrieve details of a message by Id.
+- **Parameters:** `messageId`(integer): Id of the message.
+
+**Response:**
+
+- 200 OK
+
+```json
+{
+  "status": "success",
+  "message": "Message retrieved successfully",
+  "data": {
+    "messageId": 1,
+    "senderId": 1,
+    "receiverId": 2,
+    "message": "Hello, I need some legal advice.",
+    "createdAt": "2024-08-04T09:59:12.000Z",
+    "updatedAt": "2024-08-04T09:59:12.000Z"
+  }
+}
+```
+
+- 404 Not Found
+
+```json
+{
+  "status": "error",
+  "message": "Failed to Get. No record found with ID: ${messageId}"
+}
+```
+
+</details>
+
+#### Get Many Messages
+
+<details>
+
+- **URL:** `api/v1/messages`
+- **Method:** `GET`
+- **Description:** Retrieve a list of messages.
+
+**Query Parameters:**
+
+- `endDate` (optional): Filter messages by end date.
+- `limit` (optional): Limit the number of messages returned.
+- `page` (optional): Specify the page number for pagination.
+- `receiverId` (optional): Filter by receiver ID.
+- `search` (optional): Search messages by content.
+- `senderId` (optional): Filter by sender ID.
+- `sortBy` (optional): Sort messages by specific fields. Possible values: `createdAt`, `updatedAt`.
+- `sortOrder` (optional): Order of sorting. Possible values: `desc`, `asc`.
+- `startDate` (optional): Filter messages by start date.
+
+**Example Request:**
+
+```plaintext
+GET /api/v1/messages?receiverId=2&limit=10&page=1&sortBy=createdAt&sortOrder=desc
+
+```
+
+**Response:**
+
+- 200 OK
+
+```json
+{
+  "status": "success",
+  "message": "Messages retrieved successfully",
+  "data": [
+    {
+      "messageId": 1,
+      "senderId": 1,
+      "receiverId": 2,
+      "message": "Hello, I need some legal advice.",
+      "createdAt": "2024-08-04T09:59:12.000Z",
+      "updatedAt": "2024-08-04T09:59:12.000Z"
+    }
+    // more messages objects
+  ]
+}
+```
+
+- 400 Bad Request
+
+```json
+{
+  "status": "error",
+  "message": "Validation error message"
+}
+```
+
+**Validation Error Messages:**
+
+| Property     | Validation Rule                       | Error Message                                                                                       |
+| ------------ | ------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `endDate`    | Must be a valid date                  | `End date must be a valid date.`                                                                    |
+| `limit`      | Must be a number                      | `Limit must be a number.`                                                                           |
+| `page`       | Must be a number                      | `Page must be a number.`                                                                            |
+| `receiverId` | Must be a number                      | `Receiver ID must be a number.`                                                                     |
+| `search`     | Must be a string                      | `Search must be a string.`                                                                          |
+| `senderId`   | Must be a number                      | `Sender ID must be a number.`                                                                       |
+| `sortBy`     | Must be one of [createdAt, updatedAt] | `Sort by must be one of the following values: createdAt, updatedAt.`<br>`Sort by must be a string.` |
+| `sortOrder`  | Must be 'desc' or 'asc'               | `Sort order must be either "desc" or "asc".`<br>`Sort order must be a string.`                      |
+| `startDate`  | Must be a valid date                  | `Start date must be a valid date.`                                                                  |
+
+</details>
+
+#### Update Message
+
+<details>
+
+- **URL**: `api/v1/messages/:id`
+- **Method**: `PATCH`
+- **Description**: Update details of a message by ID.
+- **Parameters**: `messageId` (integer): ID of the message.
+
+**Allowed columns:**
+
+- `message`
+
+**Request Body**:
+
+```json
+{
+  "message": "Updated message content."
+}
+```
+
+**Response:**
+
+- 200 OK
+
+```json
+{
+  "status": "success",
+  "message": "Message updated successfully.",
+  "data": {
+    "messageId": 1,
+    "message": "Updated message content.",
+    "receiverId": 2,
+    "senderId": 1,
+    "createdAt": "2024-08-03T13:29:28.000Z",
+    "updatedAt": "2024-08-03T15:23:39.000Z"
+  }
+}
+```
+
+- 404 Not Found
+
+```json
+{
+  "status": "error",
+  "message": "Failed to Update. No record found with ID: ${messageId}"
+}
+```
+
+- 400 Bad Request
+
+```json
+{
+  "status": "error",
+  "message": "Validation error message"
+}
+```
+
+**Validation Error Messages**
+
+| Property  | Validation Rule  | Error Message                                         |
+| --------- | ---------------- | ----------------------------------------------------- |
+| `message` | Required, string | `Message is required.`<br>`Message must be a string.` |
+
+</details>
+
+#### Delete Message
+
+<details>
+
+- **URL**: `api/v1/messages/:id`
+- **Method**: `DELETE`
+- **Description**: Delete a message by ID.
+- **Parameters**: `messageId` (integer): ID of the message.
+
+**Response:**
+
+- 204 No Content
+
+- 404 Not Found
+
+```json
+{
+  "status": "error",
+  "message": "Failed to Remove. No record found with ID: ${messageId}"
 }
 ```
 
