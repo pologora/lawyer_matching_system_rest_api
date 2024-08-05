@@ -395,6 +395,16 @@ In all API endpoints, any unexpected fields in query parameters that are not def
 }
 ```
 
+If user email is not verified and route is protected will result in:
+
+- 401 Unauthorized
+
+````json
+{
+  "status": "error",
+  "message": "The email is not verified. Please verify your email."
+}
+
 ## API Endpoints
 
 ### Authentication
@@ -414,7 +424,7 @@ In all API endpoints, any unexpected fields in query parameters that are not def
   "email": "john.doe@example.com",
   "password": "securePassword123"
 }
-```
+````
 
 **Response:**
 
