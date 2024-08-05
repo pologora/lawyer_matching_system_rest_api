@@ -9,15 +9,17 @@ import {
 import { asyncErrorCatch } from '../../utils/errors/asyncErrorCatch';
 import { clientCreateSchema, clientUpdateSchema } from './clients.validation';
 import { validateReqBody } from '../../middleware/validateReqBody';
+import { protect } from '../../middleware/protect';
+import { restrictTo } from '../../middleware/restrictTo';
 
 export const clientsRouter = express.Router();
 
 clientsRouter
   .route('/clients')
-  .get(asyncErrorCatch(getManyClientsController))
-  .post(validateReqBody(clientCreateSchema), asyncErrorCatch(createClientController));
+  .get(protect, restrictTo('admin'), asyncErrorCatch(getManyClientsController))
+  .post(protect, restrictTo('user'), validateReqBody(clientCreateSchema), asyncErrorCatch(createClientController));
 clientsRouter
   .route('/clients/:id')
-  .get(asyncErrorCatch(getClientController))
-  .patch(validateReqBody(clientUpdateSchema), asyncErrorCatch(updateClientController))
-  .delete(asyncErrorCatch(removeClientController));
+  .get(protect, restrictTo('admin', 'client', 'lawyer'), asyncErrorCatch(getClientController))
+  .patch(protect, restrictTo('client'), validateReqBody(clientUpdateSchema), asyncErrorCatch(updateClientController))
+  .delete(protect, restrictTo('admin', 'client'), asyncErrorCatch(removeClientController));

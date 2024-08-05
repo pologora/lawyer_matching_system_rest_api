@@ -4,9 +4,9 @@ export const buildGetManyUsersQuery = (queryString: GetManyUsersDto) => {
   const DEFAULT_LIMIT_QUERY_RESULTS = 25;
   const DEFAULT_OFFSET = 0;
 
-  const defaultColumns = ['userId, email, googleId, role, active, createdAt, updatedAt, profileImageFileName'];
+  const defaultColumns = ['userId, email, googleId, role, isVerified, createdAt, updatedAt, profileImageFileName'];
 
-  const { limit, page, sort, order, columns, role, search, active } = queryString;
+  const { limit, page, sort, order, columns, role, search, isVerified } = queryString;
 
   const filters = [];
   const values = [];
@@ -16,9 +16,9 @@ export const buildGetManyUsersQuery = (queryString: GetManyUsersDto) => {
     values.push(role);
   }
 
-  if (active) {
+  if (isVerified) {
     filters.push(`active = ?`);
-    values.push(active);
+    values.push(isVerified);
   }
 
   if (search) {

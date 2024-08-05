@@ -42,14 +42,14 @@ export const loginController = async (req: Request, res: Response, _next: NextFu
 export const getMeController = async (req: Request, res: Response, _next: NextFunction) => {
   const { user } = req;
 
-  const { role, userId, googleId, active, email, createdAt, updatedAt } = user as IUser;
+  const { role, userId, googleId, isVerified, email, createdAt, updatedAt } = user as IUser;
 
   const profile = await getMeService({ role, userId });
 
   res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
     status: 'success',
     message: 'Retrieved user and profile successfully',
-    data: { role, userId, googleId, active, email, createdAt, updatedAt, ...profile },
+    data: { role, userId, googleId, isVerified, email, createdAt, updatedAt, ...profile },
   });
 };
 

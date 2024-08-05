@@ -81,5 +81,7 @@ export const updateLawyerService = async ({ data, id }: UpdateLawerServiceProps)
 };
 
 export const removeLawyerService = async ({ id }: RemoveLawyerServiceProps) => {
-  return await LawyersProfile.remove({ id });
+  await LawyersProfile.remove({ id });
+
+  return await User.setRole({ id, role: 'user' });
 };

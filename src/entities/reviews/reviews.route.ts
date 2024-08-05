@@ -10,15 +10,17 @@ import {
 import { createReviewSchema, getManyReviewsSchema, updateReviewSchema } from './reviews.validation';
 import { validateReqBody } from '../../middleware/validateReqBody';
 import { validateReqQuery } from '../../middleware/validateReqQuery';
+import { protect } from '../../middleware/protect';
+import { restrictTo } from '../../middleware/restrictTo';
 
 export const reviewsRouter = express.Router();
 
 reviewsRouter
   .route('/reviews')
   .get(validateReqQuery(getManyReviewsSchema), asyncErrorCatch(getManyReviewsController))
-  .post(validateReqBody(createReviewSchema), asyncErrorCatch(createReviewController));
+  .post(protect, restrictTo('client'), validateReqBody(createReviewSchema), asyncErrorCatch(createReviewController));
 reviewsRouter
   .route('/reviews/:id')
   .get(asyncErrorCatch(getReviewController))
-  .patch(validateReqBody(updateReviewSchema), asyncErrorCatch(updateReviewController))
-  .delete(asyncErrorCatch(removeReviewController));
+  .patch(protect, restrictTo('client'), validateReqBody(updateReviewSchema), asyncErrorCatch(updateReviewController))
+  .delete(protect, restrictTo('admin', 'client'), asyncErrorCatch(removeReviewController));
