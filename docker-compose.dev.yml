@@ -1,3 +1,5 @@
+# docker-compose.dev.yml
+
 services:
   app:
     env_file:
@@ -8,11 +10,14 @@ services:
     volumes:
       - ./:/usr/src/app
       - /usr/src/app/node_modules
+      - ./logs:/usr/src/app/logs
+      - ./public/img/users:/usr/src/app/public/img/users
     ports:
       - ${PORT:-8000}:${PORT:-8000}
     depends_on:
       - db
     command: npm run start:dev
+
   db:
     image: mariadb:latest
     container_name: mariadb
@@ -28,5 +33,6 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./src/config/initDockerDb:/docker-entrypoint-initdb.d
+
 volumes:
   db_data:
