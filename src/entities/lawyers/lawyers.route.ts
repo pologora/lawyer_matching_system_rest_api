@@ -10,15 +10,22 @@ import {
 import { getManyLawyersQuerySchema, lawyerCreateSchema, lawyerUpdateSchema } from './lawyers.validation';
 import { validateReqBody } from '../../middleware/validateReqBody';
 import { validateReqQuery } from '../../middleware/validateReqQuery';
+import { protect } from '../../middleware/protect';
+import { restrictTo } from '../../middleware/restrictTo';
 
 export const lawyersRouter = express.Router();
 
 lawyersRouter
   .route('/lawyers')
   .get(validateReqQuery(getManyLawyersQuerySchema), asyncErrorCatch(getManyLawyersController))
-  .post(validateReqBody(lawyerCreateSchema), asyncErrorCatch(createLawyerController));
+  .post(protect, restrictTo('user'), validateReqBody(lawyerCreateSchema), asyncErrorCatch(createLawyerController));
 lawyersRouter
   .route('/lawyers/:id')
   .get(asyncErrorCatch(getLawyerController))
-  .delete(asyncErrorCatch(removeLawyerController))
-  .patch(validateReqBody(lawyerUpdateSchema), asyncErrorCatch(updateLawyerController));
+  .delete(protect, restrictTo('admin', 'lawyer'), asyncErrorCatch(removeLawyerController))
+  .patch(
+    protect,
+    restrictTo('admin', 'lawyer'),
+    validateReqBody(lawyerUpdateSchema),
+    asyncErrorCatch(updateLawyerController),
+  );

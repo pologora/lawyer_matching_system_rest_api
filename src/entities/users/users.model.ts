@@ -25,7 +25,7 @@ type GetOneForAuthProps = {
 };
 
 type GetManyProps = {
-  values: (string | number)[];
+  values: (string | number | boolean)[];
   query: string;
 };
 

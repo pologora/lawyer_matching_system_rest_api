@@ -7,7 +7,7 @@ export interface IUser {
   passwordChangedAt: Date | null;
   password?: string;
   resetPasswordTokenExpiration: Date | null;
-  active: boolean;
+  isVerified: boolean;
   token?: string;
   googleId?: string;
   emailVerificationToken: string | null;

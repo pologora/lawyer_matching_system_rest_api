@@ -7,6 +7,6 @@ export interface GetManyUsersDto {
   sort?: string;
   order?: 'desc' | 'asc';
   search?: string;
-  active?: string;
+  isVerified?: boolean;
   columns?: string;
 }

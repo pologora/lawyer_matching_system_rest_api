@@ -10,15 +10,33 @@ import {
 import { createMessageSchema, getManyMessagesSchema, updateMessageSchema } from './messages.validation';
 import { validateReqBody } from '../../middleware/validateReqBody';
 import { validateReqQuery } from '../../middleware/validateReqQuery';
+import { protect } from '../../middleware/protect';
+import { restrictTo } from '../../middleware/restrictTo';
 
 export const messagesRoute = express.Router();
 
 messagesRoute
   .route('/messages')
-  .get(validateReqQuery(getManyMessagesSchema), asyncErrorCatch(getManyMessagesController))
-  .post(validateReqBody(createMessageSchema), asyncErrorCatch(createMessageController));
+  .get(
+    protect,
+    restrictTo('admin', 'client', 'lawyer'),
+    validateReqQuery(getManyMessagesSchema),
+    asyncErrorCatch(getManyMessagesController),
+  )
+  .post(
+    protect,
+    restrictTo('client', 'lawyer'),
+    validateReqBody(createMessageSchema),
+    asyncErrorCatch(createMessageController),
+  );
+
 messagesRoute
   .route('/messages/:id')
-  .get(asyncErrorCatch(getMessageController))
-  .patch(validateReqBody(updateMessageSchema), asyncErrorCatch(updateMessageController))
-  .delete(asyncErrorCatch(removeMessageController));
+  .get(protect, restrictTo('admin', 'client', 'lawyer'), asyncErrorCatch(getMessageController))
+  .patch(
+    protect,
+    restrictTo('client', 'lawyer'),
+    validateReqBody(updateMessageSchema),
+    asyncErrorCatch(updateMessageController),
+  )
+  .delete(protect, restrictTo('admin', 'client', 'lawyer'), asyncErrorCatch(removeMessageController));

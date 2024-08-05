@@ -49,5 +49,7 @@ export const updateClientService = async ({ id, data }: UpdateClientServiceProps
 };
 
 export const removeClientService = async ({ id }: RemoveClienServiceProps) => {
-  return await ClientProfile.remove({ id });
+  await ClientProfile.remove({ id });
+
+  return await User.setRole({ id, role: 'user' });
 };
