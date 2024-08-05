@@ -1,5 +1,6 @@
 import { buildCreateTableRowQuery } from '../../helpers/buildCreateTableRowQuery';
 import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
+import { LawyersProfile } from '../lawyers/lawyers.model';
 import { CreateReviewDto, UpdateReviewDto } from './dto';
 import { buildGetManyReviewsQuery } from './helpers/buildGetManyReviewsQuery';
 import { Review } from './reviews.model';
@@ -29,6 +30,8 @@ export const createReviewService = async ({ data }: CreateReviewServiceProps) =>
   const { query: createMessageQuery, values } = buildCreateTableRowQuery(data, 'Review');
 
   const caseId = await Review.create({ createMessageQuery, values });
+
+  await LawyersProfile.updateRating({ id: data.lawyerId });
 
   return await Review.getOne({ id: caseId });
 };

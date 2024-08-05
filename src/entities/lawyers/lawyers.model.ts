@@ -6,6 +6,7 @@ import {
   deleteLawyerSpecializationsQuery,
   getLawyerByIdQuery,
   getLawyerByUserIdQuery,
+  updateRatingQuery,
 } from './sqlQueries';
 import { AppError } from '../../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
@@ -33,6 +34,10 @@ type GetManyProps = {
 type UpdateProps = {
   query: string;
   values: string | number[];
+  id: number;
+};
+
+type UpdateRatingProps = {
   id: number;
 };
 
@@ -103,15 +108,15 @@ export class LawyersProfile {
   }
 
   static async update({ id, query, values }: UpdateProps) {
-    if (!values.length) {
-      return;
-    }
-
     const [result] = await pool.query<ResultSetHeader>(query, [...values, id]);
 
     checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
 
     return result;
+  }
+
+  static async updateRating({ id }: UpdateRatingProps) {
+    return await pool.query<ResultSetHeader>(updateRatingQuery, [id, id]);
   }
 
   static async remove({ id }: RemoveProps) {
