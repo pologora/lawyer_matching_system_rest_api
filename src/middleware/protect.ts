@@ -10,7 +10,7 @@ export const protect = asyncErrorCatch(async (req: Request, res: Response, next:
   const token = req.cookies.jwt;
 
   if (!token) {
-    throw new AppError('You are not not logged in. Please log in to get access', HTTP_STATUS_CODES.UNAUTHORIZED_401);
+    throw new AppError('You are not not logged in. Please log in to get access.', HTTP_STATUS_CODES.UNAUTHORIZED_401);
   }
 
   const { id, iat } = await verifyJWT(token);
@@ -19,16 +19,20 @@ export const protect = asyncErrorCatch(async (req: Request, res: Response, next:
   const user = await User.getOneForAuth({ id });
   if (!user) {
     throw new AppError(
-      'The user belonging to this token no longer exists. Please log in or create an account',
+      'The user belonging to this token no longer exists. Please log in or create an account.',
       HTTP_STATUS_CODES.UNAUTHORIZED_401,
     );
+  }
+
+  if (!user.isVerified) {
+    throw new AppError('The email is not verified. Please verify your email.', HTTP_STATUS_CODES.UNAUTHORIZED_401);
   }
 
   // 3. user didn't change password after token was issued
   const passwordChangedAt = user.passwordChangedAt && new Date(user.passwordChangedAt).getTime();
   const isPasswordChangedAfterTokenIssued = checkPasswordChanged(iat, passwordChangedAt);
   if (isPasswordChangedAfterTokenIssued) {
-    throw new AppError('User changed password. Please log in again', HTTP_STATUS_CODES.UNAUTHORIZED_401);
+    throw new AppError('User changed password. Please log in again.', HTTP_STATUS_CODES.UNAUTHORIZED_401);
   }
 
   req.user = user;
