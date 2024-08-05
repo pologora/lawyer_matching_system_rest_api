@@ -403,9 +403,9 @@ In all API endpoints, any unexpected fields in query parameters that are not def
 
 <details>
 
-- URL: `api/v1/auth/login`
-- Method: `POST`
-- Description: Login a user and return a `JWT` token
+- **URL**: `api/v1/auth/login`
+- **Method**: `POST`
+- **Description**: Login a user and return a `JWT` token
 
 **Request Body:**
 
@@ -465,9 +465,9 @@ Validation Error Examples:
 
 <details>
 
-- URL: `api/v1/auth/register`
-- Method: `POST`
-- Description: Register a user and return a `JWT` token
+- **URL**: `api/v1/auth/register`
+- **Method**: `POST`
+- **Description**: Register a user and return a `JWT` token
 
 **Request Body:**
 
@@ -517,9 +517,9 @@ Validation Error Examples:
 
 <details>
 
-- URL: `api/v1/auth/google`
-- Method: `GET`
-- Description: Register or login a user with their Google account.
+- **URL**: `api/v1/auth/google`
+- **Method**: `GET`
+- **Description**: Register or login a user with their Google account.
 
 **Response:**
 
@@ -531,9 +531,9 @@ Validation Error Examples:
 
 <details>
 
-- URL: `api/v1/auth/me`
-- Method: `GET`
-- Description: Get `user` and `profile` by `JWT` token
+- **URL**: `api/v1/auth/me`
+- **Method**: `GET`
+- **Description**: Get `user` and `profile` by `JWT` token
 
 **Request Body:**
 
@@ -584,9 +584,9 @@ JWT token in cookies.
 
 <details>
 
-- URL: `api/v1/auth/forgot-password`
-- Method: `POST`
-- Description: Validate user `email` and sed a reset password link
+- **URL**: `api/v1/auth/forgot-password`
+- **Method**: `POST`
+- **Description**: Validate user `email` and sed a reset password link
 
 **Request Body:**
 
@@ -638,9 +638,9 @@ Validation Error Examples:
 
 <details>
 
-- URL: `api/v1/auth/reset-password/:token`
-- Method: `PATCH`
-- Description: Validate password reset token, set new password and return a `JWT` token
+- **URL**: `api/v1/auth/reset-password/:token`
+- **Method**: `PATCH`
+- **Description**: Validate password reset token, set new password and return a `JWT` token
 
 **Request Body:**
 
@@ -712,9 +712,10 @@ Validation Error Examples:
 
 <details>
 
-- URL: `api/v1/auth/change-my-password`
-- Method: `PATCH`
-- Description: Validate old password, validate `JWT`, set new password and return a new `JWT` token
+- **URL**: `api/v1/auth/change-my-password`
+- **Method**: `PATCH`
+- **Description**: Validate old password, validate `JWT`, set new password and return a new `JWT` token
+- **Protection**: `JWT`
 
 **Request Body:**
 
@@ -790,9 +791,10 @@ Validation Error Examples:
 
 <details>
 
-- URL: `api/v1/auth/delete-me`
-- Method: `PATCH`
-- Description: Validate password, validate `JWT`, delete account
+- **URL**: `api/v1/auth/delete-me`
+- **Method**: `PATCH`
+- **Description**: Validate password, validate `JWT`, delete account
+- **Protection**: `JWT`
 
 **Request Body:**
 
@@ -845,9 +847,9 @@ Validation Error Examples:
 
 <details>
 
-- URL: `api/v1/auth/verify-email/:token`
-- Method: `POST`
-- Description: Verify a user's email using the provided token, update User active column to `true`
+- **URL**: `api/v1/auth/verify-email/:token`
+- **Method**: `POST`
+- **Description**: Verify a user's email using the provided token, update User active column to `true`
 
 **Response:**
 
@@ -884,9 +886,9 @@ Validation Error Examples:
 
 <details>
 
-- URL: `api/v1/auth/logout`
-- Method: `POST`
-- Description: Logout a user by removing the JWT token from cookies
+- **URL**: `api/v1/auth/logout`
+- **Method**: `POST`
+- **Description**: Logout a user by removing the JWT token from cookies
 
 **Response:**
 
@@ -910,6 +912,9 @@ Validation Error Examples:
 - **URL:** `api/v1/users`
 - **Method:** `POST`
 - **Description:** Create a new user.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `admin`
 
 **Request Body:**
 
@@ -981,6 +986,9 @@ Validation Error Examples:
 - **Method**: `GET`
 - **Description**: Get details of a user by ID.
 - **Parameters**: `userId` (integer): ID of the user.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `admin`
 
 **Response:**
 
@@ -998,7 +1006,7 @@ Validation Error Examples:
   "passwordChangedAt": null,
   "emailVerificationToken": null,
   "emailVerificationTokenExpiration": null,
-  "active": 0,
+  "isVerified": 0,
   "createdAt": "2024-08-03T13:29:28.000Z",
   "updatedAt": "2024-08-03T13:29:44.000Z"
 }
@@ -1030,6 +1038,9 @@ Validation Error Examples:
 - **URL**: `api/v1/users`
 - **Method**: `GET`
 - **Description**: Get all users.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `admin`
 
 **Query Parameters:**
 
@@ -1039,11 +1050,11 @@ Validation Error Examples:
 - `sort` (optional): Sort users by a specific field.
 - `order` (optional): Order of sorting. Possible values: `desc`, `asc`.
 - `search` (optional): Search users by email or other searchable fields.
-- `active` (optional): Filter users by their active status.
+- `isVerified` (optional): Filter users by their isVerified status.
 - `columns` (optional): Specify which columns to return in the response.
 
 ```plaintext
-GET /api/v1/users?role=client&limit=10&page=2&sort=createdAt&order=desc&search=john&active=true&columns=userId,email,role,createdAt
+GET /api/v1/users?role=client&limit=10&page=2&sort=createdAt&order=desc&search=john&isVerified=true&columns=userId,email,role,createdAt
 ```
 
 **Response:**
@@ -1060,7 +1071,7 @@ GET /api/v1/users?role=client&limit=10&page=2&sort=createdAt&order=desc&search=j
       "email": "mail22@mail.com",
       "googleId": null,
       "role": "lawyer",
-      "active": 0,
+      "isVerified": 0,
       "createdAt": "2024-08-03T13:29:28.000Z",
       "updatedAt": "2024-08-03T13:29:44.000Z",
       "profileImageFileName": null
@@ -1070,7 +1081,7 @@ GET /api/v1/users?role=client&limit=10&page=2&sort=createdAt&order=desc&search=j
       "email": "mail@mail.com",
       "googleId": null,
       "role": "client",
-      "active": 0,
+      "isVerified": 1,
       "createdAt": "2024-08-03T13:29:36.000Z",
       "updatedAt": "2024-08-03T13:30:05.000Z",
       "profileImageFileName": null
@@ -1090,16 +1101,16 @@ GET /api/v1/users?role=client&limit=10&page=2&sort=createdAt&order=desc&search=j
 
 Validation Error Examples:
 
-| Property  | Validation Rule                                                                            | Error Message                                                                                                                        |
-| --------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `active`  | Must be a boolean                                                                          | `Active must be a boolean.`                                                                                                          |
-| `columns` | Must be a string                                                                           | `Columns must be a string.`                                                                                                          |
-| `limit`   | Must be a positive integer                                                                 | `Limit must be a number.`<br>`Limit must be an integer.`<br>`Limit must be a positive number.`                                       |
-| `order`   | Must be 'desc' or 'asc'                                                                    | `Order must be one of the following values: desc, asc.`<br>`Order must be a string value.`                                           |
-| `page`    | Must be a positive integer                                                                 | `Page must be a number.`<br>`Page must be an integer.`<br>`Page must be a positive number.`                                          |
-| `role`    | Must be one of ['admin', 'client', 'lawyer', 'user']                                       | `Role must be one of the following values: admin, client, lawyer, user.`<br>`Role must be a string value.`                           |
-| `search`  | Must be a string                                                                           | `Search must be a string.`                                                                                                           |
-| `sort`    | Must be one of ['userId', 'email', 'googleId', 'role', 'active', 'createdAt', 'updatedAt'] | `Sort must be one of the following values: userId, email, googleId, role, active, createdAt, updatedAt.`<br>`Sort must be a string.` |
+| Property     | Validation Rule                                                                            | Error Message                                                                                                                        |
+| ------------ | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `isVerified` | Must be a boolean                                                                          | `Active must be a boolean.`                                                                                                          |
+| `columns`    | Must be a string                                                                           | `Columns must be a string.`                                                                                                          |
+| `limit`      | Must be a positive integer                                                                 | `Limit must be a number.`<br>`Limit must be an integer.`<br>`Limit must be a positive number.`                                       |
+| `order`      | Must be 'desc' or 'asc'                                                                    | `Order must be one of the following values: desc, asc.`<br>`Order must be a string value.`                                           |
+| `page`       | Must be a positive integer                                                                 | `Page must be a number.`<br>`Page must be an integer.`<br>`Page must be a positive number.`                                          |
+| `role`       | Must be one of ['admin', 'client', 'lawyer', 'user']                                       | `Role must be one of the following values: admin, client, lawyer, user.`<br>`Role must be a string value.`                           |
+| `search`     | Must be a string                                                                           | `Search must be a string.`                                                                                                           |
+| `sort`       | Must be one of ['userId', 'email', 'googleId', 'role', 'active', 'createdAt', 'updatedAt'] | `Sort must be one of the following values: userId, email, googleId, role, active, createdAt, updatedAt.`<br>`Sort must be a string.` |
 
 </details>
 
@@ -1111,6 +1122,9 @@ Validation Error Examples:
 - **Method**: `PATCH`
 - **Description**: Update details of a user by ID.
 - **Parameters**: `userId` (integer): ID of the user.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `admin`
 
 **Allowed columns:**
 
@@ -1180,6 +1194,9 @@ Validation Error Examples:
 - **Method**: `DELETE`
 - **Description**: Delete a user by ID.
 - **Parameters**: `userId` (integer): ID of the user.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `admin`
 
 **Response:**
 
@@ -1204,6 +1221,7 @@ Validation Error Examples:
 - **Method**: `PATCH`
 - **Description**: Upload and resize profile photo for user.
 - **Parameters**: `userId` (integer): ID of the user.
+- **Protection**: `JWT`
 
 **Request Body:**
 
@@ -1251,6 +1269,9 @@ Validation Error Examples:
 - **URL**: `api/v1/lawyers`
 - **Method**: `POST`
 - **Description**: Create a new lawyer profile.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `user`
 
 **Request Body**:
 
@@ -1442,6 +1463,10 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 - **Method**: `PATCH`
 - **Description**: Update details of a lawyer profile by ID.
 - **Parameters**: `lawyerProfileId` (integer): ID of the lawyer profile.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `admin`
+  - `lawyer`
 
 **Allowed columns:**
 
@@ -1535,6 +1560,10 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 - **Method**: `DELETE`
 - **Description**: Delete a lawyer profile by ID.
 - **Parameters**: `lawyerProfileId` (integer): ID of the lawyer profile.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `admin`
+  - `lawyer`
 
 **Response:**
 
@@ -1560,6 +1589,9 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 - **URL**: `api/v1/clients`
 - **Method**: `POST`
 - **Description**: Create a new client profile.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `user`
 
 **Request Body:**
 
@@ -1617,6 +1649,11 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 - **Method**: `GET`
 - **Description**: Get client profile of a user by ID.
 - **Parameters**: `clientProfileId` (integer): ID of the client profile.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `admin`
+  - `client`
+  - `lawyer`
 
 **Response:**
 
@@ -1653,6 +1690,9 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 - **URL**: `api/v1/clients`
 - **Method**: `GET`
 - **Description**: Get many client profiles.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `admin`
 
 **Response:**
 
@@ -1689,6 +1729,9 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 - **Method**: `PATCH`
 - **Description**: Update details of a client profile by ID.
 - **Parameters**: `clientProfileId` (integer): ID of the client profile.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `client`
 
 **Allowed columns:**
 
@@ -1756,6 +1799,10 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 - **Method**: `DELETE`
 - **Description**: Delete a client profile by ID.
 - **Parameters**: `lawyerProfileId` (integer): ID of the client profile.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `admin`
+  - `client`
 
 **Response:**
 
@@ -1781,6 +1828,9 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 - **URL:** `api/v1/cases`
 - **Method:** `POST`
 - **Description:** Create a new case.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `client`
 
 **Request Body:**
 
@@ -1850,6 +1900,11 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 - **Method:** `GET`
 - **Description:** Retrieve details of a case by Id.
 - **Parameters:** `caseId`(integer): Id of the case.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `admin`
+  - `client`
+  - `lawyer`
 
 **Response:**
 
@@ -1892,6 +1947,11 @@ GET /api/v1/lawyers?cityId=1&experienceMax=15&experienceMin=5&limit=10&order=des
 - **URL:** `api/v1/cases`
 - **Method:** `GET`
 - **Description:** Retrieve a list of cases.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `admin`
+  - `client`
+  - `lawyer`
 
 **Query Parameters:**
 
@@ -1988,6 +2048,10 @@ GET /api/v1/cases?clientId=2&limit=10&page=1&sort=createdAt&order=desc
 - **Method**: `PATCH`
 - **Description**: Update details of a case profile by ID.
 - **Parameters**: `caseId` (integer): ID of the case.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `client`
+  - `lawyer`
 
 **Allowed columns:**
 
@@ -2067,6 +2131,10 @@ GET /api/v1/cases?clientId=2&limit=10&page=1&sort=createdAt&order=desc
 - **Method**: `DELETE`
 - **Description**: Delete a case by ID.
 - **Parameters**: `caseId` (integer): ID of the case.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `admin`
+  - `client`
 
 **Response:**
 
@@ -2092,6 +2160,9 @@ GET /api/v1/cases?clientId=2&limit=10&page=1&sort=createdAt&order=desc
 - **URL:** `api/v1/reviews`
 - **Method:** `POST`
 - **Description:** Create a new review.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `client`
 
 **Request Body:**
 
@@ -2267,6 +2338,9 @@ GET /api/v1/reviews?clientId=2&limit=10&page=1&sortBy=createdAt&sortOrder=desc
 - **Method**: `PATCH`
 - **Description**: Update details of a review by ID.
 - **Parameters**: `reviewId` (integer): ID of the review.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `client`
 
 **Allowed columns:**
 
@@ -2337,6 +2411,10 @@ GET /api/v1/reviews?clientId=2&limit=10&page=1&sortBy=createdAt&sortOrder=desc
 - **Method**: `DELETE`
 - **Description**: Delete a review by ID.
 - **Parameters**: `reviewId` (integer): ID of the review.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `admin`
+  - `client`
 
 **Response:**
 
@@ -2362,6 +2440,10 @@ GET /api/v1/reviews?clientId=2&limit=10&page=1&sortBy=createdAt&sortOrder=desc
 - **URL:** `api/v1/message`
 - **Method:** `POST`
 - **Description:** Create a new message.
+- **Protection**: `JWT`
+- **Role Restrictions**:
+  - `client`
+  - `lawyer`
 
 **Request Body:**
 
@@ -2419,6 +2501,10 @@ GET /api/v1/reviews?clientId=2&limit=10&page=1&sortBy=createdAt&sortOrder=desc
 - **Method:** `GET`
 - **Description:** Retrieve details of a message by Id.
 - **Parameters:** `messageId`(integer): Id of the message.
+- **Role Restrictions**:
+  - `client`
+  - `lawyer`
+  - `admin`
 
 **Response:**
 
@@ -2457,6 +2543,10 @@ GET /api/v1/reviews?clientId=2&limit=10&page=1&sortBy=createdAt&sortOrder=desc
 - **URL:** `api/v1/messages`
 - **Method:** `GET`
 - **Description:** Retrieve a list of messages.
+- **Role Restrictions**:
+  - `client`
+  - `lawyer`
+  - `admin`
 
 **Query Parameters:**
 
@@ -2532,6 +2622,9 @@ GET /api/v1/messages?receiverId=2&limit=10&page=1&sortBy=createdAt&sortOrder=des
 - **Method**: `PATCH`
 - **Description**: Update details of a message by ID.
 - **Parameters**: `messageId` (integer): ID of the message.
+- **Role Restrictions**:
+  - `client`
+  - `lawyer`
 
 **Allowed columns:**
 
@@ -2598,6 +2691,10 @@ GET /api/v1/messages?receiverId=2&limit=10&page=1&sortBy=createdAt&sortOrder=des
 - **Method**: `DELETE`
 - **Description**: Delete a message by ID.
 - **Parameters**: `messageId` (integer): ID of the message.
+- **Role Restrictions**:
+  - `admin`
+  - `client`
+  - `lawyer`
 
 **Response:**
 
