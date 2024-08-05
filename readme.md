@@ -187,7 +187,7 @@ The application will be accessible at `http://localhost:5000/api/v1`
   - `passwordChangedAt` timestamp,
   - `emailVerificationToken` varchar,
   - `emailVerificationTokenExpiration` timestamp,
-  - `active` boolean default `true`,
+  - `isVerified` boolean default `false`,
   - `createdAt` timestamp default current_timestamp,
   - `updatedAt` timestamp default current_timestamp on update current_timestamp
 

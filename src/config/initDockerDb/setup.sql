@@ -22,7 +22,7 @@ CREATE TABLE
         passwordChangedAt TIMESTAMP NULL DEFAULT NULL,
         emailVerificationToken VARCHAR(255),
         emailVerificationTokenExpiration TIMESTAMP,
-        active BOOLEAN DEFAULT FALSE,
+        isVerified BOOLEAN DEFAULT FALSE,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     );
