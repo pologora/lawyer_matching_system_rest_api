@@ -50,12 +50,14 @@ CREATE TABLE
         experience INT,
         firstName VARCHAR(100),
         lastName VARCHAR(100),
-        city VARCHAR(100),
-        region VARCHAR(100),
+        cityId INT,
+        regionId INT,
         rating DECIMAL(2, 1),
         initialConsultationFee DECIMAL(8, 2) DEFAULT NULL,
         hourlyRate DECIMAL(8, 2),
         FOREIGN KEY (userId) REFERENCES `User` (userId) ON DELETE CASCADE,
+        FOREIGN KEY (cityId) REFERENCES City (cityId) ON DELETE SET NULL,
+        FOREIGN KEY (regionId) REFERENCES Region (regionId) ON DELETE SET NULL,
         INDEX (userId)
     );
 
