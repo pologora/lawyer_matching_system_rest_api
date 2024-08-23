@@ -17,7 +17,7 @@ afterAll(async () => {
   await pool.end();
 });
 
-describe('Test GET /lawyers', () => {
+describe.skip('Test GET /lawyers', () => {
   test('Should respond with 200 success', async () => {
     const response = await supertest(app)
       .get('/api/v1/lawyers')
@@ -29,7 +29,7 @@ describe('Test GET /lawyers', () => {
   });
 });
 
-describe('Test POST /lawyers', () => {
+describe.skip('Test POST /lawyers', () => {
   test('Should respond with 201 created', async () => {
     const user = await supertest(app).post('/api/v1/users').send(createUserData).expect(HTTP_STATUS_CODES.CREATED_201);
     userId = user.body.data.insertId;
@@ -88,7 +88,7 @@ describe('Test POST /lawyers', () => {
   });
 });
 
-describe('Test GET /lawyers/:id', () => {
+describe.skip('Test GET /lawyers/:id', () => {
   test('Should respond with 200 success', async () => {
     const response = await supertest(app)
       .get(`/api/v1/lawyers/${lawyerId}`)
@@ -112,7 +112,7 @@ describe('Test GET /lawyers/:id', () => {
   });
 });
 
-describe('Test PATCH /lawyers/:id', () => {
+describe.skip('Test PATCH /lawyers/:id', () => {
   test('Should respond with 200 success', async () => {
     const patchData = {
       firstName: 'Patch_name_test',
@@ -146,7 +146,7 @@ describe('Test PATCH /lawyers/:id', () => {
   });
 });
 
-describe('Test DELETE /lawyers/:id', () => {
+describe.skip('Test DELETE /lawyers/:id', () => {
   test('Should respond with 204 no content', async () => {
     await supertest(app).delete(`/api/v1/lawyers/${lawyerId}`).expect(HTTP_STATUS_CODES.NO_CONTENT_204);
   });

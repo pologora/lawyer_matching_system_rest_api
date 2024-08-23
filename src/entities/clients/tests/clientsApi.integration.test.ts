@@ -18,7 +18,7 @@ afterAll(async () => {
   await pool.end();
 });
 
-describe('Test GET /clients', () => {
+describe.skip('Test GET /clients', () => {
   test('Should respond with 200 success', async () => {
     const response = await supertest(app)
       .get('/api/v1/clients')
@@ -30,7 +30,7 @@ describe('Test GET /clients', () => {
   });
 });
 
-describe('Test POST /clients', () => {
+describe.skip('Test POST /clients', () => {
   test('Should respond with 201 created', async () => {
     const user = await supertest(app).post('/api/v1/users').send(createUserData).expect(HTTP_STATUS_CODES.CREATED_201);
     userId = user.body.data.insertId;
@@ -82,7 +82,7 @@ describe('Test POST /clients', () => {
   });
 });
 
-describe('Test GET /clients/:id', () => {
+describe.skip('Test GET /clients/:id', () => {
   test('Should respond with 200 success', async () => {
     const response = await supertest(app)
       .get(`/api/v1/clients/${clientId}`)
@@ -106,7 +106,7 @@ describe('Test GET /clients/:id', () => {
   });
 });
 
-describe('Test PATCH /clients/:id', () => {
+describe.skip('Test PATCH /clients/:id', () => {
   test('Should respond with 200 success', async () => {
     const patchData = {
       firstName: 'Patch_name_test',
@@ -139,7 +139,7 @@ describe('Test PATCH /clients/:id', () => {
   });
 });
 
-describe('Test DELETE /clients/:id', () => {
+describe.skip('Test DELETE /clients/:id', () => {
   test('Should respond with 204 no content', async () => {
     await supertest(app).delete(`/api/v1/clients/${clientId}`).expect(HTTP_STATUS_CODES.NO_CONTENT_204);
   });

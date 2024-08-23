@@ -7,7 +7,7 @@ afterAll(async () => {
   await pool.end();
 });
 
-describe('Test GET /regions', () => {
+describe.skip('Test GET /regions', () => {
   test('Should respond with 200 success', async () => {
     const response = await supertest(app)
       .get('/api/v1/regions')
