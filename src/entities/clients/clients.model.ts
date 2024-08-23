@@ -5,7 +5,7 @@ import { deleteClientQuery, getManyClientsQuery, getOneClientByUserIdQuery, getO
 
 type CreateProps = {
   createUserQuery: string;
-  values: string[];
+  values: (string | number)[];
 };
 
 type GetOneProps = {
@@ -18,7 +18,7 @@ type GetOneByUserIdProps = {
 
 type UpdateProps = {
   query: string;
-  values: (string | undefined)[];
+  values: (string | number)[];
   id: number;
 };
 

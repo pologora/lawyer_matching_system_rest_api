@@ -1,29 +1,28 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
-import {
-  createCaseService,
-  getCaseService,
-  getManyCasesService,
-  removeCaseService,
-  updateCaseService,
-} from './cases.service';
-import { validateId } from '../../utils/validateId';
+import { getCaseService, getManyCasesService, removeCaseService, updateCaseService } from './cases.service';
+import { CreateCaseController } from './types/casesTypes';
 
-export const createCaseController = async (req: Request, res: Response, _next: NextFunction) => {
-  const newCase = await createCaseService({ data: req.body });
+export const createCaseController: CreateCaseController =
+  (Case, buildCreateTableRowQuery) => async (req, res, _next) => {
+    const data = req.body;
 
-  res.status(HTTP_STATUS_CODES.CREATED_201).json({
-    status: 'success',
-    message: 'Successfully created new case',
-    data: newCase,
-  });
-};
+    const { query: createCaseQuery, values } = buildCreateTableRowQuery(data, 'Case');
+
+    const caseId = await Case.create({ createCaseQuery, values });
+
+    const newCase = await Case.getOne({ id: caseId });
+
+    res.status(HTTP_STATUS_CODES.CREATED_201).json({
+      status: 'success',
+      message: 'Successfully created new case',
+      data: newCase,
+    });
+  };
 
 export const getCaseController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
-
-  const oneCase = await getCaseService({ id });
+  const oneCase = await getCaseService({ id: Number(req.params.id) });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -39,9 +38,7 @@ export const getManyCasesController = async (req: Request, res: Response, _next:
 };
 
 export const updateCaseController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
-
-  const updatedCase = await updateCaseService({ data: req.body, id });
+  const updatedCase = await updateCaseService({ data: req.body, id: Number(req.params.id) });
 
   return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
     status: 'success',
@@ -51,9 +48,7 @@ export const updateCaseController = async (req: Request, res: Response, _next: N
 };
 
 export const removeCaseController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
-
-  await removeCaseService({ id });
+  await removeCaseService({ id: Number(req.params.id) });
 
   return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
 };

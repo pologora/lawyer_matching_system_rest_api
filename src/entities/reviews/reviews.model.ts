@@ -6,7 +6,7 @@ import { getReviewQuery, removeReviewQuery } from './sqlQueries';
 
 type CreateProps = {
   createMessageQuery: string;
-  values: string[];
+  values: (string | number)[];
 };
 
 type GetOneProps = {
@@ -20,7 +20,7 @@ type GetManyProps = {
 
 type UpdateProps = {
   updateMessageQuery: string;
-  values: (string | undefined)[];
+  values: (string | number)[];
   id: number;
 };
 

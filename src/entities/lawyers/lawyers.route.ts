@@ -12,8 +12,11 @@ import { validateReqBody } from '../../middleware/validateReqBody';
 import { validateReqQuery } from '../../middleware/validateReqQuery';
 import { protect } from '../../middleware/protect';
 import { restrictTo } from '../../middleware/restrictTo';
+import { validateIdParameter } from '../../middleware/validateIdParameter';
 
 export const lawyersRouter = express.Router();
+
+lawyersRouter.param('id', validateIdParameter);
 
 lawyersRouter
   .route('/lawyers')

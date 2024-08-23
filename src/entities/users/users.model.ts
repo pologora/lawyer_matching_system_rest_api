@@ -31,7 +31,7 @@ type GetManyProps = {
 
 type UpdateProps = {
   query: string;
-  values: (string | undefined)[];
+  values: (string | number)[];
   id: number;
 };
 

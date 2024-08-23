@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
-import { validateId } from '../../utils/validateId';
 import {
   createReviewService,
   getManyReviewsService,
@@ -21,9 +20,7 @@ export const createReviewController = async (req: Request, res: Response, _next:
 };
 
 export const getReviewController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
-
-  const review = await getReviewService({ id });
+  const review = await getReviewService({ id: Number(req.params.id) });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -39,9 +36,7 @@ export const getManyReviewsController = async (req: Request, res: Response, _nex
 };
 
 export const updateReviewController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
-
-  const updatedReview = await updateReviewService({ data: req.body, id });
+  const updatedReview = await updateReviewService({ data: req.body, id: Number(req.params.id) });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -49,9 +44,7 @@ export const updateReviewController = async (req: Request, res: Response, _next:
 };
 
 export const removeReviewController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
-
-  await removeReviewService({ id });
+  await removeReviewService({ id: Number(req.params.id) });
 
   return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
 };

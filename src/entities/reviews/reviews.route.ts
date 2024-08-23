@@ -12,8 +12,11 @@ import { validateReqBody } from '../../middleware/validateReqBody';
 import { validateReqQuery } from '../../middleware/validateReqQuery';
 import { protect } from '../../middleware/protect';
 import { restrictTo } from '../../middleware/restrictTo';
+import { validateIdParameter } from '../../middleware/validateIdParameter';
 
 export const reviewsRouter = express.Router();
+
+reviewsRouter.param('id', validateIdParameter);
 
 reviewsRouter
   .route('/reviews')

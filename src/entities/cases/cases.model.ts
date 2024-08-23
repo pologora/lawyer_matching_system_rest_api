@@ -3,30 +3,7 @@ import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import pool from '../../config/db.config';
 import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
 import { deleteCaseQuery, getOneCaseQuery } from './sqlQueries';
-
-type CreateProps = {
-  createCaseQuery: string;
-  values: string[];
-};
-
-type GetOneProps = {
-  id: number;
-};
-
-type GetManyProps = {
-  query: string;
-  values: (string | number)[];
-};
-
-type UpdateProps = {
-  updateCaseQuery: string;
-  values: (string | undefined)[];
-  id: number;
-};
-
-type DeleteProps = {
-  id: number;
-};
+import { CreateProps, DeleteProps, GetManyProps, GetOneProps, UpdateProps } from './types/casesTypes';
 
 export class Case {
   static async create({ createCaseQuery, values }: CreateProps) {

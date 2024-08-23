@@ -14,7 +14,7 @@ import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult
 
 type CreateProps = {
   query: string;
-  values: string | number[];
+  values: (string | number)[];
   specializations: number[];
 };
 
@@ -28,12 +28,12 @@ type GetOneByUserIdProps = {
 
 type GetManyProps = {
   query: string;
-  values: (string | number | Date)[];
+  values: (string | number)[];
 };
 
 type UpdateProps = {
   query: string;
-  values: string | number[];
+  values: (string | number)[];
   id: number;
 };
 

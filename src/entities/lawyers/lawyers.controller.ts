@@ -7,7 +7,6 @@ import {
   removeLawyerService,
   updateLawyerService,
 } from './lawyers.service';
-import { validateId } from '../../utils/validateId';
 
 export const createLawyerController = async (req: Request, res: Response, _next: NextFunction) => {
   const lawyer = await createLawyerService({ data: req.body });
@@ -20,9 +19,7 @@ export const createLawyerController = async (req: Request, res: Response, _next:
 };
 
 export const getLawyerController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
-
-  const lawyer = await getLawyerService({ id });
+  const lawyer = await getLawyerService({ id: Number(req.params.id) });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -38,9 +35,7 @@ export const getManyLawyersController = async (req: Request, res: Response, _nex
 };
 
 export const updateLawyerController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
-
-  const updatedLawyer = await updateLawyerService({ data: req.body, id });
+  const updatedLawyer = await updateLawyerService({ data: req.body, id: Number(req.params.id) });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -48,9 +43,7 @@ export const updateLawyerController = async (req: Request, res: Response, _next:
 };
 
 export const removeLawyerController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
-
-  await removeLawyerService({ id });
+  await removeLawyerService({ id: Number(req.params.id) });
 
   return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
 };

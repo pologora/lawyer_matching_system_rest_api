@@ -11,8 +11,11 @@ import { clientCreateSchema, clientUpdateSchema } from './clients.validation';
 import { validateReqBody } from '../../middleware/validateReqBody';
 import { protect } from '../../middleware/protect';
 import { restrictTo } from '../../middleware/restrictTo';
+import { validateIdParameter } from '../../middleware/validateIdParameter';
 
 export const clientsRouter = express.Router();
+
+clientsRouter.param('id', validateIdParameter);
 
 clientsRouter
   .route('/clients')

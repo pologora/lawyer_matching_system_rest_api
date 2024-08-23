@@ -1,6 +1,6 @@
-import { DatabaseTableNames } from '../types/databaseTableNames';
+import { BuildUpdateTableRowQuery } from '../types/helpers';
 
-export const buildUpdateTableRowQuery = (data: object, table: DatabaseTableNames) => {
+export const buildUpdateTableRowQuery: BuildUpdateTableRowQuery = (data, table) => {
   const tableIdField = `${table[0].toLowerCase() + table.slice(1)}Id`;
 
   const keyValuePairs = [];

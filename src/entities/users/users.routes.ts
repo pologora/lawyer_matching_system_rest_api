@@ -16,8 +16,11 @@ import { getManyUsersSchema, userCreateSchema, userUpdateSchema } from './users.
 import { validateReqBody } from '../../middleware/validateReqBody';
 import { validateReqQuery } from '../../middleware/validateReqQuery';
 import { restrictTo } from '../../middleware/restrictTo';
+import { validateIdParameter } from '../../middleware/validateIdParameter';
 
 export const usersRouter = Router();
+
+usersRouter.param('id', validateIdParameter);
 
 usersRouter
   .route('/users')

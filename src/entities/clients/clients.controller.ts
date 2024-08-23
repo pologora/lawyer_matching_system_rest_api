@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { validateId } from '../../utils/validateId';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import {
   createClientService,
@@ -20,9 +19,7 @@ export const createClientController = async (req: Request, res: Response, _next:
 };
 
 export const getClientController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
-
-  const client = await getClientService({ id });
+  const client = await getClientService({ id: Number(req.params.id) });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -40,9 +37,7 @@ export const getManyClientsController = async (_req: Request, res: Response, _ne
 };
 
 export const updateClientController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
-
-  const updatedClient = await updateClientService({ id, data: req.body });
+  const updatedClient = await updateClientService({ id: Number(req.params.id), data: req.body });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -50,9 +45,7 @@ export const updateClientController = async (req: Request, res: Response, _next:
 };
 
 export const removeClientController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
-
-  await removeClientService({ id });
+  await removeClientService({ id: Number(req.params.id) });
 
   return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
 };

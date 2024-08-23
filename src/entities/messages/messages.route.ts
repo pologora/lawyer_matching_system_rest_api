@@ -12,8 +12,11 @@ import { validateReqBody } from '../../middleware/validateReqBody';
 import { validateReqQuery } from '../../middleware/validateReqQuery';
 import { protect } from '../../middleware/protect';
 import { restrictTo } from '../../middleware/restrictTo';
+import { validateIdParameter } from '../../middleware/validateIdParameter';
 
 export const messagesRoute = express.Router();
+
+messagesRoute.param('id', validateIdParameter);
 
 messagesRoute
   .route('/messages')

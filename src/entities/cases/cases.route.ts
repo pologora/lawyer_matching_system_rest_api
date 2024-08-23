@@ -14,8 +14,14 @@ import { createCaseSchema, getManyCasesSchema, updateCaseSchema } from './cases.
 import { validateReqQuery } from '../../middleware/validateReqQuery';
 import { protect } from '../../middleware/protect';
 import { restrictTo } from '../../middleware/restrictTo';
+import { Case } from './cases.model';
+import { buildCreateTableRowQuery } from '../../helpers/buildCreateTableRowQuery';
+import { validateIdParameter } from '../../middleware/validateIdParameter';
 
 export const casesRouter = express.Router();
+casesRouter.param('id', validateIdParameter);
+
+const injectedCreateCaseController = createCaseController(Case, buildCreateTableRowQuery);
 
 casesRouter
   .route('/cases')
@@ -25,7 +31,12 @@ casesRouter
     validateReqQuery(getManyCasesSchema),
     asyncErrorCatch(getManyCasesController),
   )
-  .post(protect, restrictTo('client'), validateReqBody(createCaseSchema), asyncErrorCatch(createCaseController));
+  .post(
+    protect,
+    restrictTo('client'),
+    validateReqBody(createCaseSchema),
+    asyncErrorCatch(injectedCreateCaseController),
+  );
 
 casesRouter
   .route('/cases/:id')
