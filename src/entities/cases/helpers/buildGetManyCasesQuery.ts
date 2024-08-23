@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { GetManyCasesDto } from '../dto';
 
-export const buildGetManyCasesQuery = (queryString: GetManyCasesDto) => {
+export const buildGetManyCasesQuery = (queryParams: GetManyCasesDto) => {
   const DEFAULT_LIMIT_QUERY_RESULTS = 25;
   const DEFAULT_OFFSET = 0;
 
@@ -18,7 +18,7 @@ export const buildGetManyCasesQuery = (queryString: GetManyCasesDto) => {
     page,
     sort,
     order,
-  } = queryString;
+  } = queryParams;
 
   const filters = [];
   const values = [];
