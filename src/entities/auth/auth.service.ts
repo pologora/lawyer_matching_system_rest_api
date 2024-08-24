@@ -17,7 +17,7 @@ import { comparePasswords } from '../../utils/passwordManagement/comparePassword
 import { createRandomToken } from '../../utils/hashedToken/createRandomToken';
 import { Request } from 'express';
 import { createHashedToken } from '../../utils/hashedToken/createHashedToken';
-import { isTokenExpired } from '../../helpers/isTokenExpired';
+import { isTokenExpired } from '../../utils/isTokenExpired';
 import { ClientProfile } from '../clients/clients.model';
 import { LawyersProfile } from '../lawyers/lawyers.model';
 import { calculateEmailVerificationExpiraton } from './helpers/calculateEmailVerificationExpirationDate';

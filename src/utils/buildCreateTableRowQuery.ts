@@ -1,4 +1,4 @@
-import { BuildCreateTableRowQuery } from '../types/helpers';
+import { BuildCreateTableRowQuery } from '../types/utils';
 
 export const buildCreateTableRowQuery: BuildCreateTableRowQuery = (data, table) => {
   const values = [];

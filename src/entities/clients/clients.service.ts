@@ -1,5 +1,5 @@
-import { buildCreateTableRowQuery } from '../../helpers/buildCreateTableRowQuery';
-import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
+import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
+import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
 import { User } from '../users/users.model';
 import { ClientProfile } from './clients.model';
 import { CreateClientDto, UpdateClientDto } from './dto';

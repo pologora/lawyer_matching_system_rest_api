@@ -2,8 +2,8 @@ import { User } from '../users/users.model';
 import { CreateLawyerDto, UpdateLawyerDto } from './dto';
 import { GetManyLawyersQueryStringDto } from './dto/getManyLawyersQueryStringDto';
 import { buildGetManyLawyersQuery } from './helpers/biuldGetManyLawyersQuery';
-import { buildCreateTableRowQuery } from '../../helpers/buildCreateTableRowQuery';
-import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
+import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
+import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
 import { LawyersProfile } from './lawyers.model';
 
 type CreateLawyerServiceProps = {

@@ -1,4 +1,4 @@
-import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
+import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
 import { AppError } from '../../utils/errors/AppError';
 import { hashPassword } from '../../utils/passwordManagement/hashPassword';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';

@@ -1,12 +1,11 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 import pool from '../../config/db.config';
-import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
 import { deleteCaseQuery, getOneCaseQuery } from './sqlQueries';
 import { CreateProps, DeleteProps, GetManyProps, GetOneProps, UpdateProps } from './types/casesTypes';
 
 export class Case {
-  static async create({ createCaseQuery, values }: CreateProps) {
+  static async create({ createCaseQuery, values, checkDatabaseOperation }: CreateProps) {
     const [result] = await pool.query<ResultSetHeader>(createCaseQuery, values);
 
     checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
@@ -14,7 +13,7 @@ export class Case {
     return result.insertId;
   }
 
-  static async getOne({ id }: GetOneProps) {
+  static async getOne({ id, checkDatabaseOperation }: GetOneProps) {
     const [result] = await pool.query<RowDataPacket[]>(getOneCaseQuery, [id]);
 
     checkDatabaseOperation({ id, operation: 'get', result: result[0] });
@@ -28,7 +27,7 @@ export class Case {
     return result[0];
   }
 
-  static async update({ updateCaseQuery, values, id }: UpdateProps) {
+  static async update({ updateCaseQuery, values, id, checkDatabaseOperation }: UpdateProps) {
     const [result] = await pool.query<ResultSetHeader>(updateCaseQuery, [...values, id]);
 
     checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
@@ -36,7 +35,7 @@ export class Case {
     return result;
   }
 
-  static async remove({ id }: DeleteProps) {
+  static async remove({ id, checkDatabaseOperation }: DeleteProps) {
     const [result] = await pool.query<ResultSetHeader>(deleteCaseQuery, [id]);
 
     checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });

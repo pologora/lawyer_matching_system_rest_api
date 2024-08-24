@@ -1,15 +1,8 @@
+import { CheckDatabaseOperationResult } from '../types/utils';
 import { AppError } from './errors/AppError';
 import { HTTP_STATUS_CODES } from './statusCodes';
 
-type DatabaseOperations = 'update' | 'remove' | 'get' | 'create';
-
-type CheckDatabaseOperationInput = {
-  result: object | undefined | number;
-  id?: number;
-  operation: DatabaseOperations;
-};
-
-export const checkDatabaseOperation = ({ result, id, operation }: CheckDatabaseOperationInput) => {
+export const checkDatabaseOperation: CheckDatabaseOperationResult = ({ result, id, operation }) => {
   if (!result) {
     const firstElementIndex = 0;
     const capitalizedOperation = operation.charAt(firstElementIndex).toUpperCase() + operation.slice(1);

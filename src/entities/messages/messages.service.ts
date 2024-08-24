@@ -1,5 +1,5 @@
-import { buildCreateTableRowQuery } from '../../helpers/buildCreateTableRowQuery';
-import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
+import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
+import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
 import { CreateMessageDto, UpdateMessageDto } from './dto';
 import { buildGetManyMessagesQuery } from './helpers/buildGetManyMessagesQuery';
 import { Message } from './messages.model';

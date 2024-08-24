@@ -1,5 +1,5 @@
-import { buildCreateTableRowQuery } from '../../helpers/buildCreateTableRowQuery';
-import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
+import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
+import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
 import { LawyersProfile } from '../lawyers/lawyers.model';
 import { CreateReviewDto, UpdateReviewDto } from './dto';
 import { buildGetManyReviewsQuery } from './helpers/buildGetManyReviewsQuery';
