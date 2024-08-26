@@ -19,18 +19,24 @@ import { LawyersProfile } from '../lawyers/lawyers.model';
 import { Review } from './reviews.model';
 import { buildGetManyReviewsQuery } from './helpers/buildGetManyReviewsQuery';
 import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
+import { getReviewQuery, removeReviewQuery } from './sqlQueries';
 
 export const reviewsRouter = express.Router();
 
 reviewsRouter.param('id', validateIdParameter);
 
-const injectedCreateReviewService = createReviewService({ LawyersProfile, Review, buildCreateTableRowQuery });
+const injectedCreateReviewService = createReviewService({
+  LawyersProfile,
+  Review,
+  buildCreateTableRowQuery,
+  getReviewQuery,
+});
 
 const injectedCreateReviewController = createReviewController({ createReviewService: injectedCreateReviewService });
-const injectedGetReviewController = getReviewController({ Review });
+const injectedGetReviewController = getReviewController({ Review, query: getReviewQuery });
 const injectedGetManyReviewsController = getManyReviewsController({ Review, buildGetManyReviewsQuery });
-const injectedUpdateReviewController = updateReviewController({ Review, buildUpdateTableRowQuery });
-const injectedRemoveReviewController = removeReviewController({ Review });
+const injectedUpdateReviewController = updateReviewController({ Review, buildUpdateTableRowQuery, getReviewQuery });
+const injectedRemoveReviewController = removeReviewController({ Review, query: removeReviewQuery });
 
 reviewsRouter
   .route('/reviews')

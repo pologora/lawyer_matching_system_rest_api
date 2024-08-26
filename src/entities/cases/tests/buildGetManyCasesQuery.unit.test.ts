@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable max-lines-per-function */
-import { GetManyCasesQueryParams } from '../dto';
 import { buildGetManyCasesQuery } from '../helpers/buildGetManyCasesQuery';
+import { GetManyCasesQueryParams } from '../types/casesTypes';
 
 describe('get many cases query builder', () => {
   test('should return object with a query string and array of parameters', () => {

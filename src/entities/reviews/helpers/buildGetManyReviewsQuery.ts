@@ -2,7 +2,7 @@
 
 import { BuildGetManyReviewsQuery } from '../types/reviewsTypes';
 
-export const buildGetManyReviewsQuery: BuildGetManyReviewsQuery = (queryString) => {
+export const buildGetManyReviewsQuery: BuildGetManyReviewsQuery = (queryParams) => {
   const defaultLimit = 25;
   const defaultPage = 1;
   const defaultSortBy = 'createdAt';
@@ -20,7 +20,7 @@ export const buildGetManyReviewsQuery: BuildGetManyReviewsQuery = (queryString) 
     lawyerId,
     ratingMax,
     ratingMin,
-  } = queryString;
+  } = queryParams;
 
   const filters = [];
   const values = [];

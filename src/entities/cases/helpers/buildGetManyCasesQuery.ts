@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 
-import { GetManyCasesQueryParams } from '../types/casesTypes';
+import { BuildGetManyCasesQuery } from '../types/casesTypes';
 
-export const buildGetManyCasesQuery = (queryParams: GetManyCasesQueryParams) => {
+export const buildGetManyCasesQuery: BuildGetManyCasesQuery = (queryParams) => {
   const DEFAULT_LIMIT_QUERY_RESULTS = 25;
   const DEFAULT_OFFSET = 0;
 
