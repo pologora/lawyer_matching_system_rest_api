@@ -8,53 +8,30 @@ import {
   getUserForAuthQuery,
   updateUserRoleQuery,
 } from './sqlQueries';
-import { UserRole } from '../../types/userRoles';
-import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
+import {
+  CreateProps,
+  GetManyProps,
+  GetOneForAuthProps,
+  GetOneProps,
+  RemoveProps,
+  SetRoleProps,
+  UpdateProps,
+} from './types/userTypes';
+import { BaseModel } from '../../utils/BaseModel';
 
-type CreateProps = {
-  email: string;
-  hashedPassword: string;
-};
-
-type GetOneProps = {
-  id: number;
-};
-
-type GetOneForAuthProps = {
-  id: number;
-};
-
-type GetManyProps = {
-  values: (string | number | boolean)[];
-  query: string;
-};
-
-type UpdateProps = {
-  query: string;
-  values: (string | number)[];
-  id: number;
-};
-
-type RemoveProps = {
-  id: number;
-};
-
-type SetRoleProps = {
-  id: number;
-  role: UserRole;
-};
-
-class User {
+class User extends BaseModel {
   static async create({ email, hashedPassword }: CreateProps) {
     const [result] = await pool.query<ResultSetHeader>(createUserQuery, [email, hashedPassword]);
 
-    checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
+    this.checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
 
     return result;
   }
 
   static async getOne({ id }: GetOneProps) {
     const [result] = await pool.query<RowDataPacket[]>(getUserByIdQuery, [id]);
+
+    this.checkDatabaseOperation({ operation: 'get', result: result[0] });
 
     return result[0] as IUser;
   }
@@ -74,7 +51,7 @@ class User {
   static async update({ query, values, id }: UpdateProps) {
     const [result] = await pool.query<ResultSetHeader>(query, [...values, id]);
 
-    checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
+    this.checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
 
     return result;
   }
@@ -82,7 +59,7 @@ class User {
   static async remove({ id }: RemoveProps) {
     const [result] = await pool.query<ResultSetHeader>(deleteUserQuery, [id]);
 
-    checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
+    this.checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
 
     return result;
   }
@@ -90,7 +67,7 @@ class User {
   static async setRole({ role, id }: SetRoleProps) {
     const [result] = await pool.query<ResultSetHeader>(updateUserRoleQuery, [role, id]);
 
-    checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
+    this.checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
 
     return result;
   }

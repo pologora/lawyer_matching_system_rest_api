@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { GetManyReveiwsQueryStringDto } from '../dto/getManyMessagesQueryStringDto';
 
-export const buildGetManyReviewsQuery = (queryString: GetManyReveiwsQueryStringDto) => {
+import { BuildGetManyReviewsQuery } from '../types/reviewsTypes';
+
+export const buildGetManyReviewsQuery: BuildGetManyReviewsQuery = (queryString) => {
   const defaultLimit = 25;
   const defaultPage = 1;
   const defaultSortBy = 'createdAt';

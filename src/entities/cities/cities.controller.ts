@@ -1,14 +1,14 @@
-import { NextFunction, Request, Response } from 'express';
-
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
-import { getCitiesByRegionService } from './cities.service';
+import { GetCitiesByRegion } from './types/citiesTypes';
 
-export const getCitiesByRegionController = async (req: Request, res: Response, _next: NextFunction) => {
-  const regionId = Number(req.query.regionId);
+export const getCitiesByRegionController: GetCitiesByRegion =
+  ({ City }) =>
+  async (req, res, _next) => {
+    const regionId = Number(req.query.regionId);
 
-  const cities = await getCitiesByRegionService({ regionId });
+    const cities = await City.getCitiesByRegion({ regionId });
 
-  return res
-    .status(HTTP_STATUS_CODES.SUCCESS_200)
-    .json({ status: 'success', message: 'Cities retrieved successfully', data: cities });
-};
+    return res
+      .status(HTTP_STATUS_CODES.SUCCESS_200)
+      .json({ status: 'success', message: 'Cities retrieved successfully', data: cities });
+  };

@@ -1,87 +1,50 @@
-import { User } from '../users/users.model';
-import { CreateLawyerDto, UpdateLawyerDto } from './dto';
-import { GetManyLawyersQueryStringDto } from './dto/getManyLawyersQueryStringDto';
-import { buildGetManyLawyersQuery } from './helpers/biuldGetManyLawyersQuery';
-import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
-import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
-import { LawyersProfile } from './lawyers.model';
+import { CreateLawyerService, UpdateLawyerService } from './types/lawyersTypes';
 
-type CreateLawyerServiceProps = {
-  data: CreateLawyerDto;
-};
+export const createLawyerService: CreateLawyerService =
+  ({ LawyersProfile, User, buildCreateTableRowQuery }) =>
+  async ({ data }) => {
+    const { userId, licenseNumber, bio, experience, firstName, lastName, cityId, regionId, specializations } = data;
 
-type GetLawyerServiceProps = {
-  id: number;
-};
+    const { query, values } = buildCreateTableRowQuery(
+      {
+        bio,
+        cityId,
+        experience,
+        firstName,
+        lastName,
+        licenseNumber,
+        regionId,
+        userId,
+      },
+      'LawyerProfile',
+    );
 
-type GetManyLawyersServiceProps = {
-  queryString: GetManyLawyersQueryStringDto;
-};
+    const lawyerId = await LawyersProfile.create({ query, specializations, values });
 
-type UpdateLawerServiceProps = {
-  data: UpdateLawyerDto;
-  id: number;
-};
+    await User.setRole({ id: userId, role: 'lawyer' });
 
-type RemoveLawyerServiceProps = {
-  id: number;
-};
+    return await LawyersProfile.getOne({ id: lawyerId! });
+  };
 
-export const createLawyerService = async ({ data }: CreateLawyerServiceProps) => {
-  const { userId, licenseNumber, bio, experience, firstName, lastName, cityId, regionId, specializations } = data;
+export const updateLawyerService: UpdateLawyerService =
+  ({ LawyersProfile, buildUpdateTableRowQuery }) =>
+  async ({ data, id }) => {
+    const { specializations } = data;
 
-  const { query, values } = buildCreateTableRowQuery(
-    {
-      bio,
-      cityId,
-      experience,
-      firstName,
-      lastName,
-      licenseNumber,
-      regionId,
-      userId,
-    },
-    'LawyerProfile',
-  );
+    await LawyersProfile.getOne({ id });
 
-  const lawyerId = await LawyersProfile.create({ query, specializations, values });
+    if (specializations?.length) {
+      await LawyersProfile.updateLawyerSpecializations({
+        lawyerId: id,
+        specializationsIds: specializations,
+      });
 
-  await User.setRole({ id: userId, role: 'lawyer' });
+      delete data.specializations;
+    }
 
-  return await LawyersProfile.getOne({ id: lawyerId! });
-};
+    const { query, values } = buildUpdateTableRowQuery(data, 'LawyerProfile');
 
-export const getLawyerService = async ({ id }: GetLawyerServiceProps) => {
-  const result = await LawyersProfile.getOne({ id });
+    await LawyersProfile.update({ id, query, values });
 
-  return result;
-};
-
-export const getManyLawyersService = async ({ queryString }: GetManyLawyersServiceProps) => {
-  const { query, values } = buildGetManyLawyersQuery(queryString);
-
-  return await LawyersProfile.getMany({ query, values });
-};
-
-export const updateLawyerService = async ({ data, id }: UpdateLawerServiceProps) => {
-  const { specializations } = data;
-
-  await LawyersProfile.getOne({ id });
-
-  if (specializations?.length) {
-    await LawyersProfile.updateLawyerSpecializations({ lawyerId: id, specializationsIds: specializations });
-    delete data.specializations;
-  }
-
-  const { query, values } = buildUpdateTableRowQuery(data, 'LawyerProfile');
-
-  await LawyersProfile.update({ id, query, values });
-
-  return await LawyersProfile.getOne({ id });
-};
-
-export const removeLawyerService = async ({ id }: RemoveLawyerServiceProps) => {
-  await LawyersProfile.remove({ id });
-
-  return await User.setRole({ id, role: 'user' });
-};
+    return await LawyersProfile.getOne({ id });
+  };

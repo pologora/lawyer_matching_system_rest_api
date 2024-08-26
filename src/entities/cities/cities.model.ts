@@ -1,9 +1,6 @@
 import pool from '../../config/db.config';
 import { getCitiesByRegionQuery } from './sqlQueries';
-
-type GetManyCitiesProps = {
-  regionId: number;
-};
+import { GetManyCitiesProps } from './types/citiesTypes';
 
 export class City {
   static async getCitiesByRegion({ regionId }: GetManyCitiesProps) {

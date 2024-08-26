@@ -1,38 +1,16 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 import pool from '../../config/db.config';
-import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
 import { getReviewQuery, removeReviewQuery } from './sqlQueries';
+import { BaseModel } from '../../utils/BaseModel';
+import { CreateProps, GetManyProps, GetOneProps, UpdateProps } from './types/reviewsTypes';
+import { DeleteProps } from '../cases/types/casesTypes';
 
-type CreateProps = {
-  createMessageQuery: string;
-  values: (string | number)[];
-};
-
-type GetOneProps = {
-  id: number;
-};
-
-type GetManyProps = {
-  query: string;
-  values: (string | number | Date)[];
-};
-
-type UpdateProps = {
-  updateMessageQuery: string;
-  values: (string | number)[];
-  id: number;
-};
-
-type DeleteProps = {
-  id: number;
-};
-
-export class Review {
+export class Review extends BaseModel {
   static async create({ createMessageQuery: createReviewQuery, values }: CreateProps) {
     const [result] = await pool.query<ResultSetHeader>(createReviewQuery, values);
 
-    checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
+    this.checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
 
     return result.insertId;
   }
@@ -40,7 +18,7 @@ export class Review {
   static async getOne({ id }: GetOneProps) {
     const [result] = await pool.query<RowDataPacket[]>(getReviewQuery, [id]);
 
-    checkDatabaseOperation({ id, operation: 'get', result: result[0] });
+    this.checkDatabaseOperation({ id, operation: 'get', result: result[0] });
 
     return result[0];
   }
@@ -54,7 +32,7 @@ export class Review {
   static async update({ updateMessageQuery, values, id }: UpdateProps) {
     const [result] = await pool.query<ResultSetHeader>(updateMessageQuery, [...values, id]);
 
-    checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
+    this.checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
 
     return result;
   }
@@ -62,7 +40,7 @@ export class Review {
   static async remove({ id }: DeleteProps) {
     const [result] = await pool.query<ResultSetHeader>(removeReviewQuery, [id]);
 
-    checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
+    this.checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
 
     return result;
   }

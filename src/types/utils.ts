@@ -19,3 +19,5 @@ export type BuildUpdateTableRowQuery = (
   data: object,
   table: DatabaseTableNames,
 ) => { query: string; values: (string | number)[] };
+
+export type HashPassword = (password: string) => Promise<string>;

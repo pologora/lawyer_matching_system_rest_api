@@ -10,47 +10,19 @@ import {
 } from './sqlQueries';
 import { AppError } from '../../utils/errors/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
-import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
+import {
+  CreateProps,
+  GetManyProps,
+  GetOneByUserIdProps,
+  GetOneProps,
+  RemoveProps,
+  UpdateLawyerSpecializationsProps,
+  UpdateProps,
+  UpdateRatingProps,
+} from './types/lawyersTypes';
+import { BaseModel } from '../../utils/BaseModel';
 
-type CreateProps = {
-  query: string;
-  values: (string | number)[];
-  specializations: number[];
-};
-
-type GetOneProps = {
-  id: number;
-};
-
-type GetOneByUserIdProps = {
-  userId: number;
-};
-
-type GetManyProps = {
-  query: string;
-  values: (string | number)[];
-};
-
-type UpdateProps = {
-  query: string;
-  values: (string | number)[];
-  id: number;
-};
-
-type UpdateRatingProps = {
-  id: number;
-};
-
-type RemoveProps = {
-  id: number;
-};
-
-type UpdateLawyerSpecializationsProps = {
-  lawyerId: number;
-  specializationsIds: number[];
-};
-
-export class LawyersProfile {
+export class LawyersProfile extends BaseModel {
   static async create({ query, values, specializations }: CreateProps) {
     const connection = await pool.getConnection();
 
@@ -59,7 +31,7 @@ export class LawyersProfile {
 
       const [result] = await connection.execute<ResultSetHeader>(query, values);
 
-      checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
+      this.checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
 
       const lawyerId = result.insertId;
 
@@ -69,7 +41,7 @@ export class LawyersProfile {
           specializationId,
         ]);
 
-        checkDatabaseOperation({ operation: 'create', result: data.affectedRows });
+        this.checkDatabaseOperation({ operation: 'create', result: data.affectedRows });
       }
 
       await connection.commit();
@@ -88,7 +60,7 @@ export class LawyersProfile {
   static async getOne({ id }: GetOneProps) {
     const [result] = await pool.query<RowDataPacket[]>(getLawyerByIdQuery, [id]);
 
-    checkDatabaseOperation({ id, operation: 'get', result: result[0] });
+    this.checkDatabaseOperation({ id, operation: 'get', result: result[0] });
 
     return result[0];
   }
@@ -96,7 +68,7 @@ export class LawyersProfile {
   static async getOneByUserId({ userId }: GetOneByUserIdProps) {
     const [result] = await pool.query<RowDataPacket[]>(getLawyerByUserIdQuery, [userId]);
 
-    checkDatabaseOperation({ id: userId, operation: 'get', result: result[0] });
+    this.checkDatabaseOperation({ id: userId, operation: 'get', result: result[0] });
 
     return result[0];
   }
@@ -110,19 +82,23 @@ export class LawyersProfile {
   static async update({ id, query, values }: UpdateProps) {
     const [result] = await pool.query<ResultSetHeader>(query, [...values, id]);
 
-    checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
+    this.checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
 
     return result;
   }
 
   static async updateRating({ id }: UpdateRatingProps) {
-    return await pool.query<ResultSetHeader>(updateRatingQuery, [id, id]);
+    const [result] = await pool.query<ResultSetHeader>(updateRatingQuery, [id, id]);
+
+    this.checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
+
+    return result;
   }
 
   static async remove({ id }: RemoveProps) {
     const [result] = await pool.query<ResultSetHeader>(deleteLawyerQuery, [id]);
 
-    checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
+    this.checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
 
     return result;
   }
@@ -138,7 +114,7 @@ export class LawyersProfile {
           lawyerId,
           specializationId,
         ]);
-        checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
+        this.checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
       }
 
       connection.commit();

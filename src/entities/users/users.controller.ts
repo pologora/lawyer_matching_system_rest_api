@@ -1,70 +1,96 @@
 import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
-import {
-  createUserService,
-  getManyUsersService,
-  getUserService,
-  removeUserService,
-  updateUserService,
-  uploadUserPhotoService,
-} from './users.service';
 import { AppError } from '../../utils/errors/AppError';
+import {
+  CreateUserController,
+  GetManyUsersController,
+  GetUserController,
+  RemoveUserController,
+  UpdateUserController,
+  UploadUserPhotoController,
+} from './types/userTypes';
 
-export const createUserController = async (req: Request, res: Response, _next: NextFunction) => {
-  const result = await createUserService({ data: req.body });
+export const createUserController: CreateUserController =
+  ({ User, hashPassword }) =>
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const { email, password } = req.body;
 
-  return res.status(HTTP_STATUS_CODES.CREATED_201).json({
-    status: 'success',
-    message: 'User created successfully.',
-    data: result,
-  });
-};
+    const hashedPassword = await hashPassword(password);
 
-export const getUserController = async (req: Request, res: Response, _next: NextFunction) => {
-  const user = await getUserService({ id: Number(req.params.id) });
+    const result = await User.create({ email, hashedPassword });
 
-  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-    status: 'success',
-    message: 'User retrieved successfully.',
-    data: user,
-  });
-};
+    return res.status(HTTP_STATUS_CODES.CREATED_201).json({
+      status: 'success',
+      message: 'User created successfully.',
+      data: result,
+    });
+  };
 
-export const getManyUsersController = async (req: Request, res: Response, _next: NextFunction) => {
-  const users = await getManyUsersService(req.query);
+export const getUserController: GetUserController =
+  ({ User }) =>
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const user = await User.getOne({ id: Number(req.params.id) });
 
-  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-    status: 'success',
-    message: 'Users retrieved successfully.',
-    data: users,
-  });
-};
+    return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+      status: 'success',
+      message: 'User retrieved successfully.',
+      data: user,
+    });
+  };
 
-export const updateUserController = async (req: Request, res: Response, _next: NextFunction) => {
-  const result = await updateUserService({ id: Number(req.params.id), data: req.body });
+export const getManyUsersController: GetManyUsersController =
+  ({ User, buildGetManyUsersQuery }) =>
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const { query, values } = buildGetManyUsersQuery(req.query);
 
-  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-    status: 'success',
-    message: 'User updated successfully.',
-    data: result,
-  });
-};
+    const users = await User.getMany({ query, values });
 
-export const removeUserController = async (req: Request, res: Response, _next: NextFunction) => {
-  await removeUserService({ id: Number(req.params.id) });
+    return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+      status: 'success',
+      message: 'Users retrieved successfully.',
+      data: users,
+    });
+  };
 
-  return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).send();
-};
+export const updateUserController: UpdateUserController =
+  ({ User, buildUpdateTableRowQuery }) =>
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const id = Number(req.params.id);
+    const { query, values } = buildUpdateTableRowQuery(req.body, 'User');
 
-export const uploadUserPhotoController = async (req: Request, res: Response, _next: NextFunction) => {
-  if (!req.file) {
-    throw new AppError('No file uploaded. Please upload an image file', HTTP_STATUS_CODES.BAD_REQUEST_400);
-  }
+    await User.update({ id, query, values });
 
-  await uploadUserPhotoService({ id: Number(req.params.id), profileImageFileName: req.file.filename });
+    const user = await User.getOne({ id });
 
-  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-    status: 'success',
-    message: 'User image uploaded successfully',
-  });
-};
+    return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+      status: 'success',
+      message: 'User updated successfully.',
+      data: user,
+    });
+  };
+
+export const removeUserController: RemoveUserController =
+  ({ User }) =>
+  async (req: Request, res: Response, _next: NextFunction) => {
+    await User.remove({ id: Number(req.params.id) });
+
+    return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).send();
+  };
+
+export const uploadUserPhotoController: UploadUserPhotoController =
+  ({ User, buildUpdateTableRowQuery }) =>
+  async (req: Request, res: Response, _next: NextFunction) => {
+    if (!req.file) {
+      throw new AppError('No file uploaded. Please upload an image file', HTTP_STATUS_CODES.BAD_REQUEST_400);
+    }
+
+    const id = Number(req.params.id);
+    const { query, values } = buildUpdateTableRowQuery({ profileImageFileName: req.file.filename }, 'User');
+
+    await User.update({ id, query, values });
+
+    return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+      status: 'success',
+      message: 'User image uploaded successfully',
+    });
+  };

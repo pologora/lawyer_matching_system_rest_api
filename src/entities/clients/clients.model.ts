@@ -1,36 +1,14 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import pool from '../../config/db.config';
-import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
 import { deleteClientQuery, getManyClientsQuery, getOneClientByUserIdQuery, getOneClientQuery } from './slqQueries';
+import { CreateProps, GetOneByUserIdProps, GetOneProps, RemoveProps, UpdateProps } from './types/clientTypes';
+import { BaseModel } from '../../utils/BaseModel';
 
-type CreateProps = {
-  createUserQuery: string;
-  values: (string | number)[];
-};
-
-type GetOneProps = {
-  id: number;
-};
-
-type GetOneByUserIdProps = {
-  userId: number;
-};
-
-type UpdateProps = {
-  query: string;
-  values: (string | number)[];
-  id: number;
-};
-
-type RemoveProps = {
-  id: number;
-};
-
-export class ClientProfile {
+export class ClientProfile extends BaseModel {
   static async create({ createUserQuery, values }: CreateProps) {
     const [result] = await pool.query<ResultSetHeader>(createUserQuery, values);
 
-    checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
+    this.checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
 
     return result.insertId;
   }
@@ -38,7 +16,7 @@ export class ClientProfile {
   static async getOne({ id }: GetOneProps) {
     const [result] = await pool.query<RowDataPacket[]>(getOneClientQuery, [id]);
 
-    checkDatabaseOperation({ id, operation: 'get', result: result[0] });
+    this.checkDatabaseOperation({ id, operation: 'get', result: result[0] });
 
     return result[0];
   }
@@ -46,7 +24,7 @@ export class ClientProfile {
   static async getOneByUserId({ userId }: GetOneByUserIdProps) {
     const [result] = await pool.query<RowDataPacket[]>(getOneClientByUserIdQuery, [userId]);
 
-    checkDatabaseOperation({ id: userId, operation: 'get', result: result[0] });
+    this.checkDatabaseOperation({ id: userId, operation: 'get', result: result[0] });
 
     return result[0];
   }
@@ -60,7 +38,7 @@ export class ClientProfile {
   static async update({ query, values, id }: UpdateProps) {
     const [result] = await pool.query<ResultSetHeader>(query, [...values, id]);
 
-    checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
+    this.checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
 
     return result;
   }
@@ -68,7 +46,7 @@ export class ClientProfile {
   static async remove({ id }: RemoveProps) {
     const [result] = await pool.query<ResultSetHeader>(deleteClientQuery, [id]);
 
-    checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
+    this.checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
 
     return result;
   }

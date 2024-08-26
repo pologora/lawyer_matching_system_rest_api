@@ -8,13 +8,13 @@ import {
 } from './types/casesTypes';
 
 export const createCaseController: CreateCaseController =
-  ({ Case, buildCreateTableRowQuery, checkDatabaseOperation }) =>
+  ({ Case, buildCreateTableRowQuery }) =>
   async (req, res, _next) => {
     const { query: createCaseQuery, values } = buildCreateTableRowQuery(req.body, 'Case');
 
-    const caseId = await Case.create({ createCaseQuery, values, checkDatabaseOperation });
+    const caseId = await Case.create({ createCaseQuery, values });
 
-    const newCase = await Case.getOne({ id: caseId, checkDatabaseOperation });
+    const newCase = await Case.getOne({ id: caseId });
 
     return res.status(HTTP_STATUS_CODES.CREATED_201).json({
       status: 'success',
@@ -24,9 +24,9 @@ export const createCaseController: CreateCaseController =
   };
 
 export const getCaseController: GetCaseController =
-  ({ Case, checkDatabaseOperation }) =>
+  ({ Case }) =>
   async (req, res, _next) => {
-    const oneCase = await Case.getOne({ id: Number(req.params.id), checkDatabaseOperation });
+    const oneCase = await Case.getOne({ id: Number(req.params.id) });
 
     return res
       .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -46,7 +46,7 @@ export const getManyCasesController: GetManyCaseController =
   };
 
 export const updateCaseController: UpdateCaseController =
-  ({ Case, buildUpdateTableRowQuery, checkDatabaseOperation }) =>
+  ({ Case, buildUpdateTableRowQuery }) =>
   async (req, res, _next) => {
     const { query: updateCaseQuery, values } = buildUpdateTableRowQuery(req.body, 'Case');
 
@@ -54,7 +54,6 @@ export const updateCaseController: UpdateCaseController =
       updateCaseQuery,
       values,
       id: Number(req.params.id),
-      checkDatabaseOperation,
     });
 
     return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
@@ -65,9 +64,9 @@ export const updateCaseController: UpdateCaseController =
   };
 
 export const removeCaseController: RemoveCaseController =
-  ({ Case, checkDatabaseOperation }) =>
+  ({ Case }) =>
   async (req, res, _next) => {
-    await Case.remove({ id: Number(req.params.id), checkDatabaseOperation });
+    await Case.remove({ id: Number(req.params.id) });
 
     return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
   };

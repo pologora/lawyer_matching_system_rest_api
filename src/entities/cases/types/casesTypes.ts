@@ -1,17 +1,14 @@
 import { QueryResult, ResultSetHeader, RowDataPacket } from 'mysql2';
-import { GetManyCasesDto } from '../dto';
 import { NextFunction, Response, Request } from 'express';
-import { BuildCreateTableRowQuery, BuildUpdateTableRowQuery, CheckDatabaseOperationResult } from '../../../types/utils';
+import { BuildCreateTableRowQuery, BuildUpdateTableRowQuery } from '../../../types/utils';
 
 export type CreateProps = {
   createCaseQuery: string;
   values: (string | number | Date)[];
-  checkDatabaseOperation: CheckDatabaseOperationResult;
 };
 
 export type GetOneProps = {
   id: number;
-  checkDatabaseOperation: CheckDatabaseOperationResult;
 };
 
 export type GetManyProps = {
@@ -23,15 +20,13 @@ export type UpdateProps = {
   updateCaseQuery: string;
   values: (string | number | Date)[];
   id: number;
-  checkDatabaseOperation: CheckDatabaseOperationResult;
 };
 
 export type DeleteProps = {
   id: number;
-  checkDatabaseOperation: CheckDatabaseOperationResult;
 };
 
-export interface ICasesModel {
+export interface CasesModel {
   create(props: CreateProps): Promise<number>;
   getOne(props: GetOneProps): Promise<RowDataPacket>;
   getMany(props: GetManyProps): Promise<QueryResult>;
@@ -39,32 +34,45 @@ export interface ICasesModel {
   remove(props: DeleteProps): Promise<ResultSetHeader>;
 }
 
-export type BuildGetManyCasesQuery = (queryParams: GetManyCasesDto) => { query: string; values: (number | string)[] };
+export interface GetManyCasesQueryParams {
+  clientId?: number;
+  lawyerId?: number;
+  specializationId?: number;
+  regionId?: number;
+  cityId?: number;
+  status?: string;
+  searchTitle?: string;
+  searchDescription?: string;
+  limit?: number;
+  page?: number;
+  sort?: string;
+  order?: 'desc' | 'asc';
+}
+
+export type BuildGetManyCasesQuery = (queryParams: GetManyCasesQueryParams) => {
+  query: string;
+  values: (number | string)[];
+};
 
 export type CreateCaseController = (props: {
-  Case: ICasesModel;
+  Case: CasesModel;
   buildCreateTableRowQuery: BuildCreateTableRowQuery;
-  checkDatabaseOperation: CheckDatabaseOperationResult;
 }) => (req: Request, res: Response, next: NextFunction) => Promise<Response>;
 
 export type GetCaseController = (props: {
-  Case: ICasesModel;
-  checkDatabaseOperation: CheckDatabaseOperationResult;
+  Case: CasesModel;
 }) => (req: Request, res: Response, next: NextFunction) => Promise<Response>;
 
 export type GetManyCaseController = (props: {
-  Case: ICasesModel;
+  Case: CasesModel;
   buildGetManyCasesQuery: BuildGetManyCasesQuery;
-  checkDatabaseOperation: CheckDatabaseOperationResult;
 }) => (req: Request, res: Response, next: NextFunction) => Promise<Response>;
 
 export type UpdateCaseController = (props: {
-  Case: ICasesModel;
+  Case: CasesModel;
   buildUpdateTableRowQuery: BuildUpdateTableRowQuery;
-  checkDatabaseOperation: CheckDatabaseOperationResult;
 }) => (req: Request, res: Response, next: NextFunction) => Promise<Response>;
 
 export type RemoveCaseController = (props: {
-  Case: ICasesModel;
-  checkDatabaseOperation: CheckDatabaseOperationResult;
+  Case: CasesModel;
 }) => (req: Request, res: Response, next: NextFunction) => Promise<Response>;

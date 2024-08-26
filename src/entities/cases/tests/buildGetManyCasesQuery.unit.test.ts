@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable max-lines-per-function */
-import { GetManyCasesDto } from '../dto';
+import { GetManyCasesQueryParams } from '../dto';
 import { buildGetManyCasesQuery } from '../helpers/buildGetManyCasesQuery';
 
 describe('get many cases query builder', () => {
@@ -18,7 +18,7 @@ describe('get many cases query builder', () => {
       sort: 'title',
       specializationId: 3,
       status: 'open',
-    } as GetManyCasesDto;
+    } as GetManyCasesQueryParams;
 
     const expectedValues = [
       queryParamsObject.cityId,
@@ -44,7 +44,7 @@ describe('get many cases query builder', () => {
       cityId: 1,
       order: 'asc',
       sort: 'title',
-    } as GetManyCasesDto;
+    } as GetManyCasesQueryParams;
 
     const { query, values } = buildGetManyCasesQuery(queryParamsObject);
 

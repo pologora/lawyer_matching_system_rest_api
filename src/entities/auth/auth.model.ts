@@ -14,7 +14,7 @@ import {
   setUserVerifiedQuery,
   updateUserPasswordQuery,
 } from './sqlQueries';
-import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
+import { BaseModel } from '../../utils/BaseModel';
 
 type LoginProps = {
   email: string;
@@ -63,7 +63,7 @@ type DeleteMeProps = {
   id: number;
 };
 
-export class Auth {
+export class Auth extends BaseModel {
   static async login({ email }: LoginProps) {
     const user = await pool.query<RowDataPacket[]>(loginUserQuery, [email]);
 
@@ -141,7 +141,7 @@ export class Auth {
   static async setUserVerified({ id }: DeleteMeProps) {
     const result = await pool.query<ResultSetHeader>(setUserVerifiedQuery, [id]);
 
-    checkDatabaseOperation({ id, operation: 'update', result: result[0] });
+    this.checkDatabaseOperation({ id, operation: 'update', result: result[0] });
 
     return result[0].affectedRows;
   }
