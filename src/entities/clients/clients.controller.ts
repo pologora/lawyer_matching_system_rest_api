@@ -9,16 +9,9 @@ import {
 } from './types/clientTypes';
 
 export const createClientController: CreateClientController =
-  ({ ClientProfile, buildCreateTableRowQuery, User, getOneClientQuery }) =>
+  ({ createClientService }) =>
   async (req, res, _next) => {
-    const data = req.body;
-    const { query, values } = buildCreateTableRowQuery(data, 'ClientProfile');
-
-    const clientId = await ClientProfile.create({ query, values });
-
-    await User.setRole({ id: data.userId, role: 'client' });
-
-    const client = await ClientProfile.getOne({ id: clientId, query: getOneClientQuery });
+    const client = await createClientService({ data: req.body });
 
     return res.status(HTTP_STATUS_CODES.CREATED_201).json({
       status: 'success',

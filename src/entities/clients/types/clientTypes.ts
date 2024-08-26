@@ -13,11 +13,25 @@ export interface ClientProfileModel extends CRUDModel {
   getOneByUserId(props: GetOneByUserIdProps): Promise<RowDataPacket>;
 }
 
-export type CreateClientController = (props: {
+type CreateClientServiceProps = {
   User: UserModel;
   ClientProfile: ClientProfileModel;
   getOneClientQuery: string;
   buildCreateTableRowQuery: BuildCreateTableRowQuery;
+};
+
+type CreateClientDto = {
+  firstName: string;
+  lastName: string;
+  userId: number;
+};
+
+export type CreateClientService = (
+  props: CreateClientServiceProps,
+) => (args: { data: CreateClientDto }) => Promise<RowDataPacket>;
+
+export type CreateClientController = (props: {
+  createClientService: (args: { data: CreateClientDto }) => Promise<RowDataPacket>;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
 
 export type GetClientController = (props: {

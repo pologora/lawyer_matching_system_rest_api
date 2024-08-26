@@ -17,17 +17,20 @@ import { ClientProfile } from './clients.model';
 import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
 import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
 import { deleteClientQuery, getManyClientsQuery, getOneClientQuery } from './slqQueries';
+import { createClientService } from './clients.service';
 
 export const clientsRouter = express.Router();
 
 clientsRouter.param('id', validateIdParameter);
 
-const injectedCreateClientController = createClientController({
+const injectedCreateClientService = createClientService({
   ClientProfile,
   User,
   buildCreateTableRowQuery,
   getOneClientQuery,
 });
+
+const injectedCreateClientController = createClientController({ createClientService: injectedCreateClientService });
 const injectedGetClientController = getClientController({ ClientProfile, query: getOneClientQuery });
 const injectedGetManyClientsController = getManyClientsController({ ClientProfile, query: getManyClientsQuery });
 const injectedUpdateClientController = updateClientController({
