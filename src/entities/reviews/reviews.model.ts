@@ -2,9 +2,8 @@ import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 import pool from '../../config/db.config';
 import { getReviewQuery, removeReviewQuery } from './sqlQueries';
-import { BaseModel } from '../../utils/BaseModel';
-import { CreateProps, GetManyProps, GetOneProps, UpdateProps } from './types/reviewsTypes';
-import { DeleteProps } from '../cases/types/casesTypes';
+import { BaseModel } from '../../core/model/BaseModel';
+import { CreateProps, GetManyProps, GetOneProps, RemoveProps, UpdateProps } from './types/reviewsTypes';
 
 export class Review extends BaseModel {
   static async create({ createMessageQuery: createReviewQuery, values }: CreateProps) {
@@ -37,7 +36,7 @@ export class Review extends BaseModel {
     return result;
   }
 
-  static async remove({ id }: DeleteProps) {
+  static async remove({ id }: RemoveProps) {
     const [result] = await pool.query<ResultSetHeader>(removeReviewQuery, [id]);
 
     this.checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });

@@ -1,10 +1,9 @@
-import pool from '../../config/db.config';
-import { getCitiesByRegionQuery } from './sqlQueries';
+import { BaseModel } from '../../core/model/BaseModel';
 import { GetManyCitiesProps } from './types/citiesTypes';
 
-export class City {
-  static async getCitiesByRegion({ regionId }: GetManyCitiesProps) {
-    const result = await pool.query(getCitiesByRegionQuery, [regionId]);
+export class City extends BaseModel {
+  static async getCitiesByRegion({ regionId, query }: GetManyCitiesProps) {
+    const result = await this.pool.query(query, [regionId]);
 
     return result[0];
   }

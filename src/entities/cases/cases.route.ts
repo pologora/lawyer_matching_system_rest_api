@@ -19,15 +19,20 @@ import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
 import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { buildGetManyCasesQuery } from './helpers/buildGetManyCasesQuery';
 import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
+import { deleteCaseQuery, getOneCaseQuery } from './sqlQueries';
 
 export const casesRouter = express.Router();
 casesRouter.param('id', validateIdParameter);
 
-const injectedCreateCaseController = createCaseController({ Case, buildCreateTableRowQuery });
+const injectedCreateCaseController = createCaseController({
+  Case,
+  buildCreateTableRowQuery,
+  getOneCaseQuery,
+});
 const injectedGetManyCasesController = getManyCasesController({ Case, buildGetManyCasesQuery });
-const injectedGetCaseController = getCaseController({ Case });
-const injectedUpdateCaseController = updateCaseController({ Case, buildUpdateTableRowQuery });
-const injectedRemoveCaseController = removeCaseController({ Case });
+const injectedGetCaseController = getCaseController({ Case, query: getOneCaseQuery });
+const injectedUpdateCaseController = updateCaseController({ Case, buildUpdateTableRowQuery, getOneCaseQuery });
+const injectedRemoveCaseController = removeCaseController({ Case, query: deleteCaseQuery });
 
 casesRouter
   .route('/cases')

@@ -17,7 +17,7 @@ import {
   SetRoleProps,
   UpdateProps,
 } from './types/userTypes';
-import { BaseModel } from '../../utils/BaseModel';
+import { BaseModel } from '../../core/model/BaseModel';
 
 class User extends BaseModel {
   static async create({ email, hashedPassword }: CreateProps) {

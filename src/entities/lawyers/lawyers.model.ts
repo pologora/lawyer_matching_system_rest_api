@@ -20,7 +20,7 @@ import {
   UpdateProps,
   UpdateRatingProps,
 } from './types/lawyersTypes';
-import { BaseModel } from '../../utils/BaseModel';
+import { BaseModel } from '../../core/model/BaseModel';
 
 export class LawyersProfile extends BaseModel {
   static async create({ query, values, specializations }: CreateProps) {

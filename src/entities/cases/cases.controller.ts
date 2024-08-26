@@ -8,13 +8,13 @@ import {
 } from './types/casesTypes';
 
 export const createCaseController: CreateCaseController =
-  ({ Case, buildCreateTableRowQuery }) =>
+  ({ Case, buildCreateTableRowQuery, getOneCaseQuery }) =>
   async (req, res, _next) => {
-    const { query: createCaseQuery, values } = buildCreateTableRowQuery(req.body, 'Case');
+    const { query, values } = buildCreateTableRowQuery(req.body, 'Case');
 
-    const caseId = await Case.create({ createCaseQuery, values });
+    const caseId = await Case.create({ query, values });
 
-    const newCase = await Case.getOne({ id: caseId });
+    const newCase = await Case.getOne({ id: caseId, query: getOneCaseQuery });
 
     return res.status(HTTP_STATUS_CODES.CREATED_201).json({
       status: 'success',
@@ -24,9 +24,9 @@ export const createCaseController: CreateCaseController =
   };
 
 export const getCaseController: GetCaseController =
-  ({ Case }) =>
+  ({ Case, query }) =>
   async (req, res, _next) => {
-    const oneCase = await Case.getOne({ id: Number(req.params.id) });
+    const oneCase = await Case.getOne({ id: Number(req.params.id), query });
 
     return res
       .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -46,15 +46,18 @@ export const getManyCasesController: GetManyCaseController =
   };
 
 export const updateCaseController: UpdateCaseController =
-  ({ Case, buildUpdateTableRowQuery }) =>
+  ({ Case, buildUpdateTableRowQuery, getOneCaseQuery }) =>
   async (req, res, _next) => {
-    const { query: updateCaseQuery, values } = buildUpdateTableRowQuery(req.body, 'Case');
+    const id = Number(req.params.id);
+    const { query, values } = buildUpdateTableRowQuery(req.body, 'Case');
 
-    const updatedCase = await Case.update({
-      updateCaseQuery,
+    await Case.update({
+      query,
       values,
-      id: Number(req.params.id),
+      id,
     });
+
+    const updatedCase = await Case.getOne({ id, query: getOneCaseQuery });
 
     return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
       status: 'success',
@@ -64,9 +67,9 @@ export const updateCaseController: UpdateCaseController =
   };
 
 export const removeCaseController: RemoveCaseController =
-  ({ Case }) =>
+  ({ Case, query }) =>
   async (req, res, _next) => {
-    await Case.remove({ id: Number(req.params.id) });
+    await Case.remove({ id: Number(req.params.id), query });
 
     return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
   };

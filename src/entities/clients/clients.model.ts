@@ -2,7 +2,7 @@ import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import pool from '../../config/db.config';
 import { deleteClientQuery, getManyClientsQuery, getOneClientByUserIdQuery, getOneClientQuery } from './slqQueries';
 import { CreateProps, GetOneByUserIdProps, GetOneProps, RemoveProps, UpdateProps } from './types/clientTypes';
-import { BaseModel } from '../../utils/BaseModel';
+import { BaseModel } from '../../core/model/BaseModel';
 
 export class ClientProfile extends BaseModel {
   static async create({ createUserQuery, values }: CreateProps) {

@@ -1,38 +1,8 @@
-import { QueryResult, ResultSetHeader, RowDataPacket } from 'mysql2';
 import { NextFunction, Response, Request } from 'express';
 import { BuildCreateTableRowQuery, BuildUpdateTableRowQuery } from '../../../types/utils';
+import { CRUDModel } from '../../../types/CRUDModel';
 
-export type CreateProps = {
-  createCaseQuery: string;
-  values: (string | number | Date)[];
-};
-
-export type GetOneProps = {
-  id: number;
-};
-
-export type GetManyProps = {
-  query: string;
-  values: (string | number)[];
-};
-
-export type UpdateProps = {
-  updateCaseQuery: string;
-  values: (string | number | Date)[];
-  id: number;
-};
-
-export type DeleteProps = {
-  id: number;
-};
-
-export interface CasesModel {
-  create(props: CreateProps): Promise<number>;
-  getOne(props: GetOneProps): Promise<RowDataPacket>;
-  getMany(props: GetManyProps): Promise<QueryResult>;
-  update(props: UpdateProps): Promise<ResultSetHeader>;
-  remove(props: DeleteProps): Promise<ResultSetHeader>;
-}
+export interface CasesModel extends CRUDModel {}
 
 export interface GetManyCasesQueryParams {
   clientId?: number;
@@ -56,11 +26,13 @@ export type BuildGetManyCasesQuery = (queryParams: GetManyCasesQueryParams) => {
 
 export type CreateCaseController = (props: {
   Case: CasesModel;
+  getOneCaseQuery: string;
   buildCreateTableRowQuery: BuildCreateTableRowQuery;
 }) => (req: Request, res: Response, next: NextFunction) => Promise<Response>;
 
 export type GetCaseController = (props: {
   Case: CasesModel;
+  query: string;
 }) => (req: Request, res: Response, next: NextFunction) => Promise<Response>;
 
 export type GetManyCaseController = (props: {
@@ -70,9 +42,11 @@ export type GetManyCaseController = (props: {
 
 export type UpdateCaseController = (props: {
   Case: CasesModel;
+  getOneCaseQuery: string;
   buildUpdateTableRowQuery: BuildUpdateTableRowQuery;
 }) => (req: Request, res: Response, next: NextFunction) => Promise<Response>;
 
 export type RemoveCaseController = (props: {
   Case: CasesModel;
+  query: string;
 }) => (req: Request, res: Response, next: NextFunction) => Promise<Response>;

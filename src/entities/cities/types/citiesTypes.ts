@@ -3,6 +3,7 @@ import { QueryResult } from 'mysql2';
 
 export type GetManyCitiesProps = {
   regionId: number;
+  query: string;
 };
 
 export interface CitiesModel {
@@ -11,4 +12,5 @@ export interface CitiesModel {
 
 export type GetCitiesByRegion = (props: {
   City: CitiesModel;
+  query: string;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;

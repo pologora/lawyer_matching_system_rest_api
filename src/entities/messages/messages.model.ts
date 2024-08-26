@@ -2,7 +2,7 @@ import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 import pool from '../../config/db.config';
 import { getMessageQuery, removeMessageQuery } from './sqlQueries';
-import { BaseModel } from '../../utils/BaseModel';
+import { BaseModel } from '../../core/model/BaseModel';
 
 type CreateProps = {
   createMessageQuery: string;
