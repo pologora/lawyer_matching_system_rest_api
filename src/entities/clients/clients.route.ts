@@ -18,6 +18,7 @@ import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
 import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
 import { deleteClientQuery, getManyClientsQuery, getOneClientQuery } from './slqQueries';
 import { createClientService } from './clients.service';
+import { updateUserRoleQuery } from '../users/sqlQueries';
 
 export const clientsRouter = express.Router();
 
@@ -28,6 +29,7 @@ const injectedCreateClientService = createClientService({
   User,
   buildCreateTableRowQuery,
   getOneClientQuery,
+  updateUserRoleQuery,
 });
 
 const injectedCreateClientController = createClientController({ createClientService: injectedCreateClientService });

@@ -20,28 +20,30 @@ export type BuildGetManyUsersQuery = (queryString: GetManyUsersQueryParams) => {
   values: (string | number | boolean)[];
 };
 
-export type CreateUserProps = {
-  email: string;
-  hashedPassword: string;
-};
-
 export type SetRoleProps = {
   id: number;
   role: UserRole;
+  updateUserRoleQuery: string;
+};
+
+export type GetOneForAuthProps = {
+  id: number;
+  query: string;
 };
 
 export interface UserModel extends CRUDModel {
-  createUser(props: CreateUserProps): Promise<ResultSetHeader>;
   setRole(props: SetRoleProps): Promise<ResultSetHeader>;
 }
 
 export type CreateUserController = (props: {
   User: UserModel;
+  query: string;
   hashPassword: HashPassword;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
 
 export type GetUserController = (props: {
   User: UserModel;
+  query: string;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
 
 export type GetManyUsersController = (props: {
@@ -52,10 +54,12 @@ export type GetManyUsersController = (props: {
 export type UpdateUserController = (props: {
   User: UserModel;
   buildUpdateTableRowQuery: BuildUpdateTableRowQuery;
+  getUserByIdQuery: string;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
 
 export type RemoveUserController = (props: {
   User: UserModel;
+  query: string;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
 
 export type UploadUserPhotoController = (props: {

@@ -100,6 +100,7 @@ export type CreateLawyerServiceProps = {
   User: UserModel;
   getLawyerByIdQuery: string;
   createLawyerSpecializationsQuery: string;
+  updateUserRoleQuery: string;
   buildCreateTableRowQuery: BuildCreateTableRowQuery;
 };
 

@@ -17,6 +17,7 @@ type CreateClientServiceProps = {
   User: UserModel;
   ClientProfile: ClientProfileModel;
   getOneClientQuery: string;
+  updateUserRoleQuery: string;
   buildCreateTableRowQuery: BuildCreateTableRowQuery;
 };
 

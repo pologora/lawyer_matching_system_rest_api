@@ -4,6 +4,7 @@ import { HTTP_STATUS_CODES } from '../utils/statusCodes';
 import { asyncErrorCatch } from '../utils/errors/asyncErrorCatch';
 import { verifyJWT } from '../utils/jwt/verifyJWT';
 import { User } from '../entities/users/users.model';
+import { getUserForAuthQuery } from '../entities/users/sqlQueries';
 
 export const protect = asyncErrorCatch(async (req: Request, res: Response, next: NextFunction) => {
   // 1. get token from request and validate
@@ -16,7 +17,7 @@ export const protect = asyncErrorCatch(async (req: Request, res: Response, next:
   const { id, iat } = await verifyJWT(token);
 
   // 2. user still exists
-  const user = await User.getOneForAuth({ id });
+  const user = await User.getOneForAuth({ id, query: getUserForAuthQuery });
   if (!user) {
     throw new AppError(
       'The user belonging to this token no longer exists. Please log in or create an account.',

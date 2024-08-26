@@ -2,7 +2,7 @@ import { QueryResult, ResultSetHeader, RowDataPacket } from 'mysql2';
 
 export type CreateProps = {
   query: string;
-  values: (string | number | Date)[];
+  values: (string | number | Date | boolean)[];
 };
 
 export type GetOneProps = {
@@ -12,12 +12,12 @@ export type GetOneProps = {
 
 export type GetManyProps = {
   query: string;
-  values: (string | number)[];
+  values: (string | number | Date | boolean)[];
 };
 
 export type UpdateProps = {
   query: string;
-  values: (string | number | Date)[];
+  values: (string | number | Date | boolean)[];
   id: number;
 };
 
@@ -27,7 +27,7 @@ export type RemoveProps = {
 };
 
 export interface CRUDModel {
-  create(props: CreateProps): Promise<number>;
+  create(props: CreateProps | { email: string; hashedPassword: string }): Promise<number>;
   getOne(props: GetOneProps): Promise<RowDataPacket>;
   getMany(props: GetManyProps | { query: string }): Promise<QueryResult>;
   update(props: UpdateProps): Promise<ResultSetHeader>;

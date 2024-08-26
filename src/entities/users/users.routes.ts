@@ -21,16 +21,17 @@ import { hashPassword } from '../../utils/passwordManagement/hashPassword';
 import { User } from './users.model';
 import { buildGetManyUsersQuery } from './helpers/buildGetManyUsersQuery';
 import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
+import { createUserQuery, deleteUserQuery, getUserByIdQuery } from './sqlQueries';
 
 export const usersRouter = Router();
 
 usersRouter.param('id', validateIdParameter);
 
-const injectedCreateUserController = createUserController({ User, hashPassword });
-const injectetGetUserController = getUserController({ User });
+const injectedCreateUserController = createUserController({ User, hashPassword, query: createUserQuery });
+const injectetGetUserController = getUserController({ User, query: getUserByIdQuery });
 const injectetGetManyUsersController = getManyUsersController({ User, buildGetManyUsersQuery });
-const injectetUpdateUserController = updateUserController({ User, buildUpdateTableRowQuery });
-const injectetRemoveUserController = removeUserController({ User });
+const injectetUpdateUserController = updateUserController({ User, buildUpdateTableRowQuery, getUserByIdQuery });
+const injectetRemoveUserController = removeUserController({ User, query: deleteUserQuery });
 const injectetUploadPhotoUserController = uploadUserPhotoController({
   User,
   buildUpdateTableRowQuery,

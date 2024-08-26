@@ -25,9 +25,9 @@ import {
   deleteLawyerSpecializationsQuery,
   getLawyerByIdQuery,
 } from './sqlQueries';
+import { updateUserRoleQuery } from '../users/sqlQueries';
 
 export const lawyersRouter = express.Router();
-
 lawyersRouter.param('id', validateIdParameter);
 
 const injectedCreateLawyerService = createLawyerService({
@@ -36,6 +36,7 @@ const injectedCreateLawyerService = createLawyerService({
   buildCreateTableRowQuery,
   createLawyerSpecializationsQuery,
   getLawyerByIdQuery,
+  updateUserRoleQuery,
 });
 const injectedUpdateLawyerService = updateLawyerService({
   LawyersProfile,

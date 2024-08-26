@@ -1,7 +1,14 @@
 import { CreateLawyerService, UpdateLawyerService } from './types/lawyersTypes';
 
 export const createLawyerService: CreateLawyerService =
-  ({ LawyersProfile, User, buildCreateTableRowQuery, getLawyerByIdQuery, createLawyerSpecializationsQuery }) =>
+  ({
+    LawyersProfile,
+    User,
+    buildCreateTableRowQuery,
+    getLawyerByIdQuery,
+    createLawyerSpecializationsQuery,
+    updateUserRoleQuery,
+  }) =>
   async ({ data }) => {
     const { userId, licenseNumber, bio, experience, firstName, lastName, cityId, regionId, specializations } = data;
 
@@ -27,7 +34,7 @@ export const createLawyerService: CreateLawyerService =
       values,
     });
 
-    await User.setRole({ id: userId, role: 'lawyer' });
+    await User.setRole({ id: userId, role: 'lawyer', updateUserRoleQuery });
 
     return await LawyersProfile.getOne({ id: lawyerId, query: getLawyerByIdQuery });
   };

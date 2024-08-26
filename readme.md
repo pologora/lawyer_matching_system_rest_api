@@ -399,11 +399,38 @@ If user email is not verified and route is protected will result in:
 
 - 401 Unauthorized
 
-````json
+```json
 {
   "status": "error",
   "message": "The email is not verified. Please verify your email."
 }
+```
+
+If route is protected and user is not logged in:
+
+**Response:**
+
+- 401 Unauthorized
+
+```json
+{
+  "status": "error",
+  "message": "You are not logged in. Please log in to get access."
+}
+```
+
+If route is restricted to role and user don't have privileges:
+
+**Response:**
+
+- 403 Forbidden
+
+```json
+{
+  "status": "error",
+  "message": "User does not have permissions"
+}
+```
 
 ## API Endpoints
 
@@ -424,7 +451,7 @@ If user email is not verified and route is protected will result in:
   "email": "john.doe@example.com",
   "password": "securePassword123"
 }
-````
+```
 
 **Response:**
 
@@ -975,8 +1002,6 @@ Validation Error Examples:
 
 Validation Error Examples:
 
-Validation Error Examples:
-
 | Property          | Validation Rule                 | Error Message                                                 |
 | ----------------- | ------------------------------- | ------------------------------------------------------------- |
 | `email`           | Required, valid email format    | `Email is required`,                                          |
@@ -1224,6 +1249,19 @@ Validation Error Examples:
 </details>
 
 #### Upload User Photo
+
+The `uploadPhoto` route is accessible to all authenticated users. However, users must be logged in to use this route.
+
+**Response:**
+
+- 401 Unauthorized
+
+```json
+{
+  "status": "error",
+  "message": "You are not logged in. Please log in to get access."
+}
+```
 
 <details>
 

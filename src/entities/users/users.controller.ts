@@ -11,13 +11,13 @@ import {
 } from './types/userTypes';
 
 export const createUserController: CreateUserController =
-  ({ User, hashPassword }) =>
+  ({ User, hashPassword, query }) =>
   async (req: Request, res: Response, _next: NextFunction) => {
     const { email, password } = req.body;
 
     const hashedPassword = await hashPassword(password);
 
-    const result = await User.create({ email, hashedPassword });
+    const result = await User.create({ email, hashedPassword, query });
 
     return res.status(HTTP_STATUS_CODES.CREATED_201).json({
       status: 'success',
@@ -27,9 +27,9 @@ export const createUserController: CreateUserController =
   };
 
 export const getUserController: GetUserController =
-  ({ User }) =>
+  ({ User, query }) =>
   async (req: Request, res: Response, _next: NextFunction) => {
-    const user = await User.getOne({ id: Number(req.params.id) });
+    const user = await User.getOne({ id: Number(req.params.id), query });
 
     return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
       status: 'success',
@@ -53,14 +53,14 @@ export const getManyUsersController: GetManyUsersController =
   };
 
 export const updateUserController: UpdateUserController =
-  ({ User, buildUpdateTableRowQuery }) =>
+  ({ User, buildUpdateTableRowQuery, getUserByIdQuery }) =>
   async (req: Request, res: Response, _next: NextFunction) => {
     const id = Number(req.params.id);
     const { query, values } = buildUpdateTableRowQuery(req.body, 'User');
 
     await User.update({ id, query, values });
 
-    const user = await User.getOne({ id });
+    const user = await User.getOne({ id, query: getUserByIdQuery });
 
     return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
       status: 'success',
@@ -70,9 +70,9 @@ export const updateUserController: UpdateUserController =
   };
 
 export const removeUserController: RemoveUserController =
-  ({ User }) =>
+  ({ User, query }) =>
   async (req: Request, res: Response, _next: NextFunction) => {
-    await User.remove({ id: Number(req.params.id) });
+    await User.remove({ id: Number(req.params.id), query });
 
     return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).send();
   };
