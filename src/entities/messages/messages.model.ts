@@ -1,12 +1,12 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 
 import pool from '../../config/db.config';
-import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
 import { getMessageQuery, removeMessageQuery } from './sqlQueries';
+import { BaseModel } from '../../core/model/BaseModel';
 
 type CreateProps = {
   createMessageQuery: string;
-  values: string[];
+  values: (string | number)[];
 };
 
 type GetOneProps = {
@@ -20,7 +20,7 @@ type GetManyProps = {
 
 type UpdateProps = {
   updateMessageQuery: string;
-  values: (string | undefined)[];
+  values: (string | number)[];
   id: number;
 };
 
@@ -28,11 +28,11 @@ type DeleteProps = {
   id: number;
 };
 
-export class Message {
+export class Message extends BaseModel {
   static async create({ createMessageQuery, values }: CreateProps) {
     const [result] = await pool.query<ResultSetHeader>(createMessageQuery, values);
 
-    checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
+    this.checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
 
     return result.insertId;
   }
@@ -40,7 +40,7 @@ export class Message {
   static async getOne({ id }: GetOneProps) {
     const [result] = await pool.query<RowDataPacket[]>(getMessageQuery, [id]);
 
-    checkDatabaseOperation({ id, operation: 'get', result: result[0] });
+    this.checkDatabaseOperation({ id, operation: 'get', result: result[0] });
 
     return result[0];
   }
@@ -54,7 +54,7 @@ export class Message {
   static async update({ updateMessageQuery, values, id }: UpdateProps) {
     const [result] = await pool.query<ResultSetHeader>(updateMessageQuery, [...values, id]);
 
-    checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
+    this.checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
 
     return result;
   }
@@ -62,7 +62,7 @@ export class Message {
   static async remove({ id }: DeleteProps) {
     const [result] = await pool.query<ResultSetHeader>(removeMessageQuery, [id]);
 
-    checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
+    this.checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
 
     return result;
   }

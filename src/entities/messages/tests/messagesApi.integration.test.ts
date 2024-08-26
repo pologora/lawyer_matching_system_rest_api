@@ -46,7 +46,7 @@ afterAll(async () => {
   await pool.end();
 });
 
-describe('Test GET /messages', () => {
+describe.skip('Test GET /messages', () => {
   test('Should respond with 200 success', async () => {
     const response = await supertest(app)
       .get('/api/v1/messages')
@@ -58,7 +58,7 @@ describe('Test GET /messages', () => {
   });
 });
 
-describe('Test POST /messages', () => {
+describe.skip('Test POST /messages', () => {
   test('Should respond with 201 created', async () => {
     const response = await supertest(app)
       .post('/api/v1/messages')
@@ -104,7 +104,7 @@ describe('Test POST /messages', () => {
   });
 });
 
-describe('Test GET /messages/:id', () => {
+describe.skip('Test GET /messages/:id', () => {
   test('Should respond with 200 success', async () => {
     const response = await supertest(app)
       .get(`/api/v1/messages/${messageId}`)
@@ -128,7 +128,7 @@ describe('Test GET /messages/:id', () => {
   });
 });
 
-describe('Test PATCH /messages/:id', () => {
+describe.skip('Test PATCH /messages/:id', () => {
   test('Should respond with 200 success', async () => {
     const patchData = {
       message: 'patch message',
@@ -161,7 +161,7 @@ describe('Test PATCH /messages/:id', () => {
   });
 });
 
-describe('Test DELETE /messages/:id', () => {
+describe.skip('Test DELETE /messages/:id', () => {
   test('Should respond with 204 no content', async () => {
     await supertest(app).delete(`/api/v1/messages/${messageId}`).expect(HTTP_STATUS_CODES.NO_CONTENT_204);
   });

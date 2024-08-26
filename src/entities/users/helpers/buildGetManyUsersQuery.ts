@@ -1,6 +1,6 @@
-import { GetManyUsersDto } from '../dto';
+import { BuildGetManyUsersQuery } from '../types/userTypes';
 
-export const buildGetManyUsersQuery = (queryString: GetManyUsersDto) => {
+export const buildGetManyUsersQuery: BuildGetManyUsersQuery = (queryString) => {
   const DEFAULT_LIMIT_QUERY_RESULTS = 25;
   const DEFAULT_OFFSET = 0;
 

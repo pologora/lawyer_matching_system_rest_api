@@ -1,4 +1,4 @@
-export * from './getOneClientQuery';
+export * from './getClientQuery';
 export * from './deleteClientQuery';
 export * from './getManyClientsQuery';
-export * from './getOneClientByUserIdQuery';
+export * from './getClientByUserIdQuery';

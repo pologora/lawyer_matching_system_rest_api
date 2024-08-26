@@ -68,7 +68,7 @@ app.use('/api/v1', regionsRouter);
 app.use('/api/v1', citiesRouter);
 
 // route not found on server
-app.use('*', (req: Request, _res: Response, next: NextFunction) => {
+app.use('*', (req: Request, _res: Response, _next: NextFunction) => {
   throw new AppError(`Can't find ${req.originalUrl} on this server!`, HTTP_STATUS_CODES.NOT_FOUND_404);
 });
 

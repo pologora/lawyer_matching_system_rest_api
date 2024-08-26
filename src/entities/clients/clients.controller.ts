@@ -1,58 +1,70 @@
 import { NextFunction, Request, Response } from 'express';
-import { validateId } from '../../utils/validateId';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import {
-  createClientService,
-  getClientService,
-  getManyClientsService,
-  removeClientService,
-  updateClientService,
-} from './clients.service';
+  CreateClientController,
+  GetClientController,
+  GetManyClientsController,
+  RemoveClientController,
+  UpdateClientController,
+} from './types/clientTypes';
 
-export const createClientController = async (req: Request, res: Response, _next: NextFunction) => {
-  const client = await createClientService({ data: req.body });
+export const createClientController: CreateClientController =
+  ({ createClientService }) =>
+  async (req, res, _next) => {
+    const client = await createClientService({ data: req.body });
 
-  return res.status(HTTP_STATUS_CODES.CREATED_201).json({
-    status: 'success',
-    message: 'Successfully created client profile',
-    data: client,
-  });
-};
+    return res.status(HTTP_STATUS_CODES.CREATED_201).json({
+      status: 'success',
+      message: 'Successfully created client profile',
+      data: client,
+    });
+  };
 
-export const getClientController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
+export const getClientController: GetClientController =
+  ({ ClientProfile, query }) =>
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const client = await ClientProfile.getOne({ id: Number(req.params.id), query });
 
-  const client = await getClientService({ id });
+    return res
+      .status(HTTP_STATUS_CODES.SUCCESS_200)
+      .json({ status: 'success', message: 'Client profile retrieved successfully', data: client });
+  };
 
-  return res
-    .status(HTTP_STATUS_CODES.SUCCESS_200)
-    .json({ status: 'success', message: 'Client profile retrieved successfully', data: client });
-};
+export const getManyClientsController: GetManyClientsController =
+  ({ ClientProfile, query }) =>
+  async (_req: Request, res: Response, _next: NextFunction) => {
+    const clients = await ClientProfile.getMany({ query });
 
-export const getManyClientsController = async (_req: Request, res: Response, _next: NextFunction) => {
-  const clients = await getManyClientsService();
+    return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+      status: 'success',
+      message: 'Client profiles retrieved successfully',
+      data: clients,
+    });
+  };
 
-  return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-    status: 'success',
-    message: 'Client profiles retrieved successfully',
-    data: clients,
-  });
-};
+export const updateClientController: UpdateClientController =
+  ({ ClientProfile, buildUpdateTableRowQuery, getOneClientQuery }) =>
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const id = Number(req.params.id);
+    const { query, values } = buildUpdateTableRowQuery(req.body, 'ClientProfile');
 
-export const updateClientController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
+    await ClientProfile.update({
+      id,
+      query,
+      values,
+    });
 
-  const updatedClient = await updateClientService({ id, data: req.body });
+    const updatedClient = await ClientProfile.getOne({ id, query: getOneClientQuery });
 
-  return res
-    .status(HTTP_STATUS_CODES.SUCCESS_200)
-    .json({ status: 'success', message: 'Successfully updated client profile', data: updatedClient });
-};
+    return res
+      .status(HTTP_STATUS_CODES.SUCCESS_200)
+      .json({ status: 'success', message: 'Successfully updated client profile', data: updatedClient });
+  };
 
-export const removeClientController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
+export const removeClientController: RemoveClientController =
+  ({ ClientProfile, query }) =>
+  async (req: Request, res: Response, _next: NextFunction) => {
+    await ClientProfile.remove({ id: Number(req.params.id), query });
 
-  await removeClientService({ id });
-
-  return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
-};
+    return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
+  };

@@ -1,55 +1,13 @@
-import { buildCreateTableRowQuery } from '../../helpers/buildCreateTableRowQuery';
-import { buildUpdateTableRowQuery } from '../../helpers/buildUpdateTableRowQuery';
-import { User } from '../users/users.model';
-import { ClientProfile } from './clients.model';
-import { CreateClientDto, UpdateClientDto } from './dto';
+import { CreateClientService } from './types/clientTypes';
 
-type CreateClientServiceProps = {
-  data: CreateClientDto;
-};
+export const createClientService: CreateClientService =
+  ({ ClientProfile, buildCreateTableRowQuery, User, getOneClientQuery, updateUserRoleQuery }) =>
+  async ({ data }) => {
+    const { query, values } = buildCreateTableRowQuery(data, 'ClientProfile');
 
-type GetClientServiceProps = {
-  id: number;
-};
+    const clientId = await ClientProfile.create({ query, values });
 
-type UpdateClientServiceProps = {
-  id: number;
-  data: UpdateClientDto;
-};
+    await User.setRole({ id: data.userId, role: 'client', updateUserRoleQuery });
 
-type RemoveClienServiceProps = {
-  id: number;
-};
-
-export const createClientService = async ({ data }: CreateClientServiceProps) => {
-  const { userId } = data;
-  const { query: createUserQuery, values } = buildCreateTableRowQuery(data, 'ClientProfile');
-
-  const clientId = await ClientProfile.create({ createUserQuery, values });
-
-  await User.setRole({ id: userId, role: 'client' });
-
-  return await ClientProfile.getOne({ id: clientId });
-};
-
-export const getClientService = async ({ id }: GetClientServiceProps) => {
-  return await ClientProfile.getOne({ id });
-};
-
-export const getManyClientsService = async () => {
-  return await ClientProfile.getMany();
-};
-
-export const updateClientService = async ({ id, data }: UpdateClientServiceProps) => {
-  const { query, values } = buildUpdateTableRowQuery(data, 'ClientProfile');
-
-  await ClientProfile.update({ id, query, values });
-
-  return await ClientProfile.getOne({ id });
-};
-
-export const removeClientService = async ({ id }: RemoveClienServiceProps) => {
-  await ClientProfile.remove({ id });
-
-  return await User.setRole({ id, role: 'user' });
-};
+    return await ClientProfile.getOne({ id: clientId, query: getOneClientQuery });
+  };

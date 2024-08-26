@@ -17,11 +17,13 @@ import { comparePasswords } from '../../utils/passwordManagement/comparePassword
 import { createRandomToken } from '../../utils/hashedToken/createRandomToken';
 import { Request } from 'express';
 import { createHashedToken } from '../../utils/hashedToken/createHashedToken';
-import { isTokenExpired } from '../../helpers/isTokenExpired';
+import { isTokenExpired } from '../../utils/isTokenExpired';
 import { ClientProfile } from '../clients/clients.model';
 import { LawyersProfile } from '../lawyers/lawyers.model';
 import { calculateEmailVerificationExpiraton } from './helpers/calculateEmailVerificationExpirationDate';
 import { Email } from '../../utils/email/Email';
+import { getLawyerByUserIdQuery } from '../lawyers/sqlQueries';
+import { getOneClientByUserIdQuery } from '../clients/slqQueries';
 
 export const registerService = async ({ email, password, req }: RegisterUserDto) => {
   const hashedPassword = await hashPassword(password);
@@ -92,12 +94,11 @@ export const forgotPasswordService = async ({ email }: ForgotPasswordDto, req: R
 
 export const getMeService = async ({ role, userId }: GetMeDto) => {
   return role === 'client'
-    ? await ClientProfile.getOneByUserId({ userId })
+    ? await ClientProfile.getOneByUserId({ query: getOneClientByUserIdQuery, userId })
     : role === 'lawyer'
-    ? await LawyersProfile.getOneByUserId({ userId })
+    ? await LawyersProfile.getOneByUserId({ getLawyerByUserIdQuery, userId })
     : null;
 };
-
 export const resetPasswordService = async ({ resetToken, password }: ResetPasswordDto) => {
   const hashedToken = createHashedToken(resetToken);
   //get user by token

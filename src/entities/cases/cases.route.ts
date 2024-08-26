@@ -14,8 +14,25 @@ import { createCaseSchema, getManyCasesSchema, updateCaseSchema } from './cases.
 import { validateReqQuery } from '../../middleware/validateReqQuery';
 import { protect } from '../../middleware/protect';
 import { restrictTo } from '../../middleware/restrictTo';
+import { Case } from './cases.model';
+import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
+import { validateIdParameter } from '../../middleware/validateIdParameter';
+import { buildGetManyCasesQuery } from './helpers/buildGetManyCasesQuery';
+import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
+import { deleteCaseQuery, getOneCaseQuery } from './sqlQueries';
 
 export const casesRouter = express.Router();
+casesRouter.param('id', validateIdParameter);
+
+const injectedCreateCaseController = createCaseController({
+  Case,
+  buildCreateTableRowQuery,
+  getOneCaseQuery,
+});
+const injectedGetManyCasesController = getManyCasesController({ Case, buildGetManyCasesQuery });
+const injectedGetCaseController = getCaseController({ Case, query: getOneCaseQuery });
+const injectedUpdateCaseController = updateCaseController({ Case, buildUpdateTableRowQuery, getOneCaseQuery });
+const injectedRemoveCaseController = removeCaseController({ Case, query: deleteCaseQuery });
 
 casesRouter
   .route('/cases')
@@ -23,17 +40,22 @@ casesRouter
     protect,
     restrictTo('admin', 'client', 'lawyer'),
     validateReqQuery(getManyCasesSchema),
-    asyncErrorCatch(getManyCasesController),
+    asyncErrorCatch(injectedGetManyCasesController),
   )
-  .post(protect, restrictTo('client'), validateReqBody(createCaseSchema), asyncErrorCatch(createCaseController));
+  .post(
+    protect,
+    restrictTo('client'),
+    validateReqBody(createCaseSchema),
+    asyncErrorCatch(injectedCreateCaseController),
+  );
 
 casesRouter
   .route('/cases/:id')
-  .get(protect, restrictTo('admin', 'client', 'lawyer'), asyncErrorCatch(getCaseController))
+  .get(protect, restrictTo('admin', 'client', 'lawyer'), asyncErrorCatch(injectedGetCaseController))
   .patch(
     protect,
     restrictTo('client', 'lawyer'),
     validateReqBody(updateCaseSchema),
-    asyncErrorCatch(updateCaseController),
+    asyncErrorCatch(injectedUpdateCaseController),
   )
-  .delete(protect, restrictTo('admin', 'client'), asyncErrorCatch(removeCaseController));
+  .delete(protect, restrictTo('admin', 'client'), asyncErrorCatch(injectedRemoveCaseController));

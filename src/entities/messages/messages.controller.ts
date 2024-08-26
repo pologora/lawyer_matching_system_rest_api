@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
-import { validateId } from '../../utils/validateId';
 import {
   createMessageService,
   getManyMessagesService,
@@ -21,9 +20,7 @@ export const createMessageController = async (req: Request, res: Response, _next
 };
 
 export const getMessageController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
-
-  const message = await getMessageService({ id });
+  const message = await getMessageService({ id: Number(req.params.id) });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -39,9 +36,7 @@ export const getManyMessagesController = async (req: Request, res: Response, _ne
 };
 
 export const updateMessageController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
-
-  const updatedMessage = await updateMessageService({ data: req.body, id });
+  const updatedMessage = await updateMessageService({ data: req.body, id: Number(req.params.id) });
 
   return res
     .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -49,9 +44,7 @@ export const updateMessageController = async (req: Request, res: Response, _next
 };
 
 export const removeMessageController = async (req: Request, res: Response, _next: NextFunction) => {
-  const { id } = validateId(Number(req.params.id));
-
-  await removeMessageService({ id });
+  await removeMessageService({ id: Number(req.params.id) });
 
   return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
 };

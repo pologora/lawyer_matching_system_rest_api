@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { GetManyLawyersQueryStringDto } from '../dto/getManyLawyersQueryStringDto';
+import { BuildGetManyLawyersQuery } from '../types/lawyersTypes';
 
-export const buildGetManyLawyersQuery = (queryString: GetManyLawyersQueryStringDto) => {
+export const buildGetManyLawyersQuery: BuildGetManyLawyersQuery = (queryString) => {
   const DEFAULT_LIMIT_QUERY_RESULTS = 25;
   const DEFAULT_OFFSET = 0;
 

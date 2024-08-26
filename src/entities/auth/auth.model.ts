@@ -1,5 +1,4 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
-import pool from '../../config/db.config';
 import { IUser } from '../../types/user';
 import {
   clearResetPasswordQuery,
@@ -14,58 +13,23 @@ import {
   setUserVerifiedQuery,
   updateUserPasswordQuery,
 } from './sqlQueries';
-import { checkDatabaseOperation } from '../../utils/checkDatabaseOperationResult';
+import { BaseModel } from '../../core/model/BaseModel';
+import {
+  ClearResetPasswordProps,
+  DeleteMeProps,
+  GetUserByEmailProps,
+  GetUserByEmailVerificationTokenProps,
+  GetUserByResetTokenProps,
+  LoginProps,
+  RegisterByEmailProps,
+  RegisterByGoogle,
+  SetResetPasswordTokenProps,
+  UpdatePasswordProps,
+} from './types/authTypes';
 
-type LoginProps = {
-  email: string;
-};
-
-type RegisterByEmailProps = {
-  email: string;
-  password: string;
-  emailVerificationTokenExpiration: Date;
-  hashedEmailValidationToken: string;
-};
-
-type RegisterByGoogle = {
-  email: string;
-  googleId: string;
-};
-
-type GetUserByEmailProps = {
-  email: string;
-};
-
-type SetResetPasswordTokenProps = {
-  hashedToken: string;
-  expirationInMinutes: number;
-  userId: number;
-};
-
-type ClearResetPasswordProps = {
-  id: number;
-};
-
-type UpdatePasswordProps = {
-  password: string;
-  id: number;
-};
-
-type GetUserByResetTokenProps = {
-  hashedToken: string;
-};
-
-type GetUserByEmailVerificationTokenProps = {
-  hashedToken: string;
-};
-
-type DeleteMeProps = {
-  id: number;
-};
-
-export class Auth {
+export class Auth extends BaseModel {
   static async login({ email }: LoginProps) {
-    const user = await pool.query<RowDataPacket[]>(loginUserQuery, [email]);
+    const user = await this.pool.query<RowDataPacket[]>(loginUserQuery, [email]);
 
     return user[0][0];
   }
@@ -76,7 +40,7 @@ export class Auth {
     hashedEmailValidationToken,
     emailVerificationTokenExpiration,
   }: RegisterByEmailProps) {
-    const result = await pool.query<ResultSetHeader>(registerByEmailQuery, [
+    const result = await this.pool.query<ResultSetHeader>(registerByEmailQuery, [
       email,
       password,
       hashedEmailValidationToken,
@@ -87,19 +51,19 @@ export class Auth {
   }
 
   static async registerByGoogle({ email, googleId }: RegisterByGoogle) {
-    const result = await pool.query<ResultSetHeader>(registerByGoogleQuery, [email, googleId]);
+    const result = await this.pool.query<ResultSetHeader>(registerByGoogleQuery, [email, googleId]);
 
     return result[0];
   }
 
   static async getUserByEmail({ email }: GetUserByEmailProps) {
-    const user = await pool.query<RowDataPacket[]>(getUserByEmailQuery, [email]);
+    const user = await this.pool.query<RowDataPacket[]>(getUserByEmailQuery, [email]);
 
     return user[0][0] as IUser;
   }
 
   static async setResetPasswordToken({ hashedToken, expirationInMinutes, userId }: SetResetPasswordTokenProps) {
-    const result = await pool.query<ResultSetHeader>(setResetPasswordTokenQuery, [
+    const result = await this.pool.query<ResultSetHeader>(setResetPasswordTokenQuery, [
       hashedToken,
       expirationInMinutes,
       userId,
@@ -109,39 +73,39 @@ export class Auth {
   }
 
   static async clearResetPassword({ id }: ClearResetPasswordProps) {
-    const result = await pool.query<ResultSetHeader>(clearResetPasswordQuery, [id]);
+    const result = await this.pool.query<ResultSetHeader>(clearResetPasswordQuery, [id]);
 
     return result[0].affectedRows;
   }
 
   static async updatePassword({ password, id }: UpdatePasswordProps) {
-    const result = await pool.query<ResultSetHeader>(updateUserPasswordQuery, [password, id]);
+    const result = await this.pool.query<ResultSetHeader>(updateUserPasswordQuery, [password, id]);
 
     return result[0].affectedRows;
   }
 
   static async getUserByResetToken({ hashedToken }: GetUserByResetTokenProps) {
-    const result = await pool.query<RowDataPacket[]>(getUserByResetTokenQuery, [hashedToken]);
+    const result = await this.pool.query<RowDataPacket[]>(getUserByResetTokenQuery, [hashedToken]);
 
     return result[0][0] as IUser;
   }
 
   static async getUserByEmailVerificationToken({ hashedToken }: GetUserByEmailVerificationTokenProps) {
-    const result = await pool.query<RowDataPacket[]>(getUserByEmailVerificationTokenQuery, [hashedToken]);
+    const result = await this.pool.query<RowDataPacket[]>(getUserByEmailVerificationTokenQuery, [hashedToken]);
 
     return result[0][0] as IUser;
   }
 
   static async deleteMe({ id }: DeleteMeProps) {
-    const result = await pool.query<ResultSetHeader>(deleteMeQuery, [id]);
+    const result = await this.pool.query<ResultSetHeader>(deleteMeQuery, [id]);
 
     return result[0].affectedRows;
   }
 
   static async setUserVerified({ id }: DeleteMeProps) {
-    const result = await pool.query<ResultSetHeader>(setUserVerifiedQuery, [id]);
+    const result = await this.pool.query<ResultSetHeader>(setUserVerifiedQuery, [id]);
 
-    checkDatabaseOperation({ id, operation: 'update', result: result[0] });
+    this.checkDatabaseOperation({ id, operation: 'update', result: result[0] });
 
     return result[0].affectedRows;
   }
