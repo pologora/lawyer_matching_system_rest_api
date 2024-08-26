@@ -1,4 +1,3 @@
-import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import {
   CreateLawyerController,
@@ -57,7 +56,7 @@ export const updateLawyerController: UpdateLawyerController =
 
 export const removeLawyerController: RemoveLawyerController =
   ({ LawyersProfile, query }) =>
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req, res, _next) => {
     await LawyersProfile.remove({ id: Number(req.params.id), query });
 
     return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();

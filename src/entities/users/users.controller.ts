@@ -1,4 +1,3 @@
-import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import { AppError } from '../../utils/errors/AppError';
 import {
@@ -12,7 +11,7 @@ import {
 
 export const createUserController: CreateUserController =
   ({ User, hashPassword, query }) =>
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req, res, _next) => {
     const { email, password } = req.body;
 
     const hashedPassword = await hashPassword(password);
@@ -28,7 +27,7 @@ export const createUserController: CreateUserController =
 
 export const getUserController: GetUserController =
   ({ User, query }) =>
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req, res, _next) => {
     const user = await User.getOne({ id: Number(req.params.id), query });
 
     return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
@@ -40,7 +39,7 @@ export const getUserController: GetUserController =
 
 export const getManyUsersController: GetManyUsersController =
   ({ User, buildGetManyUsersQuery }) =>
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req, res, _next) => {
     const { query, values } = buildGetManyUsersQuery(req.query);
 
     const users = await User.getMany({ query, values });
@@ -54,7 +53,7 @@ export const getManyUsersController: GetManyUsersController =
 
 export const updateUserController: UpdateUserController =
   ({ User, buildUpdateTableRowQuery, getUserByIdQuery }) =>
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req, res, _next) => {
     const id = Number(req.params.id);
     const { query, values } = buildUpdateTableRowQuery(req.body, 'User');
 
@@ -71,7 +70,7 @@ export const updateUserController: UpdateUserController =
 
 export const removeUserController: RemoveUserController =
   ({ User, query }) =>
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req, res, _next) => {
     await User.remove({ id: Number(req.params.id), query });
 
     return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).send();
@@ -79,7 +78,7 @@ export const removeUserController: RemoveUserController =
 
 export const uploadUserPhotoController: UploadUserPhotoController =
   ({ User, buildUpdateTableRowQuery }) =>
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req, res, _next) => {
     if (!req.file) {
       throw new AppError('No file uploaded. Please upload an image file', HTTP_STATUS_CODES.BAD_REQUEST_400);
     }

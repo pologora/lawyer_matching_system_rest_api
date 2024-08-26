@@ -1,4 +1,3 @@
-import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import {
   CreateClientController,
@@ -22,7 +21,7 @@ export const createClientController: CreateClientController =
 
 export const getClientController: GetClientController =
   ({ ClientProfile, query }) =>
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req, res, _next) => {
     const client = await ClientProfile.getOne({ id: Number(req.params.id), query });
 
     return res
@@ -32,7 +31,7 @@ export const getClientController: GetClientController =
 
 export const getManyClientsController: GetManyClientsController =
   ({ ClientProfile, query }) =>
-  async (_req: Request, res: Response, _next: NextFunction) => {
+  async (_req, res, _next) => {
     const clients = await ClientProfile.getMany({ query });
 
     return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
@@ -44,7 +43,7 @@ export const getManyClientsController: GetManyClientsController =
 
 export const updateClientController: UpdateClientController =
   ({ ClientProfile, buildUpdateTableRowQuery, getOneClientQuery }) =>
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req, res, _next) => {
     const id = Number(req.params.id);
     const { query, values } = buildUpdateTableRowQuery(req.body, 'ClientProfile');
 
@@ -63,7 +62,7 @@ export const updateClientController: UpdateClientController =
 
 export const removeClientController: RemoveClientController =
   ({ ClientProfile, query }) =>
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req, res, _next) => {
     await ClientProfile.remove({ id: Number(req.params.id), query });
 
     return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();

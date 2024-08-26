@@ -1,5 +1,3 @@
-import { NextFunction, Request, Response } from 'express';
-
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import {
   CreateMessageController,
@@ -11,7 +9,7 @@ import {
 
 export const createMessageController: CreateMessageController =
   ({ buildCreateTableRowQuery, getMessageQuery, Message }) =>
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req, res, _next) => {
     const { query, values } = buildCreateTableRowQuery(req.body, 'Message');
 
     const messageId = await Message.create({ query, values });
@@ -27,7 +25,7 @@ export const createMessageController: CreateMessageController =
 
 export const getMessageController: GetMessageController =
   ({ Message, query }) =>
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req, res, _next) => {
     const message = await Message.getOne({ id: Number(req.params.id), query });
 
     return res
@@ -37,7 +35,7 @@ export const getMessageController: GetMessageController =
 
 export const getManyMessagesController: GetManyMessagesController =
   ({ Message, buildGetManyMessagesQuery }) =>
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req, res, _next) => {
     const { query, values } = buildGetManyMessagesQuery(req.query);
 
     const messages = await Message.getMany({ query, values });
@@ -49,7 +47,7 @@ export const getManyMessagesController: GetManyMessagesController =
 
 export const updateMessageController: UpdateMessageController =
   ({ Message, buildUpdateTableRowQuery, getMessageQuery }) =>
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req, res, _next) => {
     const id = Number(req.params.id);
 
     const { query, values } = buildUpdateTableRowQuery(req.body, 'Message');
@@ -65,7 +63,7 @@ export const updateMessageController: UpdateMessageController =
 
 export const removeMessageController: RemoveMessageController =
   ({ Message, query }) =>
-  async (req: Request, res: Response, _next: NextFunction) => {
+  async (req, res, _next) => {
     await Message.remove({ id: Number(req.params.id), query });
 
     return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
