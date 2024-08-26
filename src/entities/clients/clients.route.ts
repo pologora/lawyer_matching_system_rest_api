@@ -16,6 +16,7 @@ import { User } from '../users/users.model';
 import { ClientProfile } from './clients.model';
 import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
 import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
+import { deleteClientQuery, getManyClientsQuery, getOneClientQuery } from './slqQueries';
 
 export const clientsRouter = express.Router();
 
@@ -25,14 +26,16 @@ const injectedCreateClientController = createClientController({
   ClientProfile,
   User,
   buildCreateTableRowQuery,
+  getOneClientQuery,
 });
-const injectedGetClientController = getClientController({ ClientProfile });
-const injectedGetManyClientsController = getManyClientsController({ ClientProfile });
+const injectedGetClientController = getClientController({ ClientProfile, query: getOneClientQuery });
+const injectedGetManyClientsController = getManyClientsController({ ClientProfile, query: getManyClientsQuery });
 const injectedUpdateClientController = updateClientController({
   ClientProfile,
   buildUpdateTableRowQuery,
+  getOneClientQuery,
 });
-const injectedremoveClientController = removeClientController({ ClientProfile });
+const injectedremoveClientController = removeClientController({ ClientProfile, query: deleteClientQuery });
 
 clientsRouter
   .route('/clients')

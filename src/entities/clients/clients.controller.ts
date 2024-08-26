@@ -9,17 +9,16 @@ import {
 } from './types/clientTypes';
 
 export const createClientController: CreateClientController =
-  ({ ClientProfile, buildCreateTableRowQuery, User }) =>
+  ({ ClientProfile, buildCreateTableRowQuery, User, getOneClientQuery }) =>
   async (req, res, _next) => {
     const data = req.body;
+    const { query, values } = buildCreateTableRowQuery(data, 'ClientProfile');
 
-    const { query: createUserQuery, values } = buildCreateTableRowQuery(data, 'ClientProfile');
-
-    const clientId = await ClientProfile.create({ createUserQuery, values });
+    const clientId = await ClientProfile.create({ query, values });
 
     await User.setRole({ id: data.userId, role: 'client' });
 
-    const client = await ClientProfile.getOne({ id: clientId });
+    const client = await ClientProfile.getOne({ id: clientId, query: getOneClientQuery });
 
     return res.status(HTTP_STATUS_CODES.CREATED_201).json({
       status: 'success',
@@ -29,9 +28,9 @@ export const createClientController: CreateClientController =
   };
 
 export const getClientController: GetClientController =
-  ({ ClientProfile }) =>
+  ({ ClientProfile, query }) =>
   async (req: Request, res: Response, _next: NextFunction) => {
-    const client = await ClientProfile.getOne({ id: Number(req.params.id) });
+    const client = await ClientProfile.getOne({ id: Number(req.params.id), query });
 
     return res
       .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -39,9 +38,9 @@ export const getClientController: GetClientController =
   };
 
 export const getManyClientsController: GetManyClientsController =
-  ({ ClientProfile }) =>
+  ({ ClientProfile, query }) =>
   async (_req: Request, res: Response, _next: NextFunction) => {
-    const clients = await ClientProfile.getMany();
+    const clients = await ClientProfile.getMany({ query });
 
     return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
       status: 'success',
@@ -51,15 +50,18 @@ export const getManyClientsController: GetManyClientsController =
   };
 
 export const updateClientController: UpdateClientController =
-  ({ ClientProfile, buildUpdateTableRowQuery }) =>
+  ({ ClientProfile, buildUpdateTableRowQuery, getOneClientQuery }) =>
   async (req: Request, res: Response, _next: NextFunction) => {
+    const id = Number(req.params.id);
     const { query, values } = buildUpdateTableRowQuery(req.body, 'ClientProfile');
 
-    const updatedClient = await ClientProfile.update({
-      id: Number(req.params.id),
+    await ClientProfile.update({
+      id,
       query,
       values,
     });
+
+    const updatedClient = await ClientProfile.getOne({ id, query: getOneClientQuery });
 
     return res
       .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -67,9 +69,9 @@ export const updateClientController: UpdateClientController =
   };
 
 export const removeClientController: RemoveClientController =
-  ({ ClientProfile }) =>
+  ({ ClientProfile, query }) =>
   async (req: Request, res: Response, _next: NextFunction) => {
-    await ClientProfile.remove({ id: Number(req.params.id) });
+    await ClientProfile.remove({ id: Number(req.params.id), query });
 
     return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
   };

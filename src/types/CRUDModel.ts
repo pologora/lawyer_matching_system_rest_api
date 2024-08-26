@@ -29,7 +29,7 @@ export type RemoveProps = {
 export interface CRUDModel {
   create(props: CreateProps): Promise<number>;
   getOne(props: GetOneProps): Promise<RowDataPacket>;
-  getMany(props: GetManyProps): Promise<QueryResult>;
+  getMany(props: GetManyProps | { query: string }): Promise<QueryResult>;
   update(props: UpdateProps): Promise<ResultSetHeader>;
   remove(props: RemoveProps): Promise<ResultSetHeader>;
 }
