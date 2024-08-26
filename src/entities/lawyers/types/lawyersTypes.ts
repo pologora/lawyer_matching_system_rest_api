@@ -1,7 +1,8 @@
 import { NextFunction, Response, Request } from 'express';
-import { QueryResult, ResultSetHeader, RowDataPacket } from 'mysql2';
+import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import { UserModel } from '../../users/types/userTypes';
 import { BuildCreateTableRowQuery, BuildUpdateTableRowQuery } from '../../../types/utils';
+import { CRUDModel } from '../../../types/CRUDModel';
 
 type GetManyLawyersQueryParams = {
   limit?: number;
@@ -27,53 +28,36 @@ export type BuildGetManyLawyersQuery = (params: GetManyLawyersQueryParams) => {
   values: (string | number)[];
 };
 
-export type CreateProps = {
+export type CreateLawyerProps = {
   query: string;
   values: (string | number)[];
   specializations: number[];
-};
-
-export type GetOneProps = {
-  id: number;
+  createLawyerSpecializationsQuery: string;
+  getLawyerByIdQuery: string;
 };
 
 export type GetOneByUserIdProps = {
   userId: number;
-};
-
-export type GetManyProps = {
-  query: string;
-  values: (string | number)[];
-};
-
-export type UpdateProps = {
-  query: string;
-  values: (string | number)[];
-  id: number;
+  getLawyerByUserIdQuery: string;
 };
 
 export type UpdateRatingProps = {
   id: number;
+  updateRatingQuery: string;
 };
 
 export type UpdateLawyerSpecializationsProps = {
   lawyerId: number;
   specializationsIds: number[];
+  deleteLawyerSpecializationsQuery: string;
+  createLawyerSpecializationsQuery: string;
 };
 
-export type RemoveProps = {
-  id: number;
-};
-
-export interface LawyersProfileModel {
-  create(props: CreateProps): Promise<number | undefined>;
-  getOne(props: GetOneProps): Promise<RowDataPacket>;
+export interface LawyersProfileModel extends CRUDModel {
+  createLawyer(props: CreateLawyerProps): Promise<number>;
   getOneByUserId(props: GetOneByUserIdProps): Promise<RowDataPacket>;
-  getMany(props: GetManyProps): Promise<QueryResult>;
-  update(props: UpdateProps): Promise<ResultSetHeader>;
   updateRating(props: UpdateRatingProps): Promise<ResultSetHeader>;
   updateLawyerSpecializations(props: UpdateLawyerSpecializationsProps): Promise<void>;
-  remove(props: RemoveProps): Promise<ResultSetHeader>;
 }
 
 type UpdateLawyerDto = {
@@ -89,8 +73,11 @@ type UpdateLawyerDto = {
   initialConsultationFee?: number;
 };
 
-type UpdateLawerServiceProps = {
+type UpdateLawyerServiceProps = {
   LawyersProfile: LawyersProfileModel;
+  getLawyerByIdQuery: string;
+  deleteLawyerSpecializationsQuery: string;
+  createLawyerSpecializationsQuery: string;
   buildUpdateTableRowQuery: BuildUpdateTableRowQuery;
 };
 
@@ -111,6 +98,8 @@ type CreateLawyerDto = {
 export type CreateLawyerServiceProps = {
   LawyersProfile: LawyersProfileModel;
   User: UserModel;
+  getLawyerByIdQuery: string;
+  createLawyerSpecializationsQuery: string;
   buildCreateTableRowQuery: BuildCreateTableRowQuery;
 };
 
@@ -119,7 +108,7 @@ export type CreateLawyerService = (
 ) => (args: { data: CreateLawyerDto }) => Promise<RowDataPacket>;
 
 export type UpdateLawyerService = (
-  props: UpdateLawerServiceProps,
+  props: UpdateLawyerServiceProps,
 ) => (args: { data: UpdateLawyerDto; id: number }) => Promise<RowDataPacket>;
 
 export type CreateLawyerController = (props: {
@@ -128,6 +117,7 @@ export type CreateLawyerController = (props: {
 
 export type GetLawyerController = (props: {
   LawyersProfile: LawyersProfileModel;
+  query: string;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
 
 export type GetManyLawyersController = (props: {
@@ -141,4 +131,5 @@ export type UpdateLawyerController = (props: {
 
 export type RemoveLawyerController = (props: {
   LawyersProfile: LawyersProfileModel;
+  query: string;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;

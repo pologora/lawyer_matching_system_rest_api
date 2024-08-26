@@ -1,8 +1,8 @@
-import { QueryResult, ResultSetHeader } from 'mysql2';
+import { ResultSetHeader } from 'mysql2';
 import { UserRole } from '../../../types/userRoles';
-import { IUser } from '../../../types/user';
 import { BuildUpdateTableRowQuery, HashPassword } from '../../../types/utils';
 import { NextFunction, Response, Request } from 'express';
+import { CRUDModel } from '../../../types/CRUDModel';
 
 export interface GetManyUsersQueryParams {
   role?: UserRole;
@@ -20,32 +20,9 @@ export type BuildGetManyUsersQuery = (queryString: GetManyUsersQueryParams) => {
   values: (string | number | boolean)[];
 };
 
-export type CreateProps = {
+export type CreateUserProps = {
   email: string;
   hashedPassword: string;
-};
-
-export type GetOneProps = {
-  id: number;
-};
-
-export type GetOneForAuthProps = {
-  id: number;
-};
-
-export type GetManyProps = {
-  values: (string | number | boolean)[];
-  query: string;
-};
-
-export type UpdateProps = {
-  query: string;
-  values: (string | number)[];
-  id: number;
-};
-
-export type RemoveProps = {
-  id: number;
 };
 
 export type SetRoleProps = {
@@ -53,13 +30,8 @@ export type SetRoleProps = {
   role: UserRole;
 };
 
-export interface UserModel {
-  create(props: CreateProps): Promise<ResultSetHeader>;
-  getOne(props: GetOneProps): Promise<IUser>;
-  getOneForAuth(props: GetOneForAuthProps): Promise<IUser>;
-  getMany(props: GetManyProps): Promise<QueryResult>;
-  update(props: UpdateProps): Promise<ResultSetHeader>;
-  remove(props: RemoveProps): Promise<ResultSetHeader>;
+export interface UserModel extends CRUDModel {
+  createUser(props: CreateUserProps): Promise<ResultSetHeader>;
   setRole(props: SetRoleProps): Promise<ResultSetHeader>;
 }
 

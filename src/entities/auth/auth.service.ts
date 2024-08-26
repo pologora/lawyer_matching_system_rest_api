@@ -22,6 +22,7 @@ import { ClientProfile } from '../clients/clients.model';
 import { LawyersProfile } from '../lawyers/lawyers.model';
 import { calculateEmailVerificationExpiraton } from './helpers/calculateEmailVerificationExpirationDate';
 import { Email } from '../../utils/email/Email';
+import { getLawyerByUserIdQuery } from '../lawyers/sqlQueries';
 import { getOneClientByUserIdQuery } from '../clients/slqQueries';
 
 export const registerService = async ({ email, password, req }: RegisterUserDto) => {
@@ -95,10 +96,9 @@ export const getMeService = async ({ role, userId }: GetMeDto) => {
   return role === 'client'
     ? await ClientProfile.getOneByUserId({ query: getOneClientByUserIdQuery, userId })
     : role === 'lawyer'
-    ? await LawyersProfile.getOneByUserId({ userId })
+    ? await LawyersProfile.getOneByUserId({ getLawyerByUserIdQuery, userId })
     : null;
 };
-
 export const resetPasswordService = async ({ resetToken, password }: ResetPasswordDto) => {
   const hashedToken = createHashedToken(resetToken);
   //get user by token

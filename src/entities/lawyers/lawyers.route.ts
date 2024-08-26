@@ -19,6 +19,12 @@ import { createLawyerService, updateLawyerService } from './lawyers.service';
 import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
 import { buildGetManyLawyersQuery } from './helpers/biuldGetManyLawyersQuery';
 import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
+import {
+  createLawyerSpecializationsQuery,
+  deleteLawyerQuery,
+  deleteLawyerSpecializationsQuery,
+  getLawyerByIdQuery,
+} from './sqlQueries';
 
 export const lawyersRouter = express.Router();
 
@@ -28,19 +34,24 @@ const injectedCreateLawyerService = createLawyerService({
   LawyersProfile,
   User,
   buildCreateTableRowQuery,
+  createLawyerSpecializationsQuery,
+  getLawyerByIdQuery,
 });
 const injectedUpdateLawyerService = updateLawyerService({
   LawyersProfile,
   buildUpdateTableRowQuery,
+  createLawyerSpecializationsQuery,
+  deleteLawyerSpecializationsQuery,
+  getLawyerByIdQuery,
 });
 
 const injectedCreateLawyerController = createLawyerController({ createLawyerService: injectedCreateLawyerService });
-const injectedGetLawyerController = getLawyerController({ LawyersProfile });
+const injectedGetLawyerController = getLawyerController({ LawyersProfile, query: getLawyerByIdQuery });
 const injectedGetManyLawyersController = getManyLawyersController({ LawyersProfile, buildGetManyLawyersQuery });
 const injectedUpdateLawyerController = updateLawyerController({
   updateLawyerService: injectedUpdateLawyerService,
 });
-const injectedRemoveLawyerController = removeLawyerController({ LawyersProfile });
+const injectedRemoveLawyerController = removeLawyerController({ LawyersProfile, query: deleteLawyerQuery });
 
 lawyersRouter
   .route('/lawyers')

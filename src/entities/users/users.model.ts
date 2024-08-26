@@ -1,65 +1,14 @@
-import { ResultSetHeader, RowDataPacket } from 'mysql2';
+import { ResultSetHeader } from 'mysql2';
 import pool from '../../config/db.config';
-import { IUser } from '../../types/user';
-import {
-  createUserQuery,
-  deleteUserQuery,
-  getUserByIdQuery,
-  getUserForAuthQuery,
-  updateUserRoleQuery,
-} from './sqlQueries';
-import {
-  CreateProps,
-  GetManyProps,
-  GetOneForAuthProps,
-  GetOneProps,
-  RemoveProps,
-  SetRoleProps,
-  UpdateProps,
-} from './types/userTypes';
-import { BaseModel } from '../../core/model/BaseModel';
+import { createUserQuery, updateUserRoleQuery } from './sqlQueries';
+import { CreateUserProps, SetRoleProps } from './types/userTypes';
+import { CRUDModel } from '../../core/model/CRUDModel';
 
-class User extends BaseModel {
-  static async create({ email, hashedPassword }: CreateProps) {
+class User extends CRUDModel {
+  static async createUser({ email, hashedPassword }: CreateUserProps) {
     const [result] = await pool.query<ResultSetHeader>(createUserQuery, [email, hashedPassword]);
 
     this.checkDatabaseOperation({ operation: 'create', result: result.affectedRows });
-
-    return result;
-  }
-
-  static async getOne({ id }: GetOneProps) {
-    const [result] = await pool.query<RowDataPacket[]>(getUserByIdQuery, [id]);
-
-    this.checkDatabaseOperation({ operation: 'get', result: result[0] });
-
-    return result[0] as IUser;
-  }
-
-  static async getOneForAuth({ id }: GetOneForAuthProps) {
-    const [result] = await pool.query<RowDataPacket[]>(getUserForAuthQuery, [id]);
-
-    return result[0] as IUser;
-  }
-
-  static async getMany({ query, values }: GetManyProps) {
-    const result = await pool.query(query, values);
-
-    return result[0];
-  }
-
-  static async update({ query, values, id }: UpdateProps) {
-    const [result] = await pool.query<ResultSetHeader>(query, [...values, id]);
-
-    this.checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
-
-    return result;
-  }
-
-  static async remove({ id }: RemoveProps) {
-    const [result] = await pool.query<ResultSetHeader>(deleteUserQuery, [id]);
-
-    this.checkDatabaseOperation({ id, operation: 'remove', result: result.affectedRows });
 
     return result;
   }

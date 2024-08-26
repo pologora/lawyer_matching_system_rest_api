@@ -21,9 +21,9 @@ export const createLawyerController: CreateLawyerController =
   };
 
 export const getLawyerController: GetLawyerController =
-  ({ LawyersProfile }) =>
+  ({ LawyersProfile, query }) =>
   async (req, res, _next) => {
-    const lawyer = await LawyersProfile.getOne({ id: Number(req.params.id) });
+    const lawyer = await LawyersProfile.getOne({ id: Number(req.params.id), query });
 
     return res
       .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -56,9 +56,9 @@ export const updateLawyerController: UpdateLawyerController =
   };
 
 export const removeLawyerController: RemoveLawyerController =
-  ({ LawyersProfile }) =>
+  ({ LawyersProfile, query }) =>
   async (req: Request, res: Response, _next: NextFunction) => {
-    await LawyersProfile.remove({ id: Number(req.params.id) });
+    await LawyersProfile.remove({ id: Number(req.params.id), query });
 
     return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
   };

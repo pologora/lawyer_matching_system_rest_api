@@ -1,3 +1,4 @@
+import { updateRatingQuery } from '../lawyers/sqlQueries';
 import { CreateReviewService } from './types/reviewsTypes';
 
 export const createReviewService: CreateReviewService =
@@ -7,7 +8,7 @@ export const createReviewService: CreateReviewService =
 
     const caseId = await Review.create({ createMessageQuery, values });
 
-    await LawyersProfile.updateRating({ id: data.lawyerId });
+    await LawyersProfile.updateRating({ id: data.lawyerId, updateRatingQuery });
 
     return await Review.getOne({ id: caseId! });
   };
