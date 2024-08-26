@@ -2,49 +2,71 @@ import { NextFunction, Request, Response } from 'express';
 
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import {
-  createMessageService,
-  getManyMessagesService,
-  getMessageService,
-  removeMessageService,
-  updateMessageService,
-} from './messages.service';
+  CreateMessageController,
+  GetManyMessagesController,
+  GetMessageController,
+  RemoveMessageController,
+  UpdateMessageController,
+} from './types/messagesTypes';
 
-export const createMessageController = async (req: Request, res: Response, _next: NextFunction) => {
-  const message = await createMessageService({ data: req.body });
+export const createMessageController: CreateMessageController =
+  ({ buildCreateTableRowQuery, getMessageQuery, Message }) =>
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const { query, values } = buildCreateTableRowQuery(req.body, 'Message');
 
-  return res.status(HTTP_STATUS_CODES.CREATED_201).json({
-    status: 'success',
-    message: 'Successfully created message',
-    data: message,
-  });
-};
+    const messageId = await Message.create({ query, values });
 
-export const getMessageController = async (req: Request, res: Response, _next: NextFunction) => {
-  const message = await getMessageService({ id: Number(req.params.id) });
+    const message = await Message.getOne({ id: messageId, query: getMessageQuery });
 
-  return res
-    .status(HTTP_STATUS_CODES.SUCCESS_200)
-    .json({ status: 'success', message: 'Message retrieved successfully', data: message });
-};
+    return res.status(HTTP_STATUS_CODES.CREATED_201).json({
+      status: 'success',
+      message: 'Successfully created message',
+      data: message,
+    });
+  };
 
-export const getManyMessagesController = async (req: Request, res: Response, _next: NextFunction) => {
-  const messages = await getManyMessagesService({ queryString: req.query });
+export const getMessageController: GetMessageController =
+  ({ Message, query }) =>
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const message = await Message.getOne({ id: Number(req.params.id), query });
 
-  return res
-    .status(HTTP_STATUS_CODES.SUCCESS_200)
-    .json({ status: 'success', message: 'Messages retrieved successfully', data: messages });
-};
+    return res
+      .status(HTTP_STATUS_CODES.SUCCESS_200)
+      .json({ status: 'success', message: 'Message retrieved successfully', data: message });
+  };
 
-export const updateMessageController = async (req: Request, res: Response, _next: NextFunction) => {
-  const updatedMessage = await updateMessageService({ data: req.body, id: Number(req.params.id) });
+export const getManyMessagesController: GetManyMessagesController =
+  ({ Message, buildGetManyMessagesQuery }) =>
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const { query, values } = buildGetManyMessagesQuery(req.query);
 
-  return res
-    .status(HTTP_STATUS_CODES.SUCCESS_200)
-    .json({ status: 'success', message: 'Successfully updated message', data: updatedMessage });
-};
+    const messages = await Message.getMany({ query, values });
 
-export const removeMessageController = async (req: Request, res: Response, _next: NextFunction) => {
-  await removeMessageService({ id: Number(req.params.id) });
+    return res
+      .status(HTTP_STATUS_CODES.SUCCESS_200)
+      .json({ status: 'success', message: 'Messages retrieved successfully', data: messages });
+  };
 
-  return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
-};
+export const updateMessageController: UpdateMessageController =
+  ({ Message, buildUpdateTableRowQuery, getMessageQuery }) =>
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const id = Number(req.params.id);
+
+    const { query, values } = buildUpdateTableRowQuery(req.body, 'Message');
+
+    await Message.update({ id, query, values });
+
+    const updatedMessage = await Message.getOne({ id, query: getMessageQuery });
+
+    return res
+      .status(HTTP_STATUS_CODES.SUCCESS_200)
+      .json({ status: 'success', message: 'Successfully updated message', data: updatedMessage });
+  };
+
+export const removeMessageController: RemoveMessageController =
+  ({ Message, query }) =>
+  async (req: Request, res: Response, _next: NextFunction) => {
+    await Message.remove({ id: Number(req.params.id), query });
+
+    return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
+  };

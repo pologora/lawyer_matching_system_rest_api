@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { GetManyMessagesQueryStringDto } from '../dto';
 
-export const buildGetManyMessagesQuery = (queryString: GetManyMessagesQueryStringDto) => {
+import { BuildGetManyMessagesQuery } from '../types/messagesTypes';
+
+export const buildGetManyMessagesQuery: BuildGetManyMessagesQuery = (queryString) => {
   const DEFAULT_LIMIT_QUERY_RESULTS = 25;
   const DEFAULT_OFFSET = 0;
   const DEFAULT_SORT_BY = 'createdAt DESC';

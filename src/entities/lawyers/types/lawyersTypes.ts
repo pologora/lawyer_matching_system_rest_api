@@ -54,7 +54,7 @@ export type UpdateLawyerSpecializationsProps = {
 };
 
 export interface LawyersProfileModel extends CRUDModel {
-  createLawyer(props: CreateLawyerProps): Promise<number>;
+  create(props: CreateLawyerProps): Promise<number>;
   getOneByUserId(props: GetOneByUserIdProps): Promise<RowDataPacket>;
   updateRating(props: UpdateRatingProps): Promise<ResultSetHeader>;
   updateLawyerSpecializations(props: UpdateLawyerSpecializationsProps): Promise<void>;

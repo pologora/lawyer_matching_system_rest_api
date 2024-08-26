@@ -26,7 +26,7 @@ export const createLawyerService: CreateLawyerService =
       'LawyerProfile',
     );
 
-    const lawyerId = await LawyersProfile.createLawyer({
+    const lawyerId = await LawyersProfile.create({
       createLawyerSpecializationsQuery,
       getLawyerByIdQuery,
       query,
