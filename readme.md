@@ -6,12 +6,15 @@
 2. [Project Management](#project-management)
 3. [Technical Requirements](#technical-requirements)
 4. [Installation](#installation)
-5. [Database Schema](#database-schema-design)
-6. [Error Handling](#error-handling)
-7. [Security](#security)
-8. [JWT](#jwt)
-9. [Base URL](#base-url)
-10. [API Documentation](#api-documentation)
+5. [Running the Application with Docker](#running-the-application)
+6. [Running the Application without Docker](#running-the-application-without-docker)
+7. [Running tests](#running-tests)
+8. [Database Schema](#database-schema-design)
+9. [Error Handling](#error-handling)
+10. [Security](#security)
+11. [JWT](#jwt)
+12. [Base URL](#base-url)
+13. [API Documentation](#api-documentation)
 
     - [Authentication](#authentication)
 
@@ -165,6 +168,62 @@ docker-compose -f docker-compose.prod.yml up --build
 ```
 
 The application will be accessible at `http://localhost:5000/api/v1`
+
+## Running the Application without Docker
+
+If you prefer to run the application directly on your machine without Docker, you can use the following npm scripts:
+
+**Configuration:**
+
+- Rename `env.dev.example` to `.env.dev` and adjust the variables as needed.
+
+- Rename `env.dev.example` to `.env.prod.` Ensure all necessary variables are set for the application to function properly in the production environment.
+
+1. Setup the Database:
+
+- for development:
+
+```bash
+npm run setup
+```
+
+- for production:
+
+```bash
+npm run setup:prod
+```
+
+This script will set up the database with the credentials provided in .env.dev for development or .env.prod for production.
+
+2. Running the Application
+
+- to run the application in development mode:
+
+```bash
+npm run start:dev
+```
+
+- to run the application in production mode:
+
+```bash
+npm run start:prod
+```
+
+This script will run the application with the credentials provided in .env.dev for development or .env.prod for production.
+
+## Running tests
+
+- to run unit tests:
+
+```bash
+npm run test
+```
+
+- tests coverage:
+
+```bash
+npm run test:coverage
+```
 
 ## Database Schema Design
 
