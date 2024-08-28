@@ -86,8 +86,9 @@ export const forgotPasswordService: ForgotPasswordService =
     HTTP_STATUS_CODES,
   }) =>
   async ({ req }) => {
-    const email = req.body;
+    const { email } = req.body;
     const user = await Auth.getUserByEmail({ email, getUserByEmailQuery });
+
     if (!user) {
       throw new AppError('There is no user with this email adress', HTTP_STATUS_CODES.NOT_FOUND_404);
     }
