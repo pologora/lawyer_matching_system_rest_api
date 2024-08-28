@@ -1,4 +1,4 @@
 export const registerByGoogleQuery = `
-INSERT INTO User (active, email, googleId)
+INSERT INTO User (isVerified, email, googleId)
 VALUES (true, ?, ?);
 `;
