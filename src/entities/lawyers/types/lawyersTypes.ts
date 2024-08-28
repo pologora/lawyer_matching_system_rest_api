@@ -1,8 +1,8 @@
 import { NextFunction, Response, Request } from 'express';
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import { UserModel } from '../../users/types/userTypes';
-import { BuildCreateTableRowQuery, BuildUpdateTableRowQuery } from '../../../types/utils';
-import { CRUDModel } from '../../../types/CRUDModel';
+import { BuildInsertQuery, BuildRemoveQuery, BuildUpdateQuery } from '../../../types/utils';
+import { CRUDModel } from '../../../types/core/CRUDModel';
 
 type GetManyLawyersQueryParams = {
   limit?: number;
@@ -78,7 +78,7 @@ type UpdateLawyerServiceProps = {
   getLawyerByIdQuery: string;
   deleteLawyerSpecializationsQuery: string;
   createLawyerSpecializationsQuery: string;
-  buildUpdateTableRowQuery: BuildUpdateTableRowQuery;
+  buildUpdateQuery: BuildUpdateQuery;
 };
 
 type CreateLawyerDto = {
@@ -101,7 +101,7 @@ export type CreateLawyerServiceProps = {
   getLawyerByIdQuery: string;
   createLawyerSpecializationsQuery: string;
   updateUserRoleQuery: string;
-  buildCreateTableRowQuery: BuildCreateTableRowQuery;
+  buildInsertQuery: BuildInsertQuery;
 };
 
 export type CreateLawyerService = (
@@ -132,5 +132,5 @@ export type UpdateLawyerController = (props: {
 
 export type RemoveLawyerController = (props: {
   LawyersProfile: LawyersProfileModel;
-  query: string;
+  buildRemoveQuery: BuildRemoveQuery;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;

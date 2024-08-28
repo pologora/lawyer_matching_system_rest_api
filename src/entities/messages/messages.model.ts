@@ -1,3 +1,3 @@
-import { CRUDModel } from '../../core/model/CRUDModel';
+import { CRUDModel } from '../../core/CRUDModel';
 
 export class Message extends CRUDModel {}

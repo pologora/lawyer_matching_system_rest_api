@@ -1,7 +1,7 @@
-import { CheckDatabaseOperationResult } from '../../types/utils';
-import { AppError } from '../../utils/errors/AppError';
-import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
-import pool from '../../config/db.config';
+import { CheckDatabaseOperationResult } from '../types/utils';
+import { AppError } from './AppError';
+import { HTTP_STATUS_CODES } from '../utils/statusCodes';
+import pool from '../config/db.config';
 
 export class BaseModel {
   protected static pool = pool;

@@ -1,4 +1,4 @@
-import { BaseModel } from '../../core/model/BaseModel';
+import { BaseModel } from '../../core/BaseModel';
 import { GetAllProps } from './types/regionsTypes';
 
 export class Region extends BaseModel {

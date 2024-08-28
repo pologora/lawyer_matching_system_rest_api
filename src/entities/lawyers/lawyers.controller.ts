@@ -55,9 +55,9 @@ export const updateLawyerController: UpdateLawyerController =
   };
 
 export const removeLawyerController: RemoveLawyerController =
-  ({ LawyersProfile, query }) =>
+  ({ LawyersProfile, buildRemoveQuery }) =>
   async (req, res, _next) => {
-    await LawyersProfile.remove({ id: Number(req.params.id), query });
+    await LawyersProfile.remove({ id: Number(req.params.id), query: buildRemoveQuery('LawyerProfile') });
 
     return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
   };

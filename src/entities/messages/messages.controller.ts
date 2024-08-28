@@ -62,9 +62,9 @@ export const updateMessageController: UpdateMessageController =
   };
 
 export const removeMessageController: RemoveMessageController =
-  ({ Message, query }) =>
+  ({ Message, buildRemoveQuery }) =>
   async (req, res, _next) => {
-    await Message.remove({ id: Number(req.params.id), query });
+    await Message.remove({ id: Number(req.params.id), query: buildRemoveQuery('Message') });
 
     return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
   };

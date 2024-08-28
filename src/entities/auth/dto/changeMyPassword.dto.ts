@@ -1,4 +1,4 @@
-import { IUser } from '../../../types/user';
+import { IUser } from '../../../types/IUser';
 
 export interface ChangeMyPasswordDto {
   password: string;

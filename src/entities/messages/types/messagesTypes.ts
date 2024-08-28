@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from 'express';
-import { CRUDModel } from '../../../types/CRUDModel';
-import { BuildCreateTableRowQuery, BuildUpdateTableRowQuery } from '../../../types/utils';
+import { CRUDModel } from '../../../types/core/CRUDModel';
+import { BuildInsertQuery, BuildRemoveQuery, BuildUpdateQuery } from '../../../types/utils';
 
 type SortBy = 'createdAt' | 'updatedAt';
 
@@ -26,7 +26,7 @@ export interface MessagesModule extends CRUDModel {}
 export type CreateMessageController = (props: {
   Message: MessagesModule;
   getMessageQuery: string;
-  buildCreateTableRowQuery: BuildCreateTableRowQuery;
+  buildCreateTableRowQuery: BuildInsertQuery;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
 
 export type GetMessageController = (props: {
@@ -42,10 +42,10 @@ export type GetManyMessagesController = (props: {
 export type UpdateMessageController = (props: {
   Message: MessagesModule;
   getMessageQuery: string;
-  buildUpdateTableRowQuery: BuildUpdateTableRowQuery;
+  buildUpdateTableRowQuery: BuildUpdateQuery;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
 
 export type RemoveMessageController = (props: {
   Message: MessagesModule;
-  query: string;
+  buildRemoveQuery: BuildRemoveQuery;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;

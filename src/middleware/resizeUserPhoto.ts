@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
-import { IUser } from '../types/user';
+import { IUser } from '../types/IUser';
 
 export const resizeUserPhoto = async (req: Request, res: Response, next: NextFunction) => {
   if (!req.file) {

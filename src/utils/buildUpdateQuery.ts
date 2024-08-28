@@ -1,6 +1,6 @@
-import { BuildUpdateTableRowQuery } from '../types/utils';
+import { BuildUpdateQuery } from '../types/utils';
 
-export const buildUpdateTableRowQuery: BuildUpdateTableRowQuery = (data, table) => {
+export const buildUpdateQuery: BuildUpdateQuery = (data, table) => {
   const tableIdField = `${table[0].toLowerCase() + table.slice(1)}Id`;
 
   const keyValuePairs = [];

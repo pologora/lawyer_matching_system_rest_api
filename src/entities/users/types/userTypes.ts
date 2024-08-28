@@ -1,8 +1,8 @@
 import { ResultSetHeader } from 'mysql2';
-import { UserRole } from '../../../types/userRoles';
-import { BuildUpdateTableRowQuery, HashPassword } from '../../../types/utils';
+import { BuildRemoveQuery, BuildUpdateQuery, HashPassword } from '../../../types/utils';
 import { NextFunction, Response, Request } from 'express';
-import { CRUDModel } from '../../../types/CRUDModel';
+import { CRUDModel } from '../../../types/core/CRUDModel';
+import { UserRole } from '../../../types/IUser';
 
 export interface GetManyUsersQueryParams {
   role?: UserRole;
@@ -53,16 +53,16 @@ export type GetManyUsersController = (props: {
 
 export type UpdateUserController = (props: {
   User: UserModel;
-  buildUpdateTableRowQuery: BuildUpdateTableRowQuery;
+  buildUpdateTableRowQuery: BuildUpdateQuery;
   getUserByIdQuery: string;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
 
 export type RemoveUserController = (props: {
   User: UserModel;
-  query: string;
+  buildRemoveQuery: BuildRemoveQuery;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
 
 export type UploadUserPhotoController = (props: {
   User: UserModel;
-  buildUpdateTableRowQuery: BuildUpdateTableRowQuery;
+  buildUpdateTableRowQuery: BuildUpdateQuery;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;

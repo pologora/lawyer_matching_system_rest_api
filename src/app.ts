@@ -10,7 +10,7 @@ dotenv.config({ path: envFile });
 
 import { usersRouter } from './entities/users/users.routes';
 import { globalErrorHandler } from './middleware/globalErrorHandler';
-import { AppError } from './utils/errors/AppError';
+import { AppError } from './core/AppError';
 import { HTTP_STATUS_CODES } from './utils/statusCodes';
 import { authRouter } from './entities/auth/auth.routes';
 import { limiter } from './config/rateLimit/rateLimit';

@@ -58,9 +58,9 @@ export const updateReviewController: UpdateReviewController =
   };
 
 export const removeReviewController: RemoveReviewController =
-  ({ Review, query }) =>
+  ({ Review, buildRemoveQuery }) =>
   async (req, res, _next) => {
-    await Review.remove({ id: Number(req.params.id), query });
+    await Review.remove({ id: Number(req.params.id), query: buildRemoveQuery('Review') });
 
     return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
   };

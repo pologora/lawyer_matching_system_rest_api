@@ -1,5 +1,5 @@
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
-import { AppError } from '../../utils/errors/AppError';
+import { AppError } from '../../core/AppError';
 import {
   CreateUserController,
   GetManyUsersController,
@@ -69,9 +69,9 @@ export const updateUserController: UpdateUserController =
   };
 
 export const removeUserController: RemoveUserController =
-  ({ User, query }) =>
+  ({ User, buildRemoveQuery }) =>
   async (req, res, _next) => {
-    await User.remove({ id: Number(req.params.id), query });
+    await User.remove({ id: Number(req.params.id), query: buildRemoveQuery('User') });
 
     return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).send();
   };

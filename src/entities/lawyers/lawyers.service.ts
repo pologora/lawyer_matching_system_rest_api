@@ -4,7 +4,7 @@ export const createLawyerService: CreateLawyerService =
   ({
     LawyersProfile,
     User,
-    buildCreateTableRowQuery,
+    buildInsertQuery,
     getLawyerByIdQuery,
     createLawyerSpecializationsQuery,
     updateUserRoleQuery,
@@ -12,7 +12,7 @@ export const createLawyerService: CreateLawyerService =
   async ({ data }) => {
     const { userId, licenseNumber, bio, experience, firstName, lastName, cityId, regionId, specializations } = data;
 
-    const { query, values } = buildCreateTableRowQuery(
+    const { query, values } = buildInsertQuery(
       {
         bio,
         cityId,
@@ -42,7 +42,7 @@ export const createLawyerService: CreateLawyerService =
 export const updateLawyerService: UpdateLawyerService =
   ({
     LawyersProfile,
-    buildUpdateTableRowQuery,
+    buildUpdateQuery,
     getLawyerByIdQuery,
     deleteLawyerSpecializationsQuery,
     createLawyerSpecializationsQuery,
@@ -63,7 +63,7 @@ export const updateLawyerService: UpdateLawyerService =
       delete data.specializations;
     }
 
-    const { query, values } = buildUpdateTableRowQuery(data, 'LawyerProfile');
+    const { query, values } = buildUpdateQuery(data, 'LawyerProfile');
 
     await LawyersProfile.update({ id, query, values });
 

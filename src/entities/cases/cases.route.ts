@@ -15,24 +15,29 @@ import { validateReqQuery } from '../../middleware/validateReqQuery';
 import { protect } from '../../middleware/protect';
 import { restrictTo } from '../../middleware/restrictTo';
 import { Case } from './cases.model';
-import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
+import { buildInsertQuery } from '../../utils/buildInsertQuery';
 import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { buildGetManyCasesQuery } from './helpers/buildGetManyCasesQuery';
-import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
-import { deleteCaseQuery, getOneCaseQuery } from './sqlQueries';
+import { buildUpdateQuery } from '../../utils/buildUpdateQuery';
+import { getOneCaseQuery } from './sqlQueries';
+import { buildRemoveQuery } from '../../utils/buildDeleteQuery';
 
 export const casesRouter = express.Router();
 casesRouter.param('id', validateIdParameter);
 
 const injectedCreateCaseController = createCaseController({
   Case,
-  buildCreateTableRowQuery,
+  buildCreateTableRowQuery: buildInsertQuery,
   getOneCaseQuery,
 });
 const injectedGetManyCasesController = getManyCasesController({ Case, buildGetManyCasesQuery });
 const injectedGetCaseController = getCaseController({ Case, query: getOneCaseQuery });
-const injectedUpdateCaseController = updateCaseController({ Case, buildUpdateTableRowQuery, getOneCaseQuery });
-const injectedRemoveCaseController = removeCaseController({ Case, query: deleteCaseQuery });
+const injectedUpdateCaseController = updateCaseController({
+  Case,
+  buildUpdateTableRowQuery: buildUpdateQuery,
+  getOneCaseQuery,
+});
+const injectedRemoveCaseController = removeCaseController({ Case, buildRemoveQuery });
 
 casesRouter
   .route('/cases')

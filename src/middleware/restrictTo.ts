@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { asyncErrorCatch } from '../utils/errors/asyncErrorCatch';
-import { UserRole } from '../types/userRoles';
-import { AppError } from '../utils/errors/AppError';
+import { AppError } from '../core/AppError';
 import { HTTP_STATUS_CODES } from '../utils/statusCodes';
-import { IUser } from '../types/user';
+import { IUser, UserRole } from '../types/IUser';
 
 export const restrictTo = (...allowedRoles: UserRole[]) =>
   asyncErrorCatch(async (req: Request, _res: Response, next: NextFunction) => {

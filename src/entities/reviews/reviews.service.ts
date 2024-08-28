@@ -1,9 +1,8 @@
 import { updateRatingQuery } from '../lawyers/sqlQueries';
-import { getReviewQuery } from './sqlQueries';
 import { CreateReviewService } from './types/reviewsTypes';
 
 export const createReviewService: CreateReviewService =
-  ({ buildCreateTableRowQuery, Review, LawyersProfile }) =>
+  ({ buildCreateTableRowQuery, Review, LawyersProfile, getReviewQuery }) =>
   async ({ data }) => {
     const { query, values } = buildCreateTableRowQuery(data, 'Review');
 

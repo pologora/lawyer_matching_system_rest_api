@@ -11,7 +11,7 @@ import {
   ResetPasswordDto,
   VerificateEmailDto,
 } from './dto';
-import { AppError } from '../../utils/errors/AppError';
+import { AppError } from '../../core/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import { comparePasswords } from '../../utils/passwordManagement/comparePasswords';
 import { createRandomToken } from '../../utils/hashedToken/createRandomToken';
@@ -21,7 +21,7 @@ import { isTokenExpired } from '../../utils/isTokenExpired';
 import { ClientProfile } from '../clients/clients.model';
 import { LawyersProfile } from '../lawyers/lawyers.model';
 import { calculateEmailVerificationExpiraton } from './helpers/calculateEmailVerificationExpirationDate';
-import { Email } from '../../utils/email/Email';
+import { Email } from '../../core/email/Email';
 import { getLawyerByUserIdQuery } from '../lawyers/sqlQueries';
 import { getOneClientByUserIdQuery } from '../clients/slqQueries';
 
@@ -56,7 +56,7 @@ export const loginService = async ({ email: inputEmail, password: candidatePassw
     throw new AppError('Email or password is not valid', HTTP_STATUS_CODES.UNAUTHORIZED_401);
   }
 
-  // 3) create token, return user  + token
+  // 2) create token, return user  + token
   const { userId, email, role } = user;
   const token = await createJWT({ id: userId });
 

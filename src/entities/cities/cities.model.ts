@@ -1,4 +1,4 @@
-import { BaseModel } from '../../core/model/BaseModel';
+import { BaseModel } from '../../core/BaseModel';
 import { GetManyCitiesProps } from './types/citiesTypes';
 
 export class City extends BaseModel {

@@ -1,5 +1,5 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
-import { IUser } from '../../types/user';
+import { IUser } from '../../types/IUser';
 import {
   clearResetPasswordQuery,
   deleteMeQuery,
@@ -13,7 +13,7 @@ import {
   setUserVerifiedQuery,
   updateUserPasswordQuery,
 } from './sqlQueries';
-import { BaseModel } from '../../core/model/BaseModel';
+import { BaseModel } from '../../core/BaseModel';
 import {
   ClearResetPasswordProps,
   DeleteMeProps,

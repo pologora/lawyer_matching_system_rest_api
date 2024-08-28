@@ -1,6 +1,6 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import { BaseModel } from './BaseModel';
-import { CreateProps, GetManyProps, GetOneProps, RemoveProps, UpdateProps } from '../../types/CRUDModel';
+import { CreateProps, GetManyProps, GetOneProps, RemoveProps, UpdateProps } from '../types/core/CRUDModel';
 
 export class CRUDModel extends BaseModel {
   static async create({ query, values }: CreateProps) {

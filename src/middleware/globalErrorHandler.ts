@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES, StatusCodes } from '../utils/statusCodes';
-import { AppError } from '../utils/errors/AppError';
+import { AppError } from '../core/AppError';
 import { logger } from '../config/logger/logger';
 
 const sendDevError = (err: AppError, res: Response, statusCode: StatusCodes) => {

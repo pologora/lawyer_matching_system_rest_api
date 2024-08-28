@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { idValidationSchema } from '../validation/idValidationSchema';
-import { AppError } from '../utils/errors/AppError';
+import { AppError } from '../core/AppError';
 import { HTTP_STATUS_CODES } from '../utils/statusCodes';
 
 export const validateIdParameter = (req: Request, res: Response, next: NextFunction) => {

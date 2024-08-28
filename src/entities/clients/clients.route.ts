@@ -14,8 +14,8 @@ import { restrictTo } from '../../middleware/restrictTo';
 import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { User } from '../users/users.model';
 import { ClientProfile } from './clients.model';
-import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
-import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
+import { buildInsertQuery } from '../../utils/buildInsertQuery';
+import { buildUpdateQuery } from '../../utils/buildUpdateQuery';
 import { deleteClientQuery, getManyClientsQuery, getOneClientQuery } from './slqQueries';
 import { createClientService } from './clients.service';
 import { updateUserRoleQuery } from '../users/sqlQueries';
@@ -27,7 +27,7 @@ clientsRouter.param('id', validateIdParameter);
 const injectedCreateClientService = createClientService({
   ClientProfile,
   User,
-  buildCreateTableRowQuery,
+  buildCreateTableRowQuery: buildInsertQuery,
   getOneClientQuery,
   updateUserRoleQuery,
 });
@@ -37,7 +37,7 @@ const injectedGetClientController = getClientController({ ClientProfile, query: 
 const injectedGetManyClientsController = getManyClientsController({ ClientProfile, query: getManyClientsQuery });
 const injectedUpdateClientController = updateClientController({
   ClientProfile,
-  buildUpdateTableRowQuery,
+  buildUpdateTableRowQuery: buildUpdateQuery,
   getOneClientQuery,
 });
 const injectedremoveClientController = removeClientController({ ClientProfile, query: deleteClientQuery });

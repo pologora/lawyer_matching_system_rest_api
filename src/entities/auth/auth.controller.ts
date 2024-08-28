@@ -10,12 +10,12 @@ import {
   resetPasswordService,
   verifyEmailService,
 } from './auth.service';
-import { AppError } from '../../utils/errors/AppError';
+import { AppError } from '../../core/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 
 import { setTokenCookieAndSendResponse } from './helpers/setTokenCookieAndSendResponse';
 import { cookieOptions } from '../../config/cookieOptions/cookieOptions';
-import { IUser } from '../../types/user';
+import { IUser } from '../../types/IUser';
 import { resetPasswordSchema } from './auth.validation';
 
 export const registerController = async (req: Request, res: Response, _next: NextFunction) => {

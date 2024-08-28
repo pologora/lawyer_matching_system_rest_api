@@ -14,20 +14,29 @@ import { protect } from '../../middleware/protect';
 import { restrictTo } from '../../middleware/restrictTo';
 import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { Message } from './messages.model';
-import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
-import { getMessageQuery, removeMessageQuery } from './sqlQueries';
+import { buildInsertQuery } from '../../utils/buildInsertQuery';
+import { getMessageQuery } from './sqlQueries';
 import { buildGetManyMessagesQuery } from './helpers/buildGetManyMessagesQuery';
-import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
+import { buildUpdateQuery } from '../../utils/buildUpdateQuery';
+import { buildRemoveQuery } from '../../utils/buildDeleteQuery';
 
 export const messagesRoute = express.Router();
 
 messagesRoute.param('id', validateIdParameter);
 
-const injectedCreateMessageController = createMessageController({ Message, buildCreateTableRowQuery, getMessageQuery });
+const injectedCreateMessageController = createMessageController({
+  Message,
+  buildCreateTableRowQuery: buildInsertQuery,
+  getMessageQuery,
+});
 const injectedGetMessageController = getMessageController({ Message, query: getMessageQuery });
 const injectedGetManyMessagesController = getManyMessagesController({ Message, buildGetManyMessagesQuery });
-const injectedUpdateMessageController = updateMessageController({ Message, buildUpdateTableRowQuery, getMessageQuery });
-const injectedRemoveMessageController = removeMessageController({ Message, query: removeMessageQuery });
+const injectedUpdateMessageController = updateMessageController({
+  Message,
+  buildUpdateTableRowQuery: buildUpdateQuery,
+  getMessageQuery,
+});
+const injectedRemoveMessageController = removeMessageController({ Message, buildRemoveQuery });
 
 messagesRoute
   .route('/messages')

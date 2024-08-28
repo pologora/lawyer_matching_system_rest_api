@@ -1,5 +1,5 @@
 import { AuthPayload } from '../../types/authPayload';
-import { AppError } from '../errors/AppError';
+import { AppError } from '../../core/AppError';
 import { verify } from './verify';
 
 export const verifyJWT = async (token: string): Promise<AuthPayload> => {

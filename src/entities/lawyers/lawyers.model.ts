@@ -1,5 +1,5 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
-import { AppError } from '../../utils/errors/AppError';
+import { AppError } from '../../core/AppError';
 import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
 import {
   CreateLawyerProps,
@@ -7,7 +7,7 @@ import {
   UpdateLawyerSpecializationsProps,
   UpdateRatingProps,
 } from './types/lawyersTypes';
-import { CRUDModel } from '../../core/model/CRUDModel';
+import { CRUDModel } from '../../core/CRUDModel';
 
 export class LawyersProfile extends CRUDModel {
   static async create({ query, values, specializations, createLawyerSpecializationsQuery }: CreateLawyerProps) {

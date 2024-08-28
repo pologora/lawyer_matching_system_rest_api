@@ -1,4 +1,4 @@
-import { AppError } from '../errors/AppError';
+import { AppError } from '../../core/AppError';
 import { sign } from './sign';
 
 export const createJWT = async (payload: object): Promise<string> => {

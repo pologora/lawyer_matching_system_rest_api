@@ -10,14 +10,16 @@ export type CheckDatabaseOperationInput = {
 
 export type CheckDatabaseOperationResult = ({ result, id, operation }: CheckDatabaseOperationInput) => void;
 
-export type BuildCreateTableRowQuery = (
+export type BuildInsertQuery = (
   data: object,
   table: DatabaseTableNames,
 ) => { query: string; values: (string | number)[] };
 
-export type BuildUpdateTableRowQuery = (
+export type BuildUpdateQuery = (
   data: object,
   table: DatabaseTableNames,
 ) => { query: string; values: (string | number)[] };
+
+export type BuildRemoveQuery = (table: DatabaseTableNames) => string;
 
 export type HashPassword = (password: string) => Promise<string>;

@@ -1,8 +1,8 @@
 import { NextFunction, Response, Request } from 'express';
 import { RowDataPacket } from 'mysql2';
-import { BuildCreateTableRowQuery, BuildUpdateTableRowQuery } from '../../../types/utils';
+import { BuildInsertQuery, BuildUpdateQuery } from '../../../types/utils';
 import { UserModel } from '../../users/types/userTypes';
-import { CRUDModel } from '../../../types/CRUDModel';
+import { CRUDModel } from '../../../types/core/CRUDModel';
 
 export type GetOneByUserIdProps = {
   userId: number;
@@ -18,7 +18,7 @@ type CreateClientServiceProps = {
   ClientProfile: ClientProfileModel;
   getOneClientQuery: string;
   updateUserRoleQuery: string;
-  buildCreateTableRowQuery: BuildCreateTableRowQuery;
+  buildCreateTableRowQuery: BuildInsertQuery;
 };
 
 type CreateClientDto = {
@@ -48,7 +48,7 @@ export type GetManyClientsController = (props: {
 export type UpdateClientController = (props: {
   ClientProfile: ClientProfileModel;
   getOneClientQuery: string;
-  buildUpdateTableRowQuery: BuildUpdateTableRowQuery;
+  buildUpdateTableRowQuery: BuildUpdateQuery;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
 
 export type RemoveClientController = (props: {

@@ -1,6 +1,6 @@
 import multer, { FileFilterCallback } from 'multer';
 import { Request } from 'express';
-import { AppError } from '../utils/errors/AppError';
+import { AppError } from '../core/AppError';
 import { HTTP_STATUS_CODES } from '../utils/statusCodes';
 
 const multerStorage = multer.memoryStorage();

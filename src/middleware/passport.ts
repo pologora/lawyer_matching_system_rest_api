@@ -1,10 +1,10 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { AppError } from '../utils/errors/AppError';
+import { AppError } from '../core/AppError';
 import { HTTP_STATUS_CODES } from '../utils/statusCodes';
 import { Auth } from '../entities/auth/auth.model';
 import { createJWT } from '../utils/jwt/createJWT';
-import { Email } from '../utils/email/Email';
+import { Email } from '../core/email/Email';
 
 passport.use(
   new GoogleStrategy(

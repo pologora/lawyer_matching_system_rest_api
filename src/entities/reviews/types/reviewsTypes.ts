@@ -1,8 +1,8 @@
 import { RowDataPacket } from 'mysql2';
-import { BuildCreateTableRowQuery, BuildUpdateTableRowQuery } from '../../../types/utils';
+import { BuildInsertQuery, BuildRemoveQuery, BuildUpdateQuery } from '../../../types/utils';
 import { LawyersProfileModel } from '../../lawyers/types/lawyersTypes';
 import { NextFunction, Response, Request } from 'express';
-import { CRUDModel } from '../../../types/CRUDModel';
+import { CRUDModel } from '../../../types/core/CRUDModel';
 
 export interface ReviewModel extends CRUDModel {}
 
@@ -38,7 +38,7 @@ type CreateReviewServiceProps = {
   Review: ReviewModel;
   LawyersProfile: LawyersProfileModel;
   getReviewQuery: string;
-  buildCreateTableRowQuery: BuildCreateTableRowQuery;
+  buildCreateTableRowQuery: BuildInsertQuery;
 };
 
 export type CreateReviewService = (
@@ -62,10 +62,10 @@ export type GetManyReviewsController = (props: {
 export type UpdateReviewController = (props: {
   Review: ReviewModel;
   getReviewQuery: string;
-  buildUpdateTableRowQuery: BuildUpdateTableRowQuery;
+  buildUpdateTableRowQuery: BuildUpdateQuery;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
 
 export type RemoveReviewController = (props: {
   Review: ReviewModel;
-  query: string;
+  buildRemoveQuery: BuildRemoveQuery;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;

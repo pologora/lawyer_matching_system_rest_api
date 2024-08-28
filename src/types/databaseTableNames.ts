@@ -1,9 +1,11 @@
 export type DatabaseTableNames =
   | 'LawyerProfile'
   | 'ClientProfile'
-  | 'User'
+  | `User`
   | `Case`
   | 'Message'
   | 'Specialization'
   | 'LawyerSpecialization'
-  | 'Review';
+  | 'Review'
+  | 'City'
+  | 'Region';

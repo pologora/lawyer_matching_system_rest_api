@@ -67,9 +67,9 @@ export const updateCaseController: UpdateCaseController =
   };
 
 export const removeCaseController: RemoveCaseController =
-  ({ Case, query }) =>
+  ({ Case, buildRemoveQuery }) =>
   async (req, res, _next) => {
-    await Case.remove({ id: Number(req.params.id), query });
+    await Case.remove({ id: Number(req.params.id), query: buildRemoveQuery('Case') });
 
     return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
   };

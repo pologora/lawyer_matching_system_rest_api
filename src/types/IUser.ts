@@ -1,4 +1,4 @@
-import { UserRole } from './userRoles';
+export type UserRole = 'admin' | 'user' | 'client' | 'lawyer';
 
 export interface IUser {
   userId: number;

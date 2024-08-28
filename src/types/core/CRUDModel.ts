@@ -1,5 +1,5 @@
 import { QueryResult, ResultSetHeader, RowDataPacket } from 'mysql2';
-import { CreateLawyerProps } from '../entities/lawyers/types/lawyersTypes';
+import { CreateLawyerProps } from '../../entities/lawyers/types/lawyersTypes';
 
 export type CreateProps = {
   query: string;

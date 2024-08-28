@@ -1,3 +1,3 @@
-import { CRUDModel } from '../../core/model/CRUDModel';
+import { CRUDModel } from '../../core/CRUDModel';
 
 export class Review extends CRUDModel {}
