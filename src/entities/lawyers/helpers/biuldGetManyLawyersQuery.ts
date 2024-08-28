@@ -52,11 +52,6 @@ export const buildGetManyLawyersQuery: BuildGetManyLawyersQuery = (queryParams) 
     values.push(experienceMin);
   }
 
-  if (experienceMin) {
-    filters.push(`lp.experience >= ?`);
-    values.push(experienceMin);
-  }
-
   if (experienceMax) {
     filters.push(`lp.experience <= ?`);
     values.push(experienceMax);

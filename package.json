@@ -17,7 +17,7 @@
     "setup:test": "cross-env NODE_ENV=test ts-node src/config/databaseTables/setupDatabaseTablesAndValues.ts",
     "down": "docker-compose -f docker-compose.dev.yml down",
     "docker:dev-build": "docker-compose -f docker-compose.dev.yml up --build",
-    "test:coverage": "npx jest --coverage",
+    "test:c": "npx jest --coverage",
     "docker:dev": "npm run setup:docker && docker-compose -f docker-compose.dev.yml up --build",
     "docker:prod": "npm run setup:docker && docker-compose -f docker-compose.prod.yml up --build",
     "setup:docker": "ts-node src/config/setupDerictories.ts"

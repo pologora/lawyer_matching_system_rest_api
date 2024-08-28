@@ -21,7 +21,7 @@ import {
   injectedRegisterController,
   injectedResetPasswordController,
   injectedVerifyEmailcontroller,
-} from './authInjectedFunctions';
+} from './helpers/authInjectedFunctions';
 
 export const authRouter = Router();
 
