@@ -222,7 +222,7 @@ npm run test
 - tests coverage:
 
 ```bash
-npm run test:coverage
+npm run test:c
 ```
 
 ## Database Schema Design
