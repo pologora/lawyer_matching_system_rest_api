@@ -18,7 +18,8 @@
     "down": "docker-compose -f docker-compose.dev.yml down",
     "docker:dev-build": "docker-compose -f docker-compose.dev.yml up --build",
     "docker:dev": "docker-compose -f docker-compose.dev.yml up --build",
-    "docker:prod": "docker-compose -f docker-compose.prod.yml up --build"
+    "docker:prod": "docker-compose -f docker-compose.prod.yml up --build",
+    "test:coverage": "npx jest --coverage"
   },
   "overrides": {
     "eslint": "^9.6.0"
