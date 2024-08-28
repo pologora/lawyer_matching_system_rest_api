@@ -154,7 +154,7 @@ npm install
 To run the application in development mode:
 
 ```Bash
-docker-compose -f docker-compose.dev.yml up --build
+npm run docker:dev
 ```
 
 The application will be accessible at `http://localhost:8000/api/v1`
@@ -164,7 +164,7 @@ The application will be accessible at `http://localhost:8000/api/v1`
 To run the application in production mode:
 
 ```Bash
-docker-compose -f docker-compose.prod.yml up --build
+npm run docker:prod
 ```
 
 The application will be accessible at `http://localhost:5000/api/v1`
@@ -570,8 +570,8 @@ Validation Error Examples:
 ```json
 {
   "name": "John Doe",
-  "email": "john.doe@example.com",
-  "password": "securePassword123"
+  "password": "securePassword123",
+  "confirmPassword": "john.doe@example.com"
 }
 ```
 
