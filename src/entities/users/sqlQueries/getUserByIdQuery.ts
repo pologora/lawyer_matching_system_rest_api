@@ -10,14 +10,14 @@ SELECT
   passwordChangedAt, 
   emailVerificationToken, 
   emailVerificationTokenExpiration, 
-  active, 
+  isVerified, 
   createdAt, 
   updatedAt 
 FROM User where userId = ?;
 `;
 
 const prod = `
-SELECT userId, email, role, createdAt, updatedAt, active, googleId, passwordChangedAt
+SELECT userId, email, role, createdAt, updatedAt, isVerified, googleId, passwordChangedAt
 FROM User where userId = ?;
 `;
 

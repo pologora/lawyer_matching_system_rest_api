@@ -14,23 +14,34 @@ import { protect } from '../../middleware/protect';
 import { restrictTo } from '../../middleware/restrictTo';
 import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { createReviewService } from './reviews.service';
-import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
+import { buildInsertQuery } from '../../utils/buildInsertQuery';
 import { LawyersProfile } from '../lawyers/lawyers.model';
 import { Review } from './reviews.model';
 import { buildGetManyReviewsQuery } from './helpers/buildGetManyReviewsQuery';
-import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
+import { buildUpdateQuery } from '../../utils/buildUpdateQuery';
+import { getReviewQuery } from './sqlQueries';
+import { buildRemoveQuery } from '../../utils/buildDeleteQuery';
 
 export const reviewsRouter = express.Router();
 
 reviewsRouter.param('id', validateIdParameter);
 
-const injectedCreateReviewService = createReviewService({ LawyersProfile, Review, buildCreateTableRowQuery });
+const injectedCreateReviewService = createReviewService({
+  LawyersProfile,
+  Review,
+  buildCreateTableRowQuery: buildInsertQuery,
+  getReviewQuery,
+});
 
 const injectedCreateReviewController = createReviewController({ createReviewService: injectedCreateReviewService });
-const injectedGetReviewController = getReviewController({ Review });
+const injectedGetReviewController = getReviewController({ Review, query: getReviewQuery });
 const injectedGetManyReviewsController = getManyReviewsController({ Review, buildGetManyReviewsQuery });
-const injectedUpdateReviewController = updateReviewController({ Review, buildUpdateTableRowQuery });
-const injectedRemoveReviewController = removeReviewController({ Review });
+const injectedUpdateReviewController = updateReviewController({
+  Review,
+  buildUpdateTableRowQuery: buildUpdateQuery,
+  getReviewQuery,
+});
+const injectedRemoveReviewController = removeReviewController({ Review, buildRemoveQuery });
 
 reviewsRouter
   .route('/reviews')

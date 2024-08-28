@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import pool from '../../../config/db.config';
 import { app } from '../../../app';
-import { HTTP_STATUS_CODES } from '../../../utils/statusCodes';
+import { HTTP_STATUS_CODES } from '../../../config/statusCodes';
 
 afterAll(async () => {
   await pool.end();

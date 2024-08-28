@@ -1,6 +1,6 @@
-import { BuildCreateTableRowQuery } from '../types/utils';
+import { BuildInsertQuery } from '../types/utils';
 
-export const buildCreateTableRowQuery: BuildCreateTableRowQuery = (data, table) => {
+export const buildInsertQuery: BuildInsertQuery = (data, table) => {
   const values = [];
   const columns = [];
   for (const [key, value] of Object.entries(data)) {

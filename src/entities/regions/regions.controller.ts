@@ -1,12 +1,12 @@
-import { NextFunction, Request, Response } from 'express';
+import { HTTP_STATUS_CODES } from '../../config/statusCodes';
+import { GetAllRegionsController } from './types/regionsTypes';
 
-import { getAllRegionsService } from './regions.service';
-import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
+export const getAllRegionsController: GetAllRegionsController =
+  ({ Region, query }) =>
+  async (_req, res, _next) => {
+    const regions = await Region.getAll({ query });
 
-export const getAllRegionsController = async (_req: Request, res: Response, _next: NextFunction) => {
-  const regions = await getAllRegionsService();
-
-  return res
-    .status(HTTP_STATUS_CODES.SUCCESS_200)
-    .json({ status: 'success', message: 'Regions retrieved successfully', data: regions });
-};
+    return res
+      .status(HTTP_STATUS_CODES.SUCCESS_200)
+      .json({ status: 'success', message: 'Regions retrieved successfully', data: regions });
+  };

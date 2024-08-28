@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from 'express';
-import { BuildCreateTableRowQuery, BuildUpdateTableRowQuery } from '../../../types/utils';
-import { CRUDModel } from '../../../types/CRUDModel';
+import { BuildInsertQuery, BuildRemoveQuery, BuildUpdateQuery } from '../../../types/utils';
+import { CRUDModel } from '../../../types/core/CRUDModel';
 
 export interface CasesModel extends CRUDModel {}
 
@@ -27,7 +27,7 @@ export type BuildGetManyCasesQuery = (queryParams: GetManyCasesQueryParams) => {
 export type CreateCaseController = (props: {
   Case: CasesModel;
   getOneCaseQuery: string;
-  buildCreateTableRowQuery: BuildCreateTableRowQuery;
+  buildCreateTableRowQuery: BuildInsertQuery;
 }) => (req: Request, res: Response, next: NextFunction) => Promise<Response>;
 
 export type GetCaseController = (props: {
@@ -43,10 +43,10 @@ export type GetManyCaseController = (props: {
 export type UpdateCaseController = (props: {
   Case: CasesModel;
   getOneCaseQuery: string;
-  buildUpdateTableRowQuery: BuildUpdateTableRowQuery;
+  buildUpdateTableRowQuery: BuildUpdateQuery;
 }) => (req: Request, res: Response, next: NextFunction) => Promise<Response>;
 
 export type RemoveCaseController = (props: {
   Case: CasesModel;
-  query: string;
+  buildRemoveQuery: BuildRemoveQuery;
 }) => (req: Request, res: Response, next: NextFunction) => Promise<Response>;

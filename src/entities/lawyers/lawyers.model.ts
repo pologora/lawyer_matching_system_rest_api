@@ -1,18 +1,17 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
-import pool from '../../config/db.config';
-import { AppError } from '../../utils/errors/AppError';
-import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
+import { AppError } from '../../core/AppError';
+import { HTTP_STATUS_CODES } from '../../config/statusCodes';
 import {
   CreateLawyerProps,
   GetOneByUserIdProps,
   UpdateLawyerSpecializationsProps,
   UpdateRatingProps,
 } from './types/lawyersTypes';
-import { CRUDModel } from '../../core/model/CRUDModel';
+import { CRUDModel } from '../../core/CRUDModel';
 
 export class LawyersProfile extends CRUDModel {
-  static async createLawyer({ query, values, specializations, createLawyerSpecializationsQuery }: CreateLawyerProps) {
-    const connection = await pool.getConnection();
+  static async create({ query, values, specializations, createLawyerSpecializationsQuery }: CreateLawyerProps) {
+    const connection = await this.pool.getConnection();
 
     try {
       await connection.beginTransaction();
@@ -48,7 +47,7 @@ export class LawyersProfile extends CRUDModel {
   }
 
   static async getOneByUserId({ userId, getLawyerByUserIdQuery }: GetOneByUserIdProps) {
-    const [result] = await pool.query<RowDataPacket[]>(getLawyerByUserIdQuery, [userId]);
+    const [result] = await this.pool.query<RowDataPacket[]>(getLawyerByUserIdQuery, [userId]);
 
     this.checkDatabaseOperation({ id: userId, operation: 'get', result: result[0] });
 
@@ -56,7 +55,7 @@ export class LawyersProfile extends CRUDModel {
   }
 
   static async updateRating({ id, updateRatingQuery }: UpdateRatingProps) {
-    const [result] = await pool.query<ResultSetHeader>(updateRatingQuery, [id, id]);
+    const [result] = await this.pool.query<ResultSetHeader>(updateRatingQuery, [id, id]);
 
     this.checkDatabaseOperation({ id, operation: 'update', result: result.affectedRows });
 
@@ -69,7 +68,7 @@ export class LawyersProfile extends CRUDModel {
     deleteLawyerSpecializationsQuery,
     createLawyerSpecializationsQuery,
   }: UpdateLawyerSpecializationsProps) {
-    const connection = await pool.getConnection();
+    const connection = await this.pool.getConnection();
 
     try {
       await connection.execute<ResultSetHeader>(deleteLawyerSpecializationsQuery, [lawyerId]);

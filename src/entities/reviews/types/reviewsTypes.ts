@@ -1,39 +1,10 @@
-import { QueryResult, ResultSetHeader, RowDataPacket } from 'mysql2';
-import { BuildCreateTableRowQuery, BuildUpdateTableRowQuery } from '../../../types/utils';
+import { RowDataPacket } from 'mysql2';
+import { BuildInsertQuery, BuildRemoveQuery, BuildUpdateQuery } from '../../../types/utils';
 import { LawyersProfileModel } from '../../lawyers/types/lawyersTypes';
 import { NextFunction, Response, Request } from 'express';
+import { CRUDModel } from '../../../types/core/CRUDModel';
 
-export type CreateProps = {
-  createMessageQuery: string;
-  values: (string | number)[];
-};
-
-export type GetOneProps = {
-  id: number;
-};
-
-export type GetManyProps = {
-  query: string;
-  values: (string | number | Date)[];
-};
-
-export type UpdateProps = {
-  updateMessageQuery: string;
-  values: (string | number)[];
-  id: number;
-};
-
-export type RemoveProps = {
-  id: number;
-};
-
-export interface ReviewModel {
-  create(props: CreateProps): Promise<number | undefined>;
-  getOne(props: GetOneProps): Promise<RowDataPacket>;
-  getMany(props: GetManyProps): Promise<QueryResult>;
-  update(props: UpdateProps): Promise<ResultSetHeader>;
-  remove(props: RemoveProps): Promise<ResultSetHeader>;
-}
+export interface ReviewModel extends CRUDModel {}
 
 export type ReviewSort = 'rating' | 'createdAt';
 
@@ -66,7 +37,8 @@ type CreateReviewDto = {
 type CreateReviewServiceProps = {
   Review: ReviewModel;
   LawyersProfile: LawyersProfileModel;
-  buildCreateTableRowQuery: BuildCreateTableRowQuery;
+  getReviewQuery: string;
+  buildCreateTableRowQuery: BuildInsertQuery;
 };
 
 export type CreateReviewService = (
@@ -79,6 +51,7 @@ export type CreateReviewController = (args: {
 
 export type GetReviewController = (props: {
   Review: ReviewModel;
+  query: string;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
 
 export type GetManyReviewsController = (props: {
@@ -88,9 +61,11 @@ export type GetManyReviewsController = (props: {
 
 export type UpdateReviewController = (props: {
   Review: ReviewModel;
-  buildUpdateTableRowQuery: BuildUpdateTableRowQuery;
+  getReviewQuery: string;
+  buildUpdateTableRowQuery: BuildUpdateQuery;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
 
 export type RemoveReviewController = (props: {
   Review: ReviewModel;
+  buildRemoveQuery: BuildRemoveQuery;
 }) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;

@@ -1,6 +1,6 @@
 import { RowDataPacket } from 'mysql2';
 import { GetOneByUserIdProps } from './types/clientTypes';
-import { CRUDModel } from '../../core/model/CRUDModel';
+import { CRUDModel } from '../../core/CRUDModel';
 
 export class ClientProfile extends CRUDModel {
   static async getOneByUserId({ userId, query }: GetOneByUserIdProps) {

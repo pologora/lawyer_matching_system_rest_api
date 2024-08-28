@@ -1,4 +1,5 @@
 import { QueryResult, ResultSetHeader, RowDataPacket } from 'mysql2';
+import { CreateLawyerProps } from '../../entities/lawyers/types/lawyersTypes';
 
 export type CreateProps = {
   query: string;
@@ -27,7 +28,7 @@ export type RemoveProps = {
 };
 
 export interface CRUDModel {
-  create(props: CreateProps | { email: string; hashedPassword: string }): Promise<number>;
+  create(props: CreateProps | { email: string; hashedPassword: string } | CreateLawyerProps): Promise<number>;
   getOne(props: GetOneProps): Promise<RowDataPacket>;
   getMany(props: GetManyProps | { query: string }): Promise<QueryResult>;
   update(props: UpdateProps): Promise<ResultSetHeader>;

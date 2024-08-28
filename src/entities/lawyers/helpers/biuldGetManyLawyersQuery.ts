@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { BuildGetManyLawyersQuery } from '../types/lawyersTypes';
 
-export const buildGetManyLawyersQuery: BuildGetManyLawyersQuery = (queryString) => {
+export const buildGetManyLawyersQuery: BuildGetManyLawyersQuery = (queryParams) => {
   const DEFAULT_LIMIT_QUERY_RESULTS = 25;
   const DEFAULT_OFFSET = 0;
 
@@ -22,7 +22,7 @@ export const buildGetManyLawyersQuery: BuildGetManyLawyersQuery = (queryString) 
     initialConsultationFeeMax,
     hourlyRateMin,
     hourlyRateMax,
-  } = queryString;
+  } = queryParams;
 
   const filters = [];
   const values = [];

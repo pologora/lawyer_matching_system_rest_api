@@ -18,23 +18,27 @@ import { validateReqQuery } from '../../middleware/validateReqQuery';
 import { restrictTo } from '../../middleware/restrictTo';
 import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { hashPassword } from '../../utils/passwordManagement/hashPassword';
-import { User } from './users.model';
 import { buildGetManyUsersQuery } from './helpers/buildGetManyUsersQuery';
-import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
-import { createUserQuery, deleteUserQuery, getUserByIdQuery } from './sqlQueries';
+import { buildUpdateQuery } from '../../utils/buildUpdateQuery';
+import { createUserQuery, getUserByIdQuery } from './sqlQueries';
+import { User } from './users.model';
+import { buildRemoveQuery } from '../../utils/buildDeleteQuery';
 
 export const usersRouter = Router();
 
 usersRouter.param('id', validateIdParameter);
-
 const injectedCreateUserController = createUserController({ User, hashPassword, query: createUserQuery });
 const injectetGetUserController = getUserController({ User, query: getUserByIdQuery });
 const injectetGetManyUsersController = getManyUsersController({ User, buildGetManyUsersQuery });
-const injectetUpdateUserController = updateUserController({ User, buildUpdateTableRowQuery, getUserByIdQuery });
-const injectetRemoveUserController = removeUserController({ User, query: deleteUserQuery });
+const injectetUpdateUserController = updateUserController({
+  User,
+  buildUpdateTableRowQuery: buildUpdateQuery,
+  getUserByIdQuery,
+});
+const injectetRemoveUserController = removeUserController({ User, buildRemoveQuery });
 const injectetUploadPhotoUserController = uploadUserPhotoController({
   User,
-  buildUpdateTableRowQuery,
+  buildUpdateTableRowQuery: buildUpdateQuery,
 });
 
 usersRouter

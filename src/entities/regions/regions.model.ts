@@ -1,9 +1,9 @@
-import pool from '../../config/db.config';
-import { getAllRegionsQuery } from './sqlQueries';
+import { BaseModel } from '../../core/BaseModel';
+import { GetAllProps } from './types/regionsTypes';
 
-export class Region {
-  static async getAll() {
-    const result = await pool.query(getAllRegionsQuery);
+export class Region extends BaseModel {
+  static async getAll({ query }: GetAllProps) {
+    const result = await this.pool.query(query);
 
     return result[0];
   }

@@ -1,12 +1,12 @@
 import { BuildGetManyUsersQuery } from '../types/userTypes';
 
-export const buildGetManyUsersQuery: BuildGetManyUsersQuery = (queryString) => {
+export const buildGetManyUsersQuery: BuildGetManyUsersQuery = (queryParams) => {
   const DEFAULT_LIMIT_QUERY_RESULTS = 25;
   const DEFAULT_OFFSET = 0;
 
   const defaultColumns = ['userId, email, googleId, role, isVerified, createdAt, updatedAt, profileImageFileName'];
 
-  const { limit, page, sort, order, columns, role, search, isVerified } = queryString;
+  const { limit, page, sort, order, columns, role, search, isVerified } = queryParams;
 
   const filters = [];
   const values = [];

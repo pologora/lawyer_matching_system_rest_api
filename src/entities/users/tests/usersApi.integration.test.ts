@@ -1,7 +1,7 @@
 /* eslint-disable sort-keys */
 import supertest from 'supertest';
 import { app } from '../../../app';
-import { HTTP_STATUS_CODES } from '../../../utils/statusCodes';
+import { HTTP_STATUS_CODES } from '../../../config/statusCodes';
 import pool from '../../../config/db.config';
 
 let userId: number;

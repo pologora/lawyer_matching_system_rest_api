@@ -1,5 +1,5 @@
 import { AuthPayload } from '../../types/authPayload';
-import { AppError } from '../errors/AppError';
+import { AppError } from '../../core/AppError';
 import { verify } from './verify';
 
 export const verifyJWT = async (token: string): Promise<AuthPayload> => {
@@ -14,7 +14,7 @@ export const verifyJWT = async (token: string): Promise<AuthPayload> => {
     let error: Error;
 
     try {
-      payload = verify({ token, secret });
+      payload = verify({ secret, token });
       resolve(payload);
     } catch (err) {
       error = err as Error;

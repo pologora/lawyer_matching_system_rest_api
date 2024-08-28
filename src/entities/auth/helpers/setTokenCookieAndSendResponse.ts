@@ -1,16 +1,11 @@
 /* eslint-disable sort-keys */
-import { Response } from 'express';
-import { StatusCodes } from '../../../utils/statusCodes';
 import { cookieOptions } from '../../../config/cookieOptions/cookieOptions';
+import { SetTokenCookieAndSendResponse } from '../types/helpersTypes';
 
-type TokenResponse = {
-  token: string;
-  user?: object;
-  message: string;
-  statusCode: StatusCodes;
-};
-
-export const setTokenCookieAndSendResponse = (res: Response, { token, message, user, statusCode }: TokenResponse) => {
+export const setTokenCookieAndSendResponse: SetTokenCookieAndSendResponse = (
+  res,
+  { token, message, user, statusCode },
+) => {
   res.cookie('jwt', token, cookieOptions);
 
   return res.status(statusCode).json({

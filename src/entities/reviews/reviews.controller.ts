@@ -1,4 +1,4 @@
-import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
+import { HTTP_STATUS_CODES } from '../../config/statusCodes';
 import {
   CreateReviewController,
   GetManyReviewsController,
@@ -20,9 +20,9 @@ export const createReviewController: CreateReviewController =
   };
 
 export const getReviewController: GetReviewController =
-  ({ Review }) =>
+  ({ Review, query }) =>
   async (req, res, _next) => {
-    const review = await Review.getOne({ id: Number(req.params.id) });
+    const review = await Review.getOne({ id: Number(req.params.id), query });
 
     return res
       .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -42,15 +42,15 @@ export const getManyReviewsController: GetManyReviewsController =
   };
 
 export const updateReviewController: UpdateReviewController =
-  ({ Review, buildUpdateTableRowQuery }) =>
+  ({ Review, buildUpdateTableRowQuery, getReviewQuery }) =>
   async (req, res, _next) => {
     const id = Number(req.params.id);
 
-    const { query: updateMessageQuery, values } = buildUpdateTableRowQuery(req.body, 'Review');
+    const { query, values } = buildUpdateTableRowQuery(req.body, 'Review');
 
-    await Review.update({ id, updateMessageQuery, values });
+    await Review.update({ id, query, values });
 
-    const updatedReview = await Review.getOne({ id });
+    const updatedReview = await Review.getOne({ id, query: getReviewQuery });
 
     return res
       .status(HTTP_STATUS_CODES.SUCCESS_200)
@@ -58,9 +58,9 @@ export const updateReviewController: UpdateReviewController =
   };
 
 export const removeReviewController: RemoveReviewController =
-  ({ Review }) =>
+  ({ Review, buildRemoveQuery }) =>
   async (req, res, _next) => {
-    await Review.remove({ id: Number(req.params.id) });
+    await Review.remove({ id: Number(req.params.id), query: buildRemoveQuery('Review') });
 
     return res.status(HTTP_STATUS_CODES.NO_CONTENT_204).end();
   };

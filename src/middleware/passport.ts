@@ -1,10 +1,11 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import { AppError } from '../utils/errors/AppError';
-import { HTTP_STATUS_CODES } from '../utils/statusCodes';
+import { AppError } from '../core/AppError';
+import { HTTP_STATUS_CODES } from '../config/statusCodes';
 import { Auth } from '../entities/auth/auth.model';
 import { createJWT } from '../utils/jwt/createJWT';
-import { Email } from '../utils/email/Email';
+import { Email } from '../core/email/Email';
+import { getUserByEmailQuery, registerByGoogleQuery } from '../entities/auth/sqlQueries';
 
 passport.use(
   new GoogleStrategy(
@@ -19,11 +20,10 @@ passport.use(
         if (profile.emails) {
           const email = profile.emails[0].value;
           const googleId = profile.id;
-
-          const user = await Auth.getUserByEmail({ email });
+          const user = await Auth.getUserByEmail({ email, getUserByEmailQuery });
           let userId = user?.userId;
           if (!user) {
-            const result = await Auth.registerByGoogle({ email, googleId });
+            const result = await Auth.registerByGoogle({ email, googleId, registerByGoogleQuery });
             await new Email({ user: { email } }).sendWellcomeSocialRegistration();
             userId = result.insertId;
           }

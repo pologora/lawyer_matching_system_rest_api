@@ -16,16 +16,12 @@ import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { User } from '../users/users.model';
 import { LawyersProfile } from './lawyers.model';
 import { createLawyerService, updateLawyerService } from './lawyers.service';
-import { buildCreateTableRowQuery } from '../../utils/buildCreateTableRowQuery';
 import { buildGetManyLawyersQuery } from './helpers/biuldGetManyLawyersQuery';
-import { buildUpdateTableRowQuery } from '../../utils/buildUpdateTableRowQuery';
-import {
-  createLawyerSpecializationsQuery,
-  deleteLawyerQuery,
-  deleteLawyerSpecializationsQuery,
-  getLawyerByIdQuery,
-} from './sqlQueries';
+import { createLawyerSpecializationsQuery, deleteLawyerSpecializationsQuery, getLawyerByIdQuery } from './sqlQueries';
 import { updateUserRoleQuery } from '../users/sqlQueries';
+import { buildRemoveQuery } from '../../utils/buildDeleteQuery';
+import { buildUpdateQuery } from '../../utils/buildUpdateQuery';
+import { buildInsertQuery } from '../../utils/buildInsertQuery';
 
 export const lawyersRouter = express.Router();
 lawyersRouter.param('id', validateIdParameter);
@@ -33,14 +29,14 @@ lawyersRouter.param('id', validateIdParameter);
 const injectedCreateLawyerService = createLawyerService({
   LawyersProfile,
   User,
-  buildCreateTableRowQuery,
+  buildInsertQuery,
   createLawyerSpecializationsQuery,
   getLawyerByIdQuery,
   updateUserRoleQuery,
 });
 const injectedUpdateLawyerService = updateLawyerService({
   LawyersProfile,
-  buildUpdateTableRowQuery,
+  buildUpdateQuery,
   createLawyerSpecializationsQuery,
   deleteLawyerSpecializationsQuery,
   getLawyerByIdQuery,
@@ -52,7 +48,7 @@ const injectedGetManyLawyersController = getManyLawyersController({ LawyersProfi
 const injectedUpdateLawyerController = updateLawyerController({
   updateLawyerService: injectedUpdateLawyerService,
 });
-const injectedRemoveLawyerController = removeLawyerController({ LawyersProfile, query: deleteLawyerQuery });
+const injectedRemoveLawyerController = removeLawyerController({ LawyersProfile, buildRemoveQuery });
 
 lawyersRouter
   .route('/lawyers')
