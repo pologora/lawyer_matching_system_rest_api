@@ -1,18 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 
-import {
-  changeMyPasswordController,
-  deleteMeController,
-  forgotPasswordController,
-  getMeController,
-  loginController,
-  loginWithGoogleCallbackController,
-  logoutController,
-  registerController,
-  resetPasswordController,
-  verifyEmailcontroller,
-} from './auth.controller';
+import { loginWithGoogleCallbackController, logoutController } from './auth.controller';
 import { asyncErrorCatch } from '../../utils/errors/asyncErrorCatch';
 import { protect } from '../../middleware/protect';
 import {
@@ -23,11 +12,21 @@ import {
   userRegistrationSchema,
 } from './auth.validation';
 import { validateReqBody } from '../../middleware/validateReqBody';
+import {
+  injectedChangeMyPasswordController,
+  injectedDeleteMeController,
+  injectedForgotPasswordController,
+  injectedGetMeController,
+  injectedLoginController,
+  injectedRegisterController,
+  injectedResetPasswordController,
+  injectedVerifyEmailcontroller,
+} from './authInjectedFunctions';
 
 export const authRouter = Router();
 
-authRouter.post('/register', validateReqBody(userRegistrationSchema), asyncErrorCatch(registerController));
-authRouter.post('/login', validateReqBody(loginSchema), asyncErrorCatch(loginController));
+authRouter.post('/register', validateReqBody(userRegistrationSchema), asyncErrorCatch(injectedRegisterController));
+authRouter.post('/login', validateReqBody(loginSchema), asyncErrorCatch(injectedLoginController));
 
 authRouter.get(
   '/google',
@@ -46,14 +45,18 @@ authRouter.get(
 );
 
 authRouter.get('/logout', asyncErrorCatch(logoutController));
-authRouter.get('/me', protect, asyncErrorCatch(getMeController));
-authRouter.get('/email-verification/:token', asyncErrorCatch(verifyEmailcontroller));
-authRouter.post('/forgot-password', validateReqBody(forgotPasswordShema), asyncErrorCatch(forgotPasswordController));
-authRouter.patch('/reset-password/:token', asyncErrorCatch(resetPasswordController));
+authRouter.get('/me', protect, asyncErrorCatch(injectedGetMeController));
+authRouter.get('/email-verification/:token', asyncErrorCatch(injectedVerifyEmailcontroller));
+authRouter.post(
+  '/forgot-password',
+  validateReqBody(forgotPasswordShema),
+  asyncErrorCatch(injectedForgotPasswordController),
+);
+authRouter.patch('/reset-password/:token', asyncErrorCatch(injectedResetPasswordController));
 authRouter.patch(
   '/change-my-password',
   protect,
   validateReqBody(changeMyPasswordSchema),
-  asyncErrorCatch(changeMyPasswordController),
+  asyncErrorCatch(injectedChangeMyPasswordController),
 );
-authRouter.patch('/delete-me', protect, validateReqBody(deleteMeSchema), asyncErrorCatch(deleteMeController));
+authRouter.patch('/delete-me', protect, validateReqBody(deleteMeSchema), asyncErrorCatch(injectedDeleteMeController));

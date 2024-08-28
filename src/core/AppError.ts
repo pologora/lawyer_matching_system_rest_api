@@ -1,4 +1,4 @@
-import { HTTP_STATUS_CODES, StatusCodes } from '../utils/statusCodes';
+import { HTTP_STATUS_CODES, StatusCodes } from '../config/statusCodes';
 
 export class AppError extends Error {
   statusCode: StatusCodes;

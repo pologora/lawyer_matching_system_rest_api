@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Joi from 'joi';
 import { AppError } from '../core/AppError';
-import { HTTP_STATUS_CODES } from '../utils/statusCodes';
+import { HTTP_STATUS_CODES } from '../config/statusCodes';
 
 export const validateReqQuery = (schema: Joi.ObjectSchema) => {
   return (req: Request, _res: Response, next: NextFunction) => {

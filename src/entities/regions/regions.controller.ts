@@ -1,4 +1,4 @@
-import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
+import { HTTP_STATUS_CODES } from '../../config/statusCodes';
 import { GetAllRegionsController } from './types/regionsTypes';
 
 export const getAllRegionsController: GetAllRegionsController =

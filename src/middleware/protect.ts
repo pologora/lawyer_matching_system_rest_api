@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { AppError } from '../core/AppError';
-import { HTTP_STATUS_CODES } from '../utils/statusCodes';
+import { HTTP_STATUS_CODES } from '../config/statusCodes';
 import { asyncErrorCatch } from '../utils/errors/asyncErrorCatch';
 import { verifyJWT } from '../utils/jwt/verifyJWT';
 import { User } from '../entities/users/users.model';

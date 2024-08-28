@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { HTTP_STATUS_CODES, StatusCodes } from '../utils/statusCodes';
+import { HTTP_STATUS_CODES, StatusCodes } from '../config/statusCodes';
 import { AppError } from '../core/AppError';
 import { logger } from '../config/logger/logger';
 

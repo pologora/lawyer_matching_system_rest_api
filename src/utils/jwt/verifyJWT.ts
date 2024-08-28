@@ -14,7 +14,7 @@ export const verifyJWT = async (token: string): Promise<AuthPayload> => {
     let error: Error;
 
     try {
-      payload = verify({ token, secret });
+      payload = verify({ secret, token });
       resolve(payload);
     } catch (err) {
       error = err as Error;

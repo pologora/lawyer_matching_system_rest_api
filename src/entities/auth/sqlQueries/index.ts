@@ -1,5 +1,5 @@
 export * from './getUserByEmailQuery';
-export * from './loginQuery';
+export * from './loginUserQuery';
 export * from './registerByEmailQuery';
 export * from './setResetPasswordTokenQuery';
 export * from './clearResetPasswordQuery';

@@ -1,6 +1,6 @@
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import { AppError } from '../../core/AppError';
-import { HTTP_STATUS_CODES } from '../../utils/statusCodes';
+import { HTTP_STATUS_CODES } from '../../config/statusCodes';
 import {
   CreateLawyerProps,
   GetOneByUserIdProps,
