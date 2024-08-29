@@ -16,8 +16,8 @@ export const buildGetManyUsersQuery: BuildGetManyUsersQuery = (queryParams) => {
     values.push(role);
   }
 
-  if (isVerified) {
-    filters.push(`active = ?`);
+  if (isVerified != null) {
+    filters.push(`isVerified = ?`);
     values.push(isVerified);
   }
 
