@@ -1,3 +1,5 @@
+import { HTTP_STATUS_CODES } from '../../config/statusCodes';
+import { AppError } from '../../core/AppError';
 import {
   ChangeMyPasswordService,
   DeleteMeService,
@@ -46,7 +48,7 @@ export const registerService: RegisterService =
   };
 
 export const loginService: LoginService =
-  ({ AppError, Auth, comparePasswords, createJWT, loginUserQuery, HTTP_STATUS_CODES }) =>
+  ({ Auth, comparePasswords, createJWT, loginUserQuery }) =>
   async ({ email: inputEmail, password: candidatePassword }) => {
     // 1) check user with email exists and password is valid
     const user = await Auth.login({ email: inputEmail, loginUserQuery });
@@ -74,7 +76,6 @@ export const getMeService: GetMeService =
 
 export const forgotPasswordService: ForgotPasswordService =
   ({
-    AppError,
     Auth,
     Email,
     clearResetPasswordQuery,
@@ -83,7 +84,6 @@ export const forgotPasswordService: ForgotPasswordService =
     getUserByEmailQuery,
     setResetPasswordTokenQuery,
     tokenExpirationInMinutes,
-    HTTP_STATUS_CODES,
   }) =>
   async ({ req }) => {
     const { email } = req.body;
@@ -118,9 +118,7 @@ export const forgotPasswordService: ForgotPasswordService =
 
 export const resetPasswordService: ResetPasswordService =
   ({
-    AppError,
     Auth,
-    HTTP_STATUS_CODES,
     createHashedToken,
     createJWT,
     hashPassword,
@@ -154,7 +152,7 @@ export const resetPasswordService: ResetPasswordService =
   };
 
 export const changeMyPasswordService: ChangeMyPasswordService =
-  ({ Auth, AppError, comparePasswords, createJWT, hashPassword, HTTP_STATUS_CODES, updateUserPasswordQuery }) =>
+  ({ Auth, comparePasswords, createJWT, hashPassword, updateUserPasswordQuery }) =>
   async ({ password, newPassword, user }) => {
     const validPassword = await comparePasswords(password, user.password!);
     if (!validPassword) {
@@ -171,7 +169,7 @@ export const changeMyPasswordService: ChangeMyPasswordService =
   };
 
 export const deleteMeService: DeleteMeService =
-  ({ AppError, Auth, HTTP_STATUS_CODES, comparePasswords, deleteMeQuery }) =>
+  ({ Auth, comparePasswords, deleteMeQuery }) =>
   async ({ password, user }) => {
     const validPassword = await comparePasswords(password, user.password!);
     if (!validPassword) {
@@ -188,15 +186,7 @@ export const deleteMeService: DeleteMeService =
   };
 
 export const verifyEmailService: VerifyEmailService =
-  ({
-    AppError,
-    Auth,
-    HTTP_STATUS_CODES,
-    createHashedToken,
-    isTokenExpired,
-    getUserByEmailVerificationTokenQuery,
-    setUserVerifiedQuery,
-  }) =>
+  ({ Auth, createHashedToken, isTokenExpired, getUserByEmailVerificationTokenQuery, setUserVerifiedQuery }) =>
   async ({ token }) => {
     const hashedToken = createHashedToken(token);
 

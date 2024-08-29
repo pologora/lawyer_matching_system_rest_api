@@ -18,8 +18,6 @@ import {
   resetPasswordController,
   verifyEmailcontroller,
 } from '../auth.controller';
-import { HTTP_STATUS_CODES } from '../../../config/statusCodes';
-import { AppError } from '../../../core/AppError';
 import { Email } from '../../../core/email/Email';
 import { createHashedToken } from '../../../utils/hashedToken/createHashedToken';
 import { createRandomToken } from '../../../utils/hashedToken/createRandomToken';
@@ -59,9 +57,7 @@ const injectedRegisterService = registerService({
 });
 
 const injectedLoginService = loginService({
-  AppError,
   Auth,
-  HTTP_STATUS_CODES,
   comparePasswords,
   createJWT,
   loginUserQuery,
@@ -75,9 +71,7 @@ const injectedGetMeService = getMeService({
 });
 
 const injectedVerifyEmailService = verifyEmailService({
-  AppError,
   Auth,
-  HTTP_STATUS_CODES,
   createHashedToken,
   getUserByEmailVerificationTokenQuery,
   isTokenExpired,
@@ -85,10 +79,8 @@ const injectedVerifyEmailService = verifyEmailService({
 });
 
 const injectedForgotPasswordService = forgotPasswordService({
-  AppError,
   Auth,
   Email,
-  HTTP_STATUS_CODES,
   clearResetPasswordQuery,
   createHashedToken,
   createRandomToken,
@@ -98,9 +90,7 @@ const injectedForgotPasswordService = forgotPasswordService({
 });
 
 const injectedResetPasswordService = resetPasswordService({
-  AppError,
   Auth,
-  HTTP_STATUS_CODES,
   createHashedToken,
   createJWT,
   getUserByResetTokenQuery,
@@ -110,16 +100,14 @@ const injectedResetPasswordService = resetPasswordService({
 });
 
 const injectedChangeMyPasswordService = changeMyPasswordService({
-  AppError,
   Auth,
-  HTTP_STATUS_CODES,
   comparePasswords,
   createJWT,
   hashPassword,
   updateUserPasswordQuery,
 });
 
-const injectedDeleteMeService = deleteMeService({ AppError, Auth, HTTP_STATUS_CODES, comparePasswords, deleteMeQuery });
+const injectedDeleteMeService = deleteMeService({ Auth, comparePasswords, deleteMeQuery });
 
 export const injectedRegisterController = registerController({
   registerService: injectedRegisterService,
