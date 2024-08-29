@@ -31,7 +31,7 @@ describe('buildGetManyUsersQuery', () => {
 
     const { query, values } = buildGetManyUsersQuery(queryParams);
 
-    expect(query).toContain('WHERE role = ? AND active = ?');
+    expect(query).toContain('WHERE role = ? AND isVerified = ?');
     expect(values).toEqual(['admin', true, 25, 0]);
   });
 
@@ -53,7 +53,7 @@ describe('buildGetManyUsersQuery', () => {
 
     const { query } = buildGetManyUsersQuery(queryParams);
 
-    expect(query).toContain('SELECT userId,email');
+    expect(query.replace(/\s+/g, ' ').trim()).toContain('SELECT userId, email');
   });
 
   it('should handle sorting and pagination', () => {
