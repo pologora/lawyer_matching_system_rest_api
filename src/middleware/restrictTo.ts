@@ -11,7 +11,8 @@ export const restrictTo = (...allowedRoles: UserRole[]) =>
     const role = (user.role as UserRole) || 'user';
 
     if (!allowedRoles.includes(role)) {
-      throw new AppError('User does not have permissions', HTTP_STATUS_CODES.FORBIDDEN_403);
+      const error = new AppError('User does not have permissions', HTTP_STATUS_CODES.FORBIDDEN_403);
+      next(error);
     }
 
     next();
