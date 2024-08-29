@@ -65,7 +65,7 @@ export const buildGetManyCasesQuery: BuildGetManyCasesQuery = (queryParams) => {
   }
 
   const filterString = filters.length ? `WHERE ${filters.join(' AND ')}` : '';
-  const limitValue = limit ? limit : DEFAULT_LIMIT_QUERY_RESULTS;
+  const limitValue = limit ? Number(limit) : DEFAULT_LIMIT_QUERY_RESULTS;
   const offsetValue = page ? (page - 1) * limitValue : DEFAULT_OFFSET;
   const sortValue = sort ? `ORDER BY ${sort} ${order === 'desc' ? 'DESC' : 'ASC'}` : '';
 
