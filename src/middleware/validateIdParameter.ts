@@ -6,10 +6,6 @@ import { HTTP_STATUS_CODES } from '../config/statusCodes';
 export const validateIdParameter = (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
-  if (!id) {
-    next();
-  }
-
   const { error } = idValidationSchema.validate({ id });
 
   if (error) {
