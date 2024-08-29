@@ -9,8 +9,8 @@ type GetManyLawyersQueryParams = {
   page?: number;
   experienceMin?: number;
   experienceMax?: number;
-  cityId?: string;
-  regionId?: string;
+  cityId?: number;
+  regionId?: number;
   ratingMin?: number;
   ratingMax?: number;
   search?: string;

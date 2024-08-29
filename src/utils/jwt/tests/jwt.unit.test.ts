@@ -1,12 +1,12 @@
-import { decode } from './decode';
-import { sign } from './sign';
-import { verify } from './verify';
+import { decode } from '../decode';
+import { sign } from '../sign';
+import { verify } from '../verify';
 
 describe('decode token', () => {
   test('should decode the token payload', () => {
     const payload = { name: 'John' };
     const options = { expiresIn: 9 };
-    const token = sign({ payload, secret: 'secret', options });
+    const token = sign({ options, payload, secret: 'secret' });
 
     const decoded = decode({ token });
 
@@ -18,15 +18,15 @@ describe('sign token', () => {
   test('should produce different signatures for different payloads', () => {
     const secret = 'secret';
     const jwtOne = sign({
+      options: { expiresIn: 2 },
       payload: { name: 'John' },
       secret,
-      options: { expiresIn: 2 },
     });
 
     const jwtTwo = sign({
+      options: { expiresIn: 2 },
       payload: { name: 'Tim' },
       secret: secret,
-      options: { expiresIn: 2 },
     });
 
     expect(jwtOne.split('.')[2]).not.toBe(jwtTwo.split('.')[2]);
@@ -39,8 +39,8 @@ describe('verify token', () => {
     const secret = 'secret';
     const payload = { name: 'John' };
 
-    const token = sign({ payload, secret, options });
-    const verified = verify({ token, secret });
+    const token = sign({ options, payload, secret });
+    const verified = verify({ secret, token });
 
     expect(verified.name).toBe(payload.name);
   });
@@ -50,16 +50,16 @@ describe('verify token', () => {
     const secretTwo = 'different';
     const payload = { name: 'John' };
 
-    const token = sign({ payload, secret, options });
+    const token = sign({ options, payload, secret });
 
-    expect(() => verify({ token, secret: secretTwo })).toThrow();
+    expect(() => verify({ secret: secretTwo, token })).toThrow();
   });
   test('should throw if the token has expired', () => {
     const secret = 'secret';
     const payload = { name: 'John' };
 
-    const token = sign({ payload, secret, options: { expiresIn: -1 } });
+    const token = sign({ options: { expiresIn: -1 }, payload, secret });
 
-    expect(() => verify({ token, secret })).toThrow();
+    expect(() => verify({ secret, token })).toThrow();
   });
 });

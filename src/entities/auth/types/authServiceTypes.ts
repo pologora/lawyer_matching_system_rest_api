@@ -12,8 +12,6 @@ import { IUser, UserRole } from '../../../types/IUser';
 import { AuthModel } from './authModelTypes';
 import { Email } from '../../../core/email/Email';
 import { CreateJWT } from '../../../utils/jwt/types/JWTTypes';
-import { AppError } from '../../../core/AppError';
-import { HTTP_STATUS_CODES } from '../../../config/statusCodes';
 import { ClientProfileModel } from '../../clients/types/clientTypes';
 import { LawyersProfileModel } from '../../lawyers/types/lawyersTypes';
 
@@ -71,19 +69,15 @@ type LoginServiceProps = {
   Auth: AuthModel;
   comparePasswords: ComparePasswords;
   createJWT: CreateJWT;
-  AppError: typeof AppError;
   loginUserQuery: string;
-  HTTP_STATUS_CODES: typeof HTTP_STATUS_CODES;
 };
 
 type ForgotPasswordServiceProps = {
   Auth: AuthModel;
-  AppError: typeof AppError;
   Email: typeof Email;
   createRandomToken: CreateRandomToken;
   createHashedToken: CreateHashedToken;
   tokenExpirationInMinutes: number;
-  HTTP_STATUS_CODES: typeof HTTP_STATUS_CODES;
   getUserByEmailQuery: string;
   setResetPasswordTokenQuery: string;
   clearResetPasswordQuery: string;
@@ -102,36 +96,28 @@ type ResetPasswordServiceProps = {
   createJWT: CreateJWT;
   isTokenExpired: IsTokenExpired;
   hashPassword: HashPassword;
-  AppError: typeof AppError;
-  HTTP_STATUS_CODES: typeof HTTP_STATUS_CODES;
   getUserByResetTokenQuery: string;
   updateUserPasswordQuery: string;
 };
 
 type ChangeMyPasswordServiceProps = {
   Auth: AuthModel;
-  AppError: typeof AppError;
   comparePasswords: ComparePasswords;
   hashPassword: HashPassword;
   createJWT: CreateJWT;
-  HTTP_STATUS_CODES: typeof HTTP_STATUS_CODES;
   updateUserPasswordQuery: string;
 };
 
 type DeleteMeServiceProps = {
   Auth: AuthModel;
   comparePasswords: ComparePasswords;
-  HTTP_STATUS_CODES: typeof HTTP_STATUS_CODES;
-  AppError: typeof AppError;
   deleteMeQuery: string;
 };
 
 type VerifyEmailServiceProps = {
   Auth: AuthModel;
-  AppError: typeof AppError;
   createHashedToken: CreateHashedToken;
   isTokenExpired: IsTokenExpired;
-  HTTP_STATUS_CODES: typeof HTTP_STATUS_CODES;
   getUserByEmailVerificationTokenQuery: string;
   setUserVerifiedQuery: string;
 };

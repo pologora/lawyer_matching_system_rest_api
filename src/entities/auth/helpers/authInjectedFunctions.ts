@@ -7,7 +7,7 @@ import {
   registerService,
   resetPasswordService,
   verifyEmailService,
-} from './auth.service';
+} from '../auth.service';
 import {
   changeMyPasswordController,
   deleteMeController,
@@ -17,23 +17,21 @@ import {
   registerController,
   resetPasswordController,
   verifyEmailcontroller,
-} from './auth.controller';
-import { HTTP_STATUS_CODES } from '../../config/statusCodes';
-import { AppError } from '../../core/AppError';
-import { Email } from '../../core/email/Email';
-import { createHashedToken } from '../../utils/hashedToken/createHashedToken';
-import { createRandomToken } from '../../utils/hashedToken/createRandomToken';
-import { isTokenExpired } from '../../utils/isTokenExpired';
-import { createJWT } from '../../utils/jwt/createJWT';
-import { comparePasswords } from '../../utils/passwordManagement/comparePasswords';
-import { hashPassword } from '../../utils/passwordManagement/hashPassword';
-import { ClientProfile } from '../clients/clients.model';
-import { getOneClientByUserIdQuery } from '../clients/slqQueries';
-import { LawyersProfile } from '../lawyers/lawyers.model';
-import { getLawyerByUserIdQuery } from '../lawyers/sqlQueries';
-import { Auth } from './auth.model';
-import { calculateEmailVerificationExpiraton } from './helpers/calculateEmailVerificationExpirationDate';
-import { setTokenCookieAndSendResponse } from './helpers/setTokenCookieAndSendResponse';
+} from '../auth.controller';
+import { Email } from '../../../core/email/Email';
+import { createHashedToken } from '../../../utils/hashedToken/createHashedToken';
+import { createRandomToken } from '../../../utils/hashedToken/createRandomToken';
+import { isTokenExpired } from '../../../utils/isTokenExpired';
+import { createJWT } from '../../../utils/jwt/createJWT';
+import { comparePasswords } from '../../../utils/passwordManagement/comparePasswords';
+import { hashPassword } from '../../../utils/passwordManagement/hashPassword';
+import { ClientProfile } from '../../clients/clients.model';
+import { getOneClientByUserIdQuery } from '../../clients/slqQueries';
+import { LawyersProfile } from '../../lawyers/lawyers.model';
+import { getLawyerByUserIdQuery } from '../../lawyers/sqlQueries';
+import { Auth } from '../auth.model';
+import { calculateEmailVerificationExpiraton } from './calculateEmailVerificationExpirationDate';
+import { setTokenCookieAndSendResponse } from './setTokenCookieAndSendResponse';
 import {
   clearResetPasswordQuery,
   deleteMeQuery,
@@ -45,7 +43,7 @@ import {
   setResetPasswordTokenQuery,
   setUserVerifiedQuery,
   updateUserPasswordQuery,
-} from './sqlQueries';
+} from '../sqlQueries';
 
 const injectedRegisterService = registerService({
   Auth,
@@ -59,9 +57,7 @@ const injectedRegisterService = registerService({
 });
 
 const injectedLoginService = loginService({
-  AppError,
   Auth,
-  HTTP_STATUS_CODES,
   comparePasswords,
   createJWT,
   loginUserQuery,
@@ -75,9 +71,7 @@ const injectedGetMeService = getMeService({
 });
 
 const injectedVerifyEmailService = verifyEmailService({
-  AppError,
   Auth,
-  HTTP_STATUS_CODES,
   createHashedToken,
   getUserByEmailVerificationTokenQuery,
   isTokenExpired,
@@ -85,10 +79,8 @@ const injectedVerifyEmailService = verifyEmailService({
 });
 
 const injectedForgotPasswordService = forgotPasswordService({
-  AppError,
   Auth,
   Email,
-  HTTP_STATUS_CODES,
   clearResetPasswordQuery,
   createHashedToken,
   createRandomToken,
@@ -98,9 +90,7 @@ const injectedForgotPasswordService = forgotPasswordService({
 });
 
 const injectedResetPasswordService = resetPasswordService({
-  AppError,
   Auth,
-  HTTP_STATUS_CODES,
   createHashedToken,
   createJWT,
   getUserByResetTokenQuery,
@@ -110,16 +100,14 @@ const injectedResetPasswordService = resetPasswordService({
 });
 
 const injectedChangeMyPasswordService = changeMyPasswordService({
-  AppError,
   Auth,
-  HTTP_STATUS_CODES,
   comparePasswords,
   createJWT,
   hashPassword,
   updateUserPasswordQuery,
 });
 
-const injectedDeleteMeService = deleteMeService({ AppError, Auth, HTTP_STATUS_CODES, comparePasswords, deleteMeQuery });
+const injectedDeleteMeService = deleteMeService({ Auth, comparePasswords, deleteMeQuery });
 
 export const injectedRegisterController = registerController({
   registerService: injectedRegisterService,
