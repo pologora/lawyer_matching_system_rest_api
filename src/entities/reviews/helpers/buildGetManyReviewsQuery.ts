@@ -73,6 +73,6 @@ export const buildGetManyReviewsQuery: BuildGetManyReviewsQuery = (queryParams) 
   OFFSET ?
   ;`;
 
-  values.push(sortValue, limit, offsetValue);
+  values.push(sortValue, Number(limit), offsetValue);
   return { query, values };
 };
