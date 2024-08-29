@@ -27,7 +27,7 @@ export type BuildGetManyReviewsQuery = (queryString: GetManyReveiwsQueryParams) 
   values: (string | number | Date)[];
 };
 
-type CreateReviewDto = {
+export type CreateReviewDto = {
   clientId: number;
   lawyerId: number;
   reviewText: string;
