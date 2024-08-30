@@ -9,12 +9,15 @@ import { LawyerModel } from '../lawyers/types/lawyersTypes';
 type ReviewControllerContructorProps = {
   createReviewService: CreateReviewService;
   Lawyer: LawyerModel;
+  updateRatingQuery: string;
 };
 
 export class ReviewController extends BaseController {
-  createReviewService: CreateReviewService;
-  Lawyer: LawyerModel;
-  constructor({ createReviewService, Lawyer }: ReviewControllerContructorProps) {
+  createReviewService;
+  Lawyer;
+  updateRatingQuery;
+
+  constructor({ createReviewService, Lawyer, updateRatingQuery }: ReviewControllerContructorProps) {
     super({
       buildGetManyQuery: buildGetManyReviewsQuery,
       getOneQuery: getReviewQuery,
@@ -23,6 +26,7 @@ export class ReviewController extends BaseController {
     });
 
     this.createReviewService = createReviewService;
+    this.updateRatingQuery = updateRatingQuery;
     this.Lawyer = Lawyer;
   }
 
@@ -33,6 +37,7 @@ export class ReviewController extends BaseController {
       buildInsertQuery: this.buildInsertQuery,
       data: req.body,
       getReviewQuery,
+      updateRatingQuery: this.updateRatingQuery,
     });
 
     return res.status(this.HTTP_STATUS_CODES.CREATED_201).json({
