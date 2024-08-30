@@ -52,7 +52,7 @@ export type UpdateLawyerSpecializationsProps = {
   createLawyerSpecializationsQuery: string;
 };
 
-export interface LawyerProfileModel extends CRUDModel {
+export interface LawyerModel extends CRUDModel {
   create(props: CreateLawyerProps): Promise<number>;
   getOneByUserId(props: GetOneByUserIdProps): Promise<RowDataPacket>;
   updateRating(props: UpdateRatingProps): Promise<ResultSetHeader>;
@@ -73,7 +73,7 @@ type UpdateLawyerDto = {
 };
 
 type UpdateLawyerServiceProps = {
-  LawyersProfile: LawyerProfileModel;
+  LawyersProfile: LawyerModel;
   getLawyerByIdQuery: string;
   deleteLawyerSpecializationsQuery: string;
   createLawyerSpecializationsQuery: string;
@@ -97,7 +97,7 @@ type CreateLawyerDto = {
 };
 
 export type CreateLawyerServiceProps = {
-  LawyersProfile: LawyerProfileModel;
+  LawyersProfile: LawyerModel;
   User: UserModel;
   getLawyerByIdQuery: string;
   createLawyerSpecializationsQuery: string;

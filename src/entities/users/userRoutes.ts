@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { Router } from 'express';
 
 import { asyncErrorCatch } from '../../utils/errors/asyncErrorCatch';
 import { uploadPhoto } from '../../middleware/uploadPhoto';
@@ -11,19 +11,21 @@ import { restrictTo } from '../../middleware/restrictTo';
 import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { hashPassword } from '../../utils/passwordManagement/hashPassword';
 import { UserController } from './UserController';
+import { createControllerHandler } from '../../utils/createControllerHandler';
 
 export const usersRouter = Router();
 
 usersRouter.param('id', validateIdParameter);
-
 const userController = new UserController({ hashPassword });
-const createOneHandler = (req: Request, res: Response, next: NextFunction) => userController.create(req, res, next);
-const getOneHandler = (req: Request, res: Response, next: NextFunction) => userController.getOne(req, res, next);
-const getManyHandler = (req: Request, res: Response, next: NextFunction) => userController.getMany(req, res, next);
-const updateHandler = (req: Request, res: Response, next: NextFunction) => userController.update(req, res, next);
-const removeHandler = (req: Request, res: Response, next: NextFunction) => userController.remove(req, res, next);
-const uploadPhotoHandler = (req: Request, res: Response, next: NextFunction) =>
-  userController.uploadPhoto(req, res, next);
+
+const createUserHandler = createControllerHandler({ controller: userController });
+
+const createOneHandler = createUserHandler({ method: 'create' });
+const getOneHandler = createUserHandler({ method: 'getOne' });
+const getManyHandler = createUserHandler({ method: 'getMany' });
+const updateHandler = createUserHandler({ method: 'update' });
+const removeHandler = createUserHandler({ method: 'remove' });
+const uploadPhotoHandler = createUserHandler({ method: 'uploadPhoto' });
 
 usersRouter
   .route('/users')

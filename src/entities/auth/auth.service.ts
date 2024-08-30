@@ -65,7 +65,7 @@ export const loginService: LoginService =
   };
 
 export const getMeService: GetMeService =
-  ({ ClientProfile, LawyerProfile, getOneClientByUserIdQuery, getLawyerByUserIdQuery }) =>
+  ({ Client: ClientProfile, Lawyer: LawyerProfile, getOneClientByUserIdQuery, getLawyerByUserIdQuery }) =>
   async ({ role, userId }) => {
     return role === 'client'
       ? await ClientProfile.getOneByUserId({ query: getOneClientByUserIdQuery, userId })

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { BaseController } from '../../core/BaseController';
 import { buildGetManyLawyersQuery } from './helpers/biuldGetManyLawyersQuery';
-import { LawyerProfile } from './LawyerProfile';
+import { Lawyer } from './Lawyer';
 import { getLawyerByIdQuery } from './sqlQueries';
-import { CreateLawyerService, LawyerProfileModel, UpdateLawyerService } from './types/lawyersTypes';
+import { CreateLawyerService, LawyerModel, UpdateLawyerService } from './types/lawyersTypes';
 import { UserModel } from '../users/types/userTypes';
 
 type LawyerControllerConstructorProps = {
@@ -34,7 +34,7 @@ export class LawyerController extends BaseController {
     super({
       buildGetManyQuery: buildGetManyLawyersQuery,
       getOneQuery: getLawyerByIdQuery,
-      model: LawyerProfile,
+      model: Lawyer,
       tableName: 'LawyerProfile',
     });
 
@@ -48,7 +48,7 @@ export class LawyerController extends BaseController {
 
   async create(req: Request, res: Response, _next: NextFunction) {
     const lawyer = await this.createLawyerService({
-      LawyersProfile: this.model as LawyerProfileModel,
+      LawyersProfile: this.model as LawyerModel,
       User: this.User,
       buildInsertQuery: this.buildInsertQuery,
       createLawyerSpecializationsQuery: this.createLawyerSpecializationsQuery,
@@ -66,7 +66,7 @@ export class LawyerController extends BaseController {
 
   async update(req: Request, res: Response, _next: NextFunction) {
     const updatedLawyer = await this.updateLawyerService({
-      LawyersProfile: this.model as LawyerProfileModel,
+      LawyersProfile: this.model as LawyerModel,
       buildUpdateQuery: this.buildUpdateQuery,
       createLawyerSpecializationsQuery: this.createLawyerSpecializationsQuery,
       data: req.body,

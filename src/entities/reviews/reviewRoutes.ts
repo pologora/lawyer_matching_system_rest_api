@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 
 import { asyncErrorCatch } from '../../utils/errors/asyncErrorCatch';
 import { createReviewSchema, getManyReviewsSchema, updateReviewSchema } from './reviewValidation';
@@ -8,15 +8,15 @@ import { protect } from '../../middleware/protect';
 import { restrictTo } from '../../middleware/restrictTo';
 import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { createReviewService } from './reviewService';
-import { LawyerProfile } from '../lawyers/LawyerProfile';
+import { Lawyer } from '../lawyers/Lawyer';
 import { ReviewController } from './ReviewController';
 import { createControllerHandler } from '../../utils/createControllerHandler';
 
-export const reviewsRouter = express.Router();
+export const reviewsRouter = Router();
 
 reviewsRouter.param('id', validateIdParameter);
 
-const reviewController = new ReviewController({ LawyerProfile, createReviewService });
+const reviewController = new ReviewController({ Lawyer, createReviewService });
 
 const createReviewHandler = createControllerHandler({ controller: reviewController });
 

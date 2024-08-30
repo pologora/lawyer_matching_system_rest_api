@@ -4,7 +4,7 @@
 import { RowDataPacket } from 'mysql2';
 import { BuildInsertQuery } from '../../../types/utils';
 import { updateRatingQuery } from '../../lawyers/sqlQueries';
-import { LawyerProfileModel } from '../../lawyers/types/lawyersTypes';
+import { LawyerModel } from '../../lawyers/types/lawyersTypes';
 import { createReviewService } from '../reviewService';
 import { getReviewQuery } from '../sqlQueries';
 import { CreateReviewDto, ReviewModel } from '../types/reviewsTypes';
@@ -18,7 +18,7 @@ const data = {
 describe('createReviewService', () => {
   let buildCreateTableRowQueryMock: jest.MockedFunction<BuildInsertQuery>;
   let ReviewMock: jest.Mocked<ReviewModel>;
-  let LawyersProfileMock: jest.Mocked<LawyerProfileModel>;
+  let LawyersProfileMock: jest.Mocked<LawyerModel>;
 
   beforeEach(() => {
     buildCreateTableRowQueryMock = jest.fn();
@@ -28,7 +28,7 @@ describe('createReviewService', () => {
     } as unknown as jest.Mocked<ReviewModel>;
     LawyersProfileMock = {
       updateRating: jest.fn(),
-    } as unknown as jest.Mocked<LawyerProfileModel>;
+    } as unknown as jest.Mocked<LawyerModel>;
 
     jest.clearAllMocks();
   });

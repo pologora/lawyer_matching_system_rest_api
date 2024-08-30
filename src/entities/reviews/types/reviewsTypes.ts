@@ -1,6 +1,6 @@
 import { RowDataPacket } from 'mysql2';
 import { BuildInsertQuery } from '../../../types/utils';
-import { LawyerProfileModel } from '../../lawyers/types/lawyersTypes';
+import { LawyerModel } from '../../lawyers/types/lawyersTypes';
 import { CRUDModel } from '../../../core/types/CRUDModelTypes';
 
 export interface ReviewModel extends CRUDModel {}
@@ -35,7 +35,7 @@ export type CreateReviewDto = {
 
 type CreateReviewServiceProps = {
   Review: ReviewModel;
-  LawyersProfile: LawyerProfileModel;
+  Lawyer: LawyerModel;
   getReviewQuery: string;
   buildInsertQuery: BuildInsertQuery;
   data: CreateReviewDto;

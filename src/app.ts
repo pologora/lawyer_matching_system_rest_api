@@ -16,7 +16,7 @@ import { authRouter } from './entities/auth/auth.routes';
 import { limiter } from './config/rateLimit/rateLimit';
 import { logger } from './config/logger/logger';
 import { lawyersRouter } from './entities/lawyers/lawyerRoutes';
-import { clientsRouter } from './entities/clients/clients.route';
+import { clientsRouter } from './entities/clients/clientRoute';
 import { casesRouter } from './entities/cases/cases.route';
 import { messagesRoute } from './entities/messages/messageRoutes';
 import { reviewsRouter } from './entities/reviews/reviewRoutes';

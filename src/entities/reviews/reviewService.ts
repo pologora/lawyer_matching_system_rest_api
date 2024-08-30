@@ -4,7 +4,7 @@ import { CreateReviewService } from './types/reviewsTypes';
 export const createReviewService: CreateReviewService = async ({
   buildInsertQuery,
   Review,
-  LawyersProfile,
+  Lawyer,
   getReviewQuery,
   data,
 }) => {
@@ -12,7 +12,7 @@ export const createReviewService: CreateReviewService = async ({
 
   const caseId = await Review.create({ query, values });
 
-  await LawyersProfile.updateRating({ id: data.lawyerId, updateRatingQuery });
+  await Lawyer.updateRating({ id: data.lawyerId, updateRatingQuery });
 
   return await Review.getOne({ id: caseId!, query: getReviewQuery });
 };

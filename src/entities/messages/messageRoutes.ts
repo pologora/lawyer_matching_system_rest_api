@@ -1,4 +1,4 @@
-import express from 'express';
+import { Router } from 'express';
 
 import { asyncErrorCatch } from '../../utils/errors/asyncErrorCatch';
 import { createMessageSchema, getManyMessagesSchema, updateMessageSchema } from './messageValidation';
@@ -10,7 +10,7 @@ import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { MessageController } from './MessageController';
 import { createControllerHandler } from '../../utils/createControllerHandler';
 
-export const messagesRoute = express.Router();
+export const messagesRoute = Router();
 
 messagesRoute.param('id', validateIdParameter);
 

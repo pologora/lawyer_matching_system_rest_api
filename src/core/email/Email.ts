@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 import pug from 'pug';
 import { convert } from 'html-to-text';
-import { EmailProps, SendProps } from '../types/EmailTypes';
+import { EmailProps, SendProps } from '../types/Email';
 
 export class Email {
   to: string;

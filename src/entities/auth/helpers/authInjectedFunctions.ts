@@ -25,9 +25,9 @@ import { isTokenExpired } from '../../../utils/isTokenExpired';
 import { createJWT } from '../../../utils/jwt/createJWT';
 import { comparePasswords } from '../../../utils/passwordManagement/comparePasswords';
 import { hashPassword } from '../../../utils/passwordManagement/hashPassword';
-import { ClientProfile } from '../../clients/clients.model';
+import { Client } from '../../clients/Client';
 import { getOneClientByUserIdQuery } from '../../clients/slqQueries';
-import { LawyerProfile } from '../../lawyers/LawyerProfile';
+import { Lawyer } from '../../lawyers/Lawyer';
 import { getLawyerByUserIdQuery } from '../../lawyers/sqlQueries';
 import { Auth } from '../auth.model';
 import { calculateEmailVerificationExpiraton } from './calculateEmailVerificationExpirationDate';
@@ -64,8 +64,8 @@ const injectedLoginService = loginService({
 });
 
 const injectedGetMeService = getMeService({
-  ClientProfile,
-  LawyerProfile,
+  Client,
+  Lawyer,
   getLawyerByUserIdQuery,
   getOneClientByUserIdQuery,
 });
