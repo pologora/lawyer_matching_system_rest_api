@@ -105,16 +105,3 @@ describe('UserController', () => {
     });
   });
 });
-// if (!req.file) {
-//     throw new this.AppError('No file uploaded. Please upload an image file', this.HTTP_STATUS_CODES.BAD_REQUEST_400);
-//   }
-
-//   const id = Number(req.params.id);
-//   const { query, values } = this.buildUpdateQuery({ profileImageFileName: req.file.filename }, 'User');
-
-//   await this.model.update({ id, query, values });
-
-//   return res.status(this.HTTP_STATUS_CODES.SUCCESS_200).json({
-//     message: 'User image uploaded successfully',
-//     status: 'success',
-//   });
