@@ -19,7 +19,7 @@ import { lawyersRouter } from './entities/lawyers/lawyers.route';
 import { clientsRouter } from './entities/clients/clients.route';
 import { casesRouter } from './entities/cases/cases.route';
 import { messagesRoute } from './entities/messages/messages.route';
-import { reviewsRouter } from './entities/reviews/reviews.route';
+import { reviewsRouter } from './entities/reviews/reviewRoutes';
 import { regionsRouter } from './entities/regions/regions.routes';
 import { citiesRouter } from './entities/cities/cities.routes';
 import passport from './middleware/passport';

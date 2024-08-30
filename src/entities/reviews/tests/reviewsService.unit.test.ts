@@ -5,7 +5,7 @@ import { RowDataPacket } from 'mysql2';
 import { BuildInsertQuery } from '../../../types/utils';
 import { updateRatingQuery } from '../../lawyers/sqlQueries';
 import { LawyersProfileModel } from '../../lawyers/types/lawyersTypes';
-import { createReviewService } from '../reviews.service';
+import { createReviewService } from '../reviewService';
 import { getReviewQuery } from '../sqlQueries';
 import { CreateReviewDto, ReviewModel } from '../types/reviewsTypes';
 
