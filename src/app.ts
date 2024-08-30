@@ -21,7 +21,7 @@ import { casesRouter } from './entities/cases/cases.route';
 import { messagesRoute } from './entities/messages/messageRoutes';
 import { reviewsRouter } from './entities/reviews/reviewRoutes';
 import { regionsRouter } from './entities/regions/regionRoutes';
-import { citiesRouter } from './entities/cities/cities.routes';
+import { citiesRouter } from './entities/cities/cityRoutes';
 import passport from './middleware/passport';
 import path from 'node:path/posix';
 
