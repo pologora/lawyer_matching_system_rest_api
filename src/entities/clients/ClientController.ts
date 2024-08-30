@@ -1,15 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 import { BaseController } from '../../core/BaseController';
-import { Client } from './Client';
-import { getOneClientQuery } from './slqQueries';
-import { ClientModel, CreateClientService } from './types/clientTypes';
+import { BuildGetManyClientsQuery, ClientModel, CreateClientService } from './types/clientTypes';
 import { UserModel } from '../users/types/userTypes';
-import { buildGetManyClientsQuery } from './helpers/buildGetManyClientsQuery';
 
 type ClientControllerConstructorProps = {
   createClientService: CreateClientService;
   updateUserRoleQuery: string;
   User: UserModel;
+  buildGetManyClientsQuery: BuildGetManyClientsQuery;
+  getOneClientQuery: string;
+  Client: ClientModel;
 };
 
 export class ClientController extends BaseController {
@@ -17,7 +17,14 @@ export class ClientController extends BaseController {
   User;
   updateUserRoleQuery;
 
-  constructor({ createClientService, updateUserRoleQuery, User }: ClientControllerConstructorProps) {
+  constructor({
+    createClientService,
+    updateUserRoleQuery,
+    User,
+    buildGetManyClientsQuery,
+    getOneClientQuery,
+    Client,
+  }: ClientControllerConstructorProps) {
     super({
       buildGetManyQuery: buildGetManyClientsQuery,
       getOneQuery: getOneClientQuery,
@@ -36,7 +43,7 @@ export class ClientController extends BaseController {
       User: this.User,
       buildInsertQuery: this.buildInsertQuery,
       data: req.body,
-      getOneClientQuery,
+      getOneClientQuery: this.getOneQuery,
       updateUserRoleQuery: this.updateUserRoleQuery,
     });
 
@@ -47,27 +54,3 @@ export class ClientController extends BaseController {
     });
   }
 }
-
-// export const createClientController: CreateClientController =
-//   ({ createClientService }) =>
-//   async (req, res, _next) => {
-//     const client = await createClientService({ data: req.body });
-
-//     return res.status(HTTP_STATUS_CODES.CREATED_201).json({
-//       status: 'success',
-//       message: 'Successfully created client profile',
-//       data: client,
-//     });
-//   };
-
-// export const getManyClientsController: GetManyClientsController =
-//   ({ ClientProfile, query }) =>
-//   async (_req, res, _next) => {
-//     const clients = await ClientProfile.getMany({ query });
-
-//     return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-//       status: 'success',
-//       message: 'Client profiles retrieved successfully',
-//       data: clients,
-//     });
-//   };

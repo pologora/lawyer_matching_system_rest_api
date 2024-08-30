@@ -11,12 +11,22 @@ import { createClientService } from './clientService';
 import { updateUserRoleQuery } from '../users/sqlQueries';
 import { ClientController } from './ClientController';
 import { createControllerHandler } from '../../utils/createControllerHandler';
+import { buildGetManyClientsQuery } from './helpers/buildGetManyClientsQuery';
+import { Client } from './Client';
+import { getOneClientQuery } from './slqQueries';
 
 export const clientsRouter = Router();
 
 clientsRouter.param('id', validateIdParameter);
 
-const clientController = new ClientController({ User, createClientService, updateUserRoleQuery });
+const clientController = new ClientController({
+  Client,
+  User,
+  buildGetManyClientsQuery,
+  createClientService,
+  getOneClientQuery,
+  updateUserRoleQuery,
+});
 
 const createClientHandler = createControllerHandler({ controller: clientController });
 
