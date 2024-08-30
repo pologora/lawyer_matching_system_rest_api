@@ -12,7 +12,7 @@ import { validateReqBody } from '../../middleware/validateReqBody';
 import { protect } from '../../middleware/protect';
 import { restrictTo } from '../../middleware/restrictTo';
 import { validateIdParameter } from '../../middleware/validateIdParameter';
-import { User } from '../users/users.model';
+import { User } from '../users/User';
 import { ClientProfile } from './clients.model';
 import { buildInsertQuery } from '../../utils/buildInsertQuery';
 import { buildUpdateQuery } from '../../utils/buildUpdateQuery';

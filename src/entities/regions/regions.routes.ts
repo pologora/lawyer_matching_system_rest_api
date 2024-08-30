@@ -1,7 +1,7 @@
 import express from 'express';
 import { asyncErrorCatch } from '../../utils/errors/asyncErrorCatch';
 import { getAllRegionsController } from './regions.controller';
-import { Region } from './regions.model';
+import { Region } from './Regions';
 import { getAllRegionsQuery } from './sqlQueries';
 
 export const regionsRouter = express.Router();

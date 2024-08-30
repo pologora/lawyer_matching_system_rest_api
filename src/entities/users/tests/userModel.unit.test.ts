@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { AppError } from '../../../core/AppError';
-import { User } from '../users.model';
+import { User } from '../User';
 
 describe('User model methods', () => {
   const queryMock = jest.fn();

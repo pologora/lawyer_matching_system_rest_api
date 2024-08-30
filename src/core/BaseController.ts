@@ -6,12 +6,14 @@ import { NextFunction, Response, Request } from 'express';
 import { buildRemoveQuery as defaultBuildRemoveQuery } from '../utils/buildDeleteQuery';
 import { buildInsertQuery as defaultBuildInsertQuery } from '../utils/buildInsertQuery';
 import { buildUpdateQuery as defaultBuildUpdateQuery } from '../utils/buildUpdateQuery';
+import { AppError as DefaultAppError } from './AppError';
 
 export interface BaseControllerModel {}
 
-export type BaseControllerProps = {
+export type BaseControllerConstructorProps = {
   model: CRUDModel;
   HTTP_STATUS_CODES?: StatusCodes;
+  AppError?: typeof DefaultAppError;
   buildRemoveQuery?: BuildRemoveQuery;
   buildInsertQuery?: BuildInsertQuery;
   buildUpdateQuery?: BuildUpdateQuery;
@@ -26,6 +28,7 @@ export class BaseController {
   buildRemoveQuery: BuildRemoveQuery;
   buildInsertQuery: BuildInsertQuery;
   buildUpdateQuery: BuildUpdateQuery;
+  AppError: typeof DefaultAppError;
   buildGetManyQuery: (queryParams: object) => { query: string; values: (string | number | boolean | Date)[] };
   getOneQuery: string;
   HTTP_STATUS_CODES: StatusCodes;
@@ -33,12 +36,14 @@ export class BaseController {
     model,
     tableName,
     HTTP_STATUS_CODES = defaultStatusCodes,
+    AppError = DefaultAppError,
     buildRemoveQuery = defaultBuildRemoveQuery,
     buildInsertQuery = defaultBuildInsertQuery,
     buildUpdateQuery = defaultBuildUpdateQuery,
     buildGetManyQuery,
     getOneQuery,
-  }: BaseControllerProps) {
+  }: BaseControllerConstructorProps) {
+    this.AppError = AppError;
     this.model = model;
     this.tableName = tableName;
     this.buildRemoveQuery = buildRemoveQuery;

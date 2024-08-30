@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys */
-import { Region } from '../regions.model';
+import { Region } from '../Regions';
 import { Pool } from 'mysql2/promise';
 
 describe('Regions route', () => {

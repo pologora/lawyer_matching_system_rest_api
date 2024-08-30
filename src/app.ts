@@ -8,7 +8,7 @@ import { ENV_FILES_MAP } from './config/constants';
 const envFile = ENV_FILES_MAP.get(process.env.NODE_ENV!);
 dotenv.config({ path: envFile });
 
-import { usersRouter } from './entities/users/users.routes';
+import { usersRouter } from './entities/users/userRoutes';
 import { globalErrorHandler } from './middleware/globalErrorHandler';
 import { AppError } from './core/AppError';
 import { HTTP_STATUS_CODES } from './config/statusCodes';

@@ -13,7 +13,7 @@ import { validateReqQuery } from '../../middleware/validateReqQuery';
 import { protect } from '../../middleware/protect';
 import { restrictTo } from '../../middleware/restrictTo';
 import { validateIdParameter } from '../../middleware/validateIdParameter';
-import { User } from '../users/users.model';
+import { User } from '../users/User';
 import { LawyersProfile } from './lawyers.model';
 import { createLawyerService, updateLawyerService } from './lawyers.service';
 import { buildGetManyLawyersQuery } from './helpers/biuldGetManyLawyersQuery';

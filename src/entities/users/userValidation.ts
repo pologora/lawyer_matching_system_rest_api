@@ -57,8 +57,8 @@ export const getManyUsersSchema = Joi.object({
 });
 
 export const userUpdateSchema = Joi.object({
-  active: Joi.boolean().messages({
-    'any.active': 'Active must be boolean.',
+  isVerified: Joi.boolean().messages({
+    'any.isVerified': 'isVerified must be boolean.',
   }),
   role: Joi.string().valid('admin', 'client', 'lawyer').messages({
     'any.only': 'Role must be one of the following values: admin, client, lawyer, user.',
