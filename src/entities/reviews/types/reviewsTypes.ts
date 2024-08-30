@@ -8,7 +8,7 @@ export interface ReviewModel extends CRUDModel {}
 
 export type ReviewSort = 'rating' | 'createdAt';
 
-type GetManyReveiwsQueryStringDto = {
+export type GetManyReveiwsQueryParams = {
   sortBy?: ReviewSort;
   sortOrder?: 'desc' | 'asc';
   clientId?: number;
@@ -17,17 +17,17 @@ type GetManyReveiwsQueryStringDto = {
   ratingMax?: number;
   limit?: number;
   page?: number;
-  startDate?: Date;
-  endDate?: Date;
+  startDate?: string;
+  endDate?: string;
   search?: string;
 };
 
-export type BuildGetManyReviewsQuery = (queryString: GetManyReveiwsQueryStringDto) => {
+export type BuildGetManyReviewsQuery = (queryString: GetManyReveiwsQueryParams) => {
   query: string;
   values: (string | number | Date)[];
 };
 
-type CreateReviewDto = {
+export type CreateReviewDto = {
   clientId: number;
   lawyerId: number;
   reviewText: string;
