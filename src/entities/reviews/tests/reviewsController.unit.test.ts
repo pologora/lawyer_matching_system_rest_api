@@ -7,7 +7,7 @@ import {
   getReviewController,
   removeReviewController,
   updateReviewController,
-} from '../reviews.controller';
+} from '../ReviewController';
 import { Request, Response, NextFunction } from 'express';
 import { ReviewModel } from '../types/reviewsTypes';
 

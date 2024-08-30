@@ -1,14 +1,14 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable sort-keys */
 import { Request, Response, NextFunction } from 'express';
-import { User } from '../users.model';
+import { User } from '../User';
 import {
   createUserController,
   getManyUsersController,
   getUserController,
   removeUserController,
   updateUserController,
-} from '../users.controller';
+} from '../UserController';
 import { HTTP_STATUS_CODES } from '../../../config/statusCodes';
 
 const next: NextFunction = jest.fn();

@@ -1,17 +1,17 @@
 import { HTTP_STATUS_CODES as defaultStatusCodes, StatusCodes } from '../config/statusCodes';
-import { CRUDModel } from '../types/core/CRUDModel';
+import { CRUDModel } from './types/CRUDModelTypes';
 import { DatabaseTableNames } from '../types/databaseTableNames';
 import { BuildInsertQuery, BuildRemoveQuery, BuildUpdateQuery } from '../types/utils';
 import { NextFunction, Response, Request } from 'express';
 import { buildRemoveQuery as defaultBuildRemoveQuery } from '../utils/buildDeleteQuery';
 import { buildInsertQuery as defaultBuildInsertQuery } from '../utils/buildInsertQuery';
 import { buildUpdateQuery as defaultBuildUpdateQuery } from '../utils/buildUpdateQuery';
+import { AppError as DefaultAppError } from './AppError';
 
-export interface BaseControllerModel {}
-
-export type BaseControllerProps = {
+export type BaseControllerConstructorProps = {
   model: CRUDModel;
   HTTP_STATUS_CODES?: StatusCodes;
+  AppError?: typeof DefaultAppError;
   buildRemoveQuery?: BuildRemoveQuery;
   buildInsertQuery?: BuildInsertQuery;
   buildUpdateQuery?: BuildUpdateQuery;
@@ -21,24 +21,27 @@ export type BaseControllerProps = {
 };
 
 export class BaseController {
-  model: CRUDModel;
-  tableName: DatabaseTableNames;
-  buildRemoveQuery: BuildRemoveQuery;
-  buildInsertQuery: BuildInsertQuery;
-  buildUpdateQuery: BuildUpdateQuery;
-  buildGetManyQuery: (queryParams: object) => { query: string; values: (string | number | boolean | Date)[] };
-  getOneQuery: string;
-  HTTP_STATUS_CODES: StatusCodes;
+  model;
+  tableName;
+  buildRemoveQuery;
+  buildInsertQuery;
+  buildUpdateQuery;
+  AppError;
+  buildGetManyQuery;
+  getOneQuery;
+  HTTP_STATUS_CODES;
   constructor({
     model,
     tableName,
     HTTP_STATUS_CODES = defaultStatusCodes,
+    AppError = DefaultAppError,
     buildRemoveQuery = defaultBuildRemoveQuery,
     buildInsertQuery = defaultBuildInsertQuery,
     buildUpdateQuery = defaultBuildUpdateQuery,
     buildGetManyQuery,
     getOneQuery,
-  }: BaseControllerProps) {
+  }: BaseControllerConstructorProps) {
+    this.AppError = AppError;
     this.model = model;
     this.tableName = tableName;
     this.buildRemoveQuery = buildRemoveQuery;

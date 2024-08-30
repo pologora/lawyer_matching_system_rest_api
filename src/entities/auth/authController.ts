@@ -5,7 +5,7 @@ import { HTTP_STATUS_CODES } from '../../config/statusCodes';
 
 import { cookieOptions } from '../../config/cookieOptions/cookieOptions';
 import { IUser } from '../../types/IUser';
-import { resetPasswordSchema } from './auth.validation';
+import { resetPasswordSchema } from './authValidation';
 import {
   ChangeMyPasswordController,
   DeleteMeController,
@@ -25,9 +25,9 @@ export const registerController: RegisterController =
     const token = await registerService({ req });
 
     return setTokenCookieAndSendResponse(res, {
-      token,
       message: 'User registered successfully',
       statusCode: HTTP_STATUS_CODES.CREATED_201,
+      token,
     });
   };
 
@@ -37,9 +37,9 @@ export const loginController: LoginController =
     const { token, user } = await loginService(req.body);
 
     return setTokenCookieAndSendResponse(res, {
-      token,
       message: 'User login successfully',
       statusCode: HTTP_STATUS_CODES.SUCCESS_200,
+      token,
       user,
     });
   };
@@ -54,9 +54,18 @@ export const getMeController: GetMeController =
     const profile = await getMeService({ role, userId });
 
     return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-      status: 'success',
+      data: {
+        createdAt,
+        email,
+        googleId,
+        isVerified,
+        role,
+        updatedAt,
+        userId,
+        ...profile,
+      },
       message: 'Retrieved user and profile successfully',
-      data: { role, userId, googleId, isVerified, email, createdAt, updatedAt, ...profile },
+      status: 'success',
     });
   };
 
@@ -73,8 +82,8 @@ export const logoutController: LogoutController = async (req: Request, res: Resp
   res.clearCookie('jwt', cookieOptions);
 
   return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-    status: 'success',
     message: 'User log out successfully',
+    status: 'success',
   });
 };
 
@@ -84,8 +93,8 @@ export const forgotPasswordController: ForgotPasswordController =
     await forgotPasswordService({ req });
 
     return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-      status: 'success',
       message: 'Reset password link was sent to the user email',
+      status: 'success',
     });
   };
 
@@ -103,9 +112,9 @@ export const resetPasswordController: ResetPasswordController =
     const token = await resetPasswordService(value);
 
     return setTokenCookieAndSendResponse(res, {
-      token,
       message: 'Password has been changed',
       statusCode: HTTP_STATUS_CODES.SUCCESS_200,
+      token,
     });
   };
 
@@ -115,9 +124,9 @@ export const changeMyPasswordController: ChangeMyPasswordController =
     const token = await changeMyPasswordService({ ...req.body, user: req.user });
 
     return setTokenCookieAndSendResponse(res, {
-      token,
       message: 'Password has been changed',
       statusCode: HTTP_STATUS_CODES.SUCCESS_200,
+      token,
     });
   };
 
@@ -136,7 +145,7 @@ export const verifyEmailcontroller: VerifyEmailcontroller =
     await verifyEmailService({ token });
 
     return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
-      status: 'success',
       message: 'Email validated successfully',
+      status: 'success',
     });
   };

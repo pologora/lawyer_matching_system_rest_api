@@ -7,7 +7,7 @@ import {
   registerService,
   resetPasswordService,
   verifyEmailService,
-} from '../auth.service';
+} from '../authService';
 import {
   changeMyPasswordController,
   deleteMeController,
@@ -17,7 +17,7 @@ import {
   registerController,
   resetPasswordController,
   verifyEmailcontroller,
-} from '../auth.controller';
+} from '../authController';
 import { Email } from '../../../core/email/Email';
 import { createHashedToken } from '../../../utils/hashedToken/createHashedToken';
 import { createRandomToken } from '../../../utils/hashedToken/createRandomToken';
@@ -25,11 +25,11 @@ import { isTokenExpired } from '../../../utils/isTokenExpired';
 import { createJWT } from '../../../utils/jwt/createJWT';
 import { comparePasswords } from '../../../utils/passwordManagement/comparePasswords';
 import { hashPassword } from '../../../utils/passwordManagement/hashPassword';
-import { ClientProfile } from '../../clients/clients.model';
+import { Client } from '../../clients/Client';
 import { getOneClientByUserIdQuery } from '../../clients/slqQueries';
-import { LawyersProfile } from '../../lawyers/lawyers.model';
+import { Lawyer } from '../../lawyers/Lawyer';
 import { getLawyerByUserIdQuery } from '../../lawyers/sqlQueries';
-import { Auth } from '../auth.model';
+import { Auth } from '../Auth';
 import { calculateEmailVerificationExpiraton } from './calculateEmailVerificationExpirationDate';
 import { setTokenCookieAndSendResponse } from './setTokenCookieAndSendResponse';
 import {
@@ -64,8 +64,8 @@ const injectedLoginService = loginService({
 });
 
 const injectedGetMeService = getMeService({
-  ClientProfile,
-  LawyersProfile,
+  Client,
+  Lawyer,
   getLawyerByUserIdQuery,
   getOneClientByUserIdQuery,
 });

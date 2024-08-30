@@ -1,24 +1,28 @@
-import express, { NextFunction, Request, Response } from 'express';
+import { Router } from 'express';
 
 import { asyncErrorCatch } from '../../utils/errors/asyncErrorCatch';
-import { createMessageSchema, getManyMessagesSchema, updateMessageSchema } from './messages.validation';
+import { createMessageSchema, getManyMessagesSchema, updateMessageSchema } from './messageValidation';
 import { validateReqBody } from '../../middleware/validateReqBody';
 import { validateReqQuery } from '../../middleware/validateReqQuery';
 import { protect } from '../../middleware/protect';
 import { restrictTo } from '../../middleware/restrictTo';
 import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { MessageController } from './MessageController';
+import { createControllerHandler } from '../../utils/createControllerHandler';
 
-export const messagesRoute = express.Router();
+export const messagesRoute = Router();
 
 messagesRoute.param('id', validateIdParameter);
 
 const messageController = new MessageController();
-const createOneHandler = (req: Request, res: Response, next: NextFunction) => messageController.create(req, res, next);
-const getOneHandler = (req: Request, res: Response, next: NextFunction) => messageController.getOne(req, res, next);
-const getManyHandler = (req: Request, res: Response, next: NextFunction) => messageController.getMany(req, res, next);
-const updateHandler = (req: Request, res: Response, next: NextFunction) => messageController.update(req, res, next);
-const removeHandler = (req: Request, res: Response, next: NextFunction) => messageController.remove(req, res, next);
+
+const createMessageHandler = createControllerHandler({ controller: messageController });
+
+const createOneHandler = createMessageHandler({ method: 'create' });
+const getOneHandler = createMessageHandler({ method: 'getOne' });
+const getManyHandler = createMessageHandler({ method: 'getMany' });
+const updateHandler = createMessageHandler({ method: 'update' });
+const removeHandler = createMessageHandler({ method: 'remove' });
 
 messagesRoute
   .route('/messages')

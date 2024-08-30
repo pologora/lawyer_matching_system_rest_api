@@ -1,4 +1,4 @@
-import { CRUDModel } from '../../../types/core/CRUDModel';
+import { CRUDModel } from '../../../core/types/CRUDModelTypes';
 
 type SortBy = 'createdAt' | 'updatedAt';
 

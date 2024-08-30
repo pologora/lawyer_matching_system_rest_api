@@ -3,7 +3,7 @@ import { AppError } from '../core/AppError';
 import { HTTP_STATUS_CODES } from '../config/statusCodes';
 import { asyncErrorCatch } from '../utils/errors/asyncErrorCatch';
 import { verifyJWT } from '../utils/jwt/verifyJWT';
-import { User } from '../entities/users/users.model';
+import { User } from '../entities/users/User';
 import { getUserForAuthQuery } from '../entities/users/sqlQueries';
 
 export const protect = asyncErrorCatch(async (req: Request, res: Response, next: NextFunction) => {

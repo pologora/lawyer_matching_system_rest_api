@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from 'express';
 import { BuildInsertQuery, BuildRemoveQuery, BuildUpdateQuery } from '../../../types/utils';
-import { CRUDModel } from '../../../types/core/CRUDModel';
+import { CRUDModel } from '../../../core/types/CRUDModelTypes';
 
 export interface CasesModel extends CRUDModel {}
 

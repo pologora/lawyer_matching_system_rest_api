@@ -1,25 +1,26 @@
-import { NextFunction, Response, Request } from 'express';
 import { RowDataPacket } from 'mysql2';
-import { BuildInsertQuery, BuildUpdateQuery } from '../../../types/utils';
+import { BuildInsertQuery } from '../../../types/utils';
 import { UserModel } from '../../users/types/userTypes';
-import { CRUDModel } from '../../../types/core/CRUDModel';
+import { CRUDModel } from '../../../core/types/CRUDModelTypes';
+
+type GetManyClientsQueryParams = {
+  limit?: number;
+  page?: number;
+};
+
+export type BuildGetManyClientsQuery = (params: GetManyClientsQueryParams) => {
+  query: string;
+  values: (string | number)[];
+};
 
 export type GetOneByUserIdProps = {
   userId: number;
   query: string;
 };
 
-export interface ClientProfileModel extends CRUDModel {
+export interface ClientModel extends CRUDModel {
   getOneByUserId(props: GetOneByUserIdProps): Promise<RowDataPacket>;
 }
-
-type CreateClientServiceProps = {
-  User: UserModel;
-  ClientProfile: ClientProfileModel;
-  getOneClientQuery: string;
-  updateUserRoleQuery: string;
-  buildCreateTableRowQuery: BuildInsertQuery;
-};
 
 type CreateClientDto = {
   firstName: string;
@@ -27,31 +28,13 @@ type CreateClientDto = {
   userId: number;
 };
 
-export type CreateClientService = (
-  props: CreateClientServiceProps,
-) => (args: { data: CreateClientDto }) => Promise<RowDataPacket>;
-
-export type CreateClientController = (props: {
-  createClientService: (args: { data: CreateClientDto }) => Promise<RowDataPacket>;
-}) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
-
-export type GetClientController = (props: {
-  ClientProfile: ClientProfileModel;
-  query: string;
-}) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
-
-export type GetManyClientsController = (props: {
-  ClientProfile: ClientProfileModel;
-  query: string;
-}) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
-
-export type UpdateClientController = (props: {
-  ClientProfile: ClientProfileModel;
+type CreateClientServiceProps = {
+  User: UserModel;
+  ClientProfile: ClientModel;
   getOneClientQuery: string;
-  buildUpdateTableRowQuery: BuildUpdateQuery;
-}) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
+  updateUserRoleQuery: string;
+  buildInsertQuery: BuildInsertQuery;
+  data: CreateClientDto;
+};
 
-export type RemoveClientController = (props: {
-  ClientProfile: ClientProfileModel;
-  query: string;
-}) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
+export type CreateClientService = (props: CreateClientServiceProps) => Promise<RowDataPacket>;

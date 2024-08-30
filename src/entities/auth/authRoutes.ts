@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 
-import { loginWithGoogleCallbackController, logoutController } from './auth.controller';
+import { loginWithGoogleCallbackController, logoutController } from './authController';
 import { asyncErrorCatch } from '../../utils/errors/asyncErrorCatch';
 import { protect } from '../../middleware/protect';
 import {
@@ -10,7 +10,7 @@ import {
   forgotPasswordShema,
   loginSchema,
   userRegistrationSchema,
-} from './auth.validation';
+} from './authValidation';
 import { validateReqBody } from '../../middleware/validateReqBody';
 import {
   injectedChangeMyPasswordController,
