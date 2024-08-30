@@ -2,7 +2,7 @@ import { NextFunction, Response, Request } from 'express';
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import { UserModel } from '../../users/types/userTypes';
 import { BuildInsertQuery, BuildRemoveQuery, BuildUpdateQuery } from '../../../types/utils';
-import { CRUDModel } from '../../../types/core/CRUDModel';
+import { CRUDModel } from '../../../core/types/CRUDModel';
 
 type GetManyLawyersQueryParams = {
   limit?: number;

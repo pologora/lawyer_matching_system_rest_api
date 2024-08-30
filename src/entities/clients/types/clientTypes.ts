@@ -2,7 +2,7 @@ import { NextFunction, Response, Request } from 'express';
 import { RowDataPacket } from 'mysql2';
 import { BuildInsertQuery, BuildUpdateQuery } from '../../../types/utils';
 import { UserModel } from '../../users/types/userTypes';
-import { CRUDModel } from '../../../types/core/CRUDModel';
+import { CRUDModel } from '../../../core/types/CRUDModel';
 
 export type GetOneByUserIdProps = {
   userId: number;

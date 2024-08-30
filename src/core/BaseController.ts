@@ -1,5 +1,5 @@
 import { HTTP_STATUS_CODES as defaultStatusCodes, StatusCodes } from '../config/statusCodes';
-import { CRUDModel } from '../types/core/CRUDModel';
+import { CRUDModel } from './types/CRUDModel';
 import { DatabaseTableNames } from '../types/databaseTableNames';
 import { BuildInsertQuery, BuildRemoveQuery, BuildUpdateQuery } from '../types/utils';
 import { NextFunction, Response, Request } from 'express';

@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 
 import { asyncErrorCatch } from '../../utils/errors/asyncErrorCatch';
-import { createMessageSchema, getManyMessagesSchema, updateMessageSchema } from './messages.validation';
+import { createMessageSchema, getManyMessagesSchema, updateMessageSchema } from './messageValidation';
 import { validateReqBody } from '../../middleware/validateReqBody';
 import { validateReqQuery } from '../../middleware/validateReqQuery';
 import { protect } from '../../middleware/protect';

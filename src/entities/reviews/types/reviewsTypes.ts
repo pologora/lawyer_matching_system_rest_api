@@ -1,7 +1,7 @@
 import { RowDataPacket } from 'mysql2';
 import { BuildInsertQuery } from '../../../types/utils';
 import { LawyersProfileModel } from '../../lawyers/types/lawyersTypes';
-import { CRUDModel } from '../../../types/core/CRUDModel';
+import { CRUDModel } from '../../../core/types/CRUDModel';
 
 export interface ReviewModel extends CRUDModel {}
 

@@ -1,5 +1,5 @@
 import { ResultSetHeader } from 'mysql2';
-import { CRUDModel } from '../../../types/core/CRUDModel';
+import { CRUDModel } from '../../../core/types/CRUDModel';
 import { UserRole } from '../../../types/IUser';
 
 export interface GetManyUsersQueryParams {
