@@ -39,4 +39,10 @@ describe('Create expireIn JWT from user input', () => {
 
     expect(() => createExpiresIn(invalidInput)).toThrow();
   });
+
+  test('should throw if input is invalid', () => {
+    const invalidInput = 's124';
+
+    expect(() => createExpiresIn(invalidInput)).toThrow();
+  });
 });

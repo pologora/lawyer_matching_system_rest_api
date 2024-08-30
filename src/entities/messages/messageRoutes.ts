@@ -9,12 +9,15 @@ import { restrictTo } from '../../middleware/restrictTo';
 import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { MessageController } from './MessageController';
 import { createControllerHandler } from '../../utils/createControllerHandler';
+import { buildGetManyMessagesQuery } from './helpers/buildGetManyMessagesQuery';
+import { getMessageQuery } from './sqlQueries';
+import { Message } from './Message';
 
 export const messagesRoute = Router();
 
 messagesRoute.param('id', validateIdParameter);
 
-const messageController = new MessageController();
+const messageController = new MessageController({ Message, buildGetManyMessagesQuery, getMessageQuery });
 
 const createMessageHandler = createControllerHandler({ controller: messageController });
 

@@ -1,9 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { BaseController } from '../../core/BaseController';
-import { buildGetManyLawyersQuery } from './helpers/biuldGetManyLawyersQuery';
-import { Lawyer } from './Lawyer';
-import { getLawyerByIdQuery } from './sqlQueries';
-import { CreateLawyerService, LawyerModel, UpdateLawyerService } from './types/lawyersTypes';
+import { BuildGetManyLawyersQuery, CreateLawyerService, LawyerModel, UpdateLawyerService } from './types/lawyersTypes';
 import { UserModel } from '../users/types/userTypes';
 
 type LawyerControllerConstructorProps = {
@@ -13,6 +10,9 @@ type LawyerControllerConstructorProps = {
   createLawyerSpecializationsQuery: string;
   updateUserRoleQuery: string;
   User: UserModel;
+  Lawyer: LawyerModel;
+  getLawyerByIdQuery: string;
+  buildGetManyLawyersQuery: BuildGetManyLawyersQuery;
 };
 
 export class LawyerController extends BaseController {
@@ -30,6 +30,9 @@ export class LawyerController extends BaseController {
     deleteLawyerSpecializationsQuery,
     updateUserRoleQuery,
     User,
+    Lawyer,
+    getLawyerByIdQuery,
+    buildGetManyLawyersQuery,
   }: LawyerControllerConstructorProps) {
     super({
       buildGetManyQuery: buildGetManyLawyersQuery,
@@ -53,7 +56,7 @@ export class LawyerController extends BaseController {
       buildInsertQuery: this.buildInsertQuery,
       createLawyerSpecializationsQuery: this.createLawyerSpecializationsQuery,
       data: req.body,
-      getLawyerByIdQuery,
+      getLawyerByIdQuery: this.getOneQuery,
       updateUserRoleQuery: this.updateUserRoleQuery,
     });
 

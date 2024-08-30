@@ -1,10 +1,13 @@
 import { BaseController } from '../../core/BaseController';
-import { Case } from './Case';
-import { buildGetManyCasesQuery } from './helpers/buildGetManyCasesQuery';
-import { getOneCaseQuery } from './sqlQueries';
+import { BuildGetManyCasesQuery, CasesModel } from './types/casesTypes';
 
+type CaseControllerConstructorProps = {
+  buildGetManyCasesQuery: BuildGetManyCasesQuery;
+  getOneCaseQuery: string;
+  Case: CasesModel;
+};
 export class CaseController extends BaseController {
-  constructor() {
+  constructor({ buildGetManyCasesQuery, getOneCaseQuery, Case }: CaseControllerConstructorProps) {
     super({
       buildGetManyQuery: buildGetManyCasesQuery,
       getOneQuery: getOneCaseQuery,

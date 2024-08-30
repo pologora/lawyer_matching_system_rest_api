@@ -10,11 +10,14 @@ import { restrictTo } from '../../middleware/restrictTo';
 import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { CaseController } from './CaseController';
 import { createControllerHandler } from '../../utils/createControllerHandler';
+import { buildGetManyCasesQuery } from './helpers/buildGetManyCasesQuery';
+import { Case } from './Case';
+import { getOneCaseQuery } from './sqlQueries';
 
 export const casesRouter = express.Router();
 casesRouter.param('id', validateIdParameter);
 
-const caseController = new CaseController();
+const caseController = new CaseController({ Case, buildGetManyCasesQuery, getOneCaseQuery });
 
 const createCaseHandler = createControllerHandler({ controller: caseController });
 

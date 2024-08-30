@@ -37,6 +37,7 @@ type CreateReviewServiceProps = {
   Review: ReviewModel;
   Lawyer: LawyerModel;
   getReviewQuery: string;
+  updateRatingQuery: string;
   buildInsertQuery: BuildInsertQuery;
   data: CreateReviewDto;
 };
