@@ -7,8 +7,8 @@ type GetManyMessagesQueryParams = {
   page?: number;
   senderId?: number;
   receiverId?: number;
-  startDate?: Date;
-  endDate?: Date;
+  startDate?: string;
+  endDate?: string;
   sortBy?: SortBy;
   sortOrder?: 'desc' | 'asc';
   search?: string;
