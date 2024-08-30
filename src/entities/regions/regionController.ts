@@ -6,7 +6,9 @@ export const getAllRegionsController: GetAllRegionsController =
   async (_req, res, _next) => {
     const regions = await Region.getAll({ query });
 
-    return res
-      .status(HTTP_STATUS_CODES.SUCCESS_200)
-      .json({ status: 'success', message: 'Regions retrieved successfully', data: regions });
+    return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+      data: regions,
+      message: 'Regions retrieved successfully',
+      status: 'success',
+    });
   };
