@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
-import { HTTP_STATUS_CODES, StatusCodes } from '../config/statusCodes';
+import { HTTP_STATUS_CODES, StatusCode } from '../config/statusCodes';
 import { AppError } from '../core/AppError';
 import { logger } from '../config/logger/logger';
 
-const sendDevError = (err: AppError, res: Response, statusCode: StatusCodes) => {
+const sendDevError = (err: AppError, res: Response, statusCode: StatusCode) => {
   const { status, message, stack } = err;
   res.status(statusCode).json({ err, message, stack, status });
 };
 
-const sendProductionError = (err: AppError, res: Response, statusCode: StatusCodes) => {
+const sendProductionError = (err: AppError, res: Response, statusCode: StatusCode) => {
   const { status, message, isOperational, toLog } = err;
   const clientMessage = isOperational ? message : 'Something went wrong, please try again later.';
 
