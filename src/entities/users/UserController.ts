@@ -2,17 +2,18 @@ import { NextFunction, Request, Response } from 'express';
 
 import { BaseController } from '../../core/BaseController';
 import { HashPassword } from '../../types/utils';
-import { buildGetManyUsersQuery } from './helpers/buildGetManyUsersQuery';
-import { getUserByIdQuery } from './sqlQueries';
-import { User } from './User';
+import { BuildGetManyUsersQuery, UserModel } from './types/userTypes';
 
 type UserControllerConstructorProps = {
   hashPassword: HashPassword;
+  buildGetManyUsersQuery: BuildGetManyUsersQuery;
+  getUserByIdQuery: string;
+  User: UserModel;
 };
 
 export class UserController extends BaseController {
   hashPassword: HashPassword;
-  constructor({ hashPassword }: UserControllerConstructorProps) {
+  constructor({ hashPassword, buildGetManyUsersQuery, getUserByIdQuery, User }: UserControllerConstructorProps) {
     super({
       buildGetManyQuery: buildGetManyUsersQuery,
       getOneQuery: getUserByIdQuery,
@@ -28,9 +29,9 @@ export class UserController extends BaseController {
 
     const hashedPassword = await this.hashPassword(password);
 
-    const { query, values } = this.buildInsertQuery({ email, password: hashedPassword }, 'User');
+    const { query, values } = this.buildInsertQuery({ email, password: hashedPassword }, this.tableName);
 
-    const result = await User.create({ query, values });
+    const result = await this.model.create({ query, values });
 
     return res.status(this.HTTP_STATUS_CODES.CREATED_201).json({
       data: result,
@@ -47,7 +48,7 @@ export class UserController extends BaseController {
     const id = Number(req.params.id);
     const { query, values } = this.buildUpdateQuery({ profileImageFileName: req.file.filename }, 'User');
 
-    await User.update({ id, query, values });
+    await this.model.update({ id, query, values });
 
     return res.status(this.HTTP_STATUS_CODES.SUCCESS_200).json({
       message: 'User image uploaded successfully',

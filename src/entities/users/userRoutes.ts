@@ -12,11 +12,19 @@ import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { hashPassword } from '../../utils/passwordManagement/hashPassword';
 import { UserController } from './UserController';
 import { createControllerHandler } from '../../utils/createControllerHandler';
+import { buildGetManyUsersQuery } from './helpers/buildGetManyUsersQuery';
+import { getUserByIdQuery } from './sqlQueries';
+import { User } from './User';
 
 export const usersRouter = Router();
 
 usersRouter.param('id', validateIdParameter);
-const userController = new UserController({ hashPassword });
+const userController = new UserController({
+  User,
+  buildGetManyUsersQuery,
+  getUserByIdQuery,
+  hashPassword,
+});
 
 const createUserHandler = createControllerHandler({ controller: userController });
 
