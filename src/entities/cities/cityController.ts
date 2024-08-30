@@ -6,9 +6,11 @@ export const getCitiesByRegionController: GetCitiesByRegion =
   async (req, res, _next) => {
     const regionId = Number(req.query.regionId);
 
-    const cities = await City.getCitiesByRegion({ regionId, query });
+    const cities = await City.getCitiesByRegion({ query, regionId });
 
-    return res
-      .status(HTTP_STATUS_CODES.SUCCESS_200)
-      .json({ status: 'success', message: 'Cities retrieved successfully', data: cities });
+    return res.status(HTTP_STATUS_CODES.SUCCESS_200).json({
+      data: cities,
+      message: 'Cities retrieved successfully',
+      status: 'success',
+    });
   };
