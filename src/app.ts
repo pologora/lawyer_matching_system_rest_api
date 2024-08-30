@@ -12,7 +12,7 @@ import { usersRouter } from './entities/users/userRoutes';
 import { globalErrorHandler } from './middleware/globalErrorHandler';
 import { AppError } from './core/AppError';
 import { HTTP_STATUS_CODES } from './config/statusCodes';
-import { authRouter } from './entities/auth/auth.routes';
+import { authRouter } from './entities/auth/authRoutes';
 import { limiter } from './config/rateLimit/rateLimit';
 import { logger } from './config/logger/logger';
 import { lawyersRouter } from './entities/lawyers/lawyerRoutes';

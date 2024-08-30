@@ -7,7 +7,7 @@ import {
   registerService,
   resetPasswordService,
   verifyEmailService,
-} from '../auth.service';
+} from '../authService';
 import {
   changeMyPasswordController,
   deleteMeController,
@@ -17,7 +17,7 @@ import {
   registerController,
   resetPasswordController,
   verifyEmailcontroller,
-} from '../auth.controller';
+} from '../authController';
 import { Email } from '../../../core/email/Email';
 import { createHashedToken } from '../../../utils/hashedToken/createHashedToken';
 import { createRandomToken } from '../../../utils/hashedToken/createRandomToken';
@@ -29,7 +29,7 @@ import { Client } from '../../clients/Client';
 import { getOneClientByUserIdQuery } from '../../clients/slqQueries';
 import { Lawyer } from '../../lawyers/Lawyer';
 import { getLawyerByUserIdQuery } from '../../lawyers/sqlQueries';
-import { Auth } from '../auth.model';
+import { Auth } from '../Auth';
 import { calculateEmailVerificationExpiraton } from './calculateEmailVerificationExpirationDate';
 import { setTokenCookieAndSendResponse } from './setTokenCookieAndSendResponse';
 import {

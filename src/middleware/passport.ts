@@ -2,7 +2,7 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { AppError } from '../core/AppError';
 import { HTTP_STATUS_CODES } from '../config/statusCodes';
-import { Auth } from '../entities/auth/auth.model';
+import { Auth } from '../entities/auth/Auth';
 import { createJWT } from '../utils/jwt/createJWT';
 import { Email } from '../core/email/Email';
 import { getUserByEmailQuery, registerByGoogleQuery } from '../entities/auth/sqlQueries';
