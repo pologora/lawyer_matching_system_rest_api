@@ -1,5 +1,5 @@
 import { HTTP_STATUS_CODES as defaultStatusCodes, StatusCodes } from '../config/statusCodes';
-import { CRUDModel } from './types/CRUDModel';
+import { CRUDModel } from './types/CRUDModelTypes';
 import { DatabaseTableNames } from '../types/databaseTableNames';
 import { BuildInsertQuery, BuildRemoveQuery, BuildUpdateQuery } from '../types/utils';
 import { NextFunction, Response, Request } from 'express';
@@ -7,8 +7,6 @@ import { buildRemoveQuery as defaultBuildRemoveQuery } from '../utils/buildDelet
 import { buildInsertQuery as defaultBuildInsertQuery } from '../utils/buildInsertQuery';
 import { buildUpdateQuery as defaultBuildUpdateQuery } from '../utils/buildUpdateQuery';
 import { AppError as DefaultAppError } from './AppError';
-
-export interface BaseControllerModel {}
 
 export type BaseControllerConstructorProps = {
   model: CRUDModel;
@@ -23,15 +21,15 @@ export type BaseControllerConstructorProps = {
 };
 
 export class BaseController {
-  model: CRUDModel;
-  tableName: DatabaseTableNames;
-  buildRemoveQuery: BuildRemoveQuery;
-  buildInsertQuery: BuildInsertQuery;
-  buildUpdateQuery: BuildUpdateQuery;
-  AppError: typeof DefaultAppError;
-  buildGetManyQuery: (queryParams: object) => { query: string; values: (string | number | boolean | Date)[] };
-  getOneQuery: string;
-  HTTP_STATUS_CODES: StatusCodes;
+  model;
+  tableName;
+  buildRemoveQuery;
+  buildInsertQuery;
+  buildUpdateQuery;
+  AppError;
+  buildGetManyQuery;
+  getOneQuery;
+  HTTP_STATUS_CODES;
   constructor({
     model,
     tableName,

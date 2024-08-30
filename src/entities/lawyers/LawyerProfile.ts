@@ -9,7 +9,7 @@ import {
 } from './types/lawyersTypes';
 import { CRUDModel } from '../../core/CRUDModel';
 
-export class LawyersProfile extends CRUDModel {
+export class LawyerProfile extends CRUDModel {
   static async create({ query, values, specializations, createLawyerSpecializationsQuery }: CreateLawyerProps) {
     const connection = await this.pool.getConnection();
 

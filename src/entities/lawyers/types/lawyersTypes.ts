@@ -1,8 +1,7 @@
-import { NextFunction, Response, Request } from 'express';
 import { ResultSetHeader, RowDataPacket } from 'mysql2';
 import { UserModel } from '../../users/types/userTypes';
-import { BuildInsertQuery, BuildRemoveQuery, BuildUpdateQuery } from '../../../types/utils';
-import { CRUDModel } from '../../../core/types/CRUDModel';
+import { BuildInsertQuery, BuildUpdateQuery } from '../../../types/utils';
+import { CRUDModel } from '../../../core/types/CRUDModelTypes';
 
 type GetManyLawyersQueryParams = {
   limit?: number;
@@ -53,7 +52,7 @@ export type UpdateLawyerSpecializationsProps = {
   createLawyerSpecializationsQuery: string;
 };
 
-export interface LawyersProfileModel extends CRUDModel {
+export interface LawyerProfileModel extends CRUDModel {
   create(props: CreateLawyerProps): Promise<number>;
   getOneByUserId(props: GetOneByUserIdProps): Promise<RowDataPacket>;
   updateRating(props: UpdateRatingProps): Promise<ResultSetHeader>;
@@ -74,11 +73,13 @@ type UpdateLawyerDto = {
 };
 
 type UpdateLawyerServiceProps = {
-  LawyersProfile: LawyersProfileModel;
+  LawyersProfile: LawyerProfileModel;
   getLawyerByIdQuery: string;
   deleteLawyerSpecializationsQuery: string;
   createLawyerSpecializationsQuery: string;
   buildUpdateQuery: BuildUpdateQuery;
+  data: UpdateLawyerDto;
+  id: number;
 };
 
 type CreateLawyerDto = {
@@ -96,41 +97,15 @@ type CreateLawyerDto = {
 };
 
 export type CreateLawyerServiceProps = {
-  LawyersProfile: LawyersProfileModel;
+  LawyersProfile: LawyerProfileModel;
   User: UserModel;
   getLawyerByIdQuery: string;
   createLawyerSpecializationsQuery: string;
   updateUserRoleQuery: string;
   buildInsertQuery: BuildInsertQuery;
+  data: CreateLawyerDto;
 };
 
-export type CreateLawyerService = (
-  props: CreateLawyerServiceProps,
-) => (args: { data: CreateLawyerDto }) => Promise<RowDataPacket>;
+export type CreateLawyerService = (props: CreateLawyerServiceProps) => Promise<RowDataPacket>;
 
-export type UpdateLawyerService = (
-  props: UpdateLawyerServiceProps,
-) => (args: { data: UpdateLawyerDto; id: number }) => Promise<RowDataPacket>;
-
-export type CreateLawyerController = (props: {
-  createLawyerService: (args: { data: CreateLawyerDto }) => Promise<RowDataPacket>;
-}) => (req: Request, res: Response, next: NextFunction) => Promise<Response>;
-
-export type GetLawyerController = (props: {
-  LawyersProfile: LawyersProfileModel;
-  query: string;
-}) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
-
-export type GetManyLawyersController = (props: {
-  LawyersProfile: LawyersProfileModel;
-  buildGetManyLawyersQuery: BuildGetManyLawyersQuery;
-}) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
-
-export type UpdateLawyerController = (props: {
-  updateLawyerService: (args: { data: UpdateLawyerDto; id: number }) => Promise<RowDataPacket>;
-}) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
-
-export type RemoveLawyerController = (props: {
-  LawyersProfile: LawyersProfileModel;
-  buildRemoveQuery: BuildRemoveQuery;
-}) => (req: Request, res: Response, _next: NextFunction) => Promise<Response>;
+export type UpdateLawyerService = (props: UpdateLawyerServiceProps) => Promise<RowDataPacket>;

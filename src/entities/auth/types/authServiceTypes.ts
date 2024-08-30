@@ -13,7 +13,7 @@ import { AuthModel } from './authModelTypes';
 import { Email } from '../../../core/email/Email';
 import { CreateJWT } from '../../../utils/jwt/types/JWTTypes';
 import { ClientProfileModel } from '../../clients/types/clientTypes';
-import { LawyersProfileModel } from '../../lawyers/types/lawyersTypes';
+import { LawyerProfileModel } from '../../lawyers/types/lawyersTypes';
 
 export type LoginUserDto = {
   email: string;
@@ -85,7 +85,7 @@ type ForgotPasswordServiceProps = {
 
 type GetMeServiceProps = {
   ClientProfile: ClientProfileModel;
-  LawyersProfile: LawyersProfileModel;
+  LawyerProfile: LawyerProfileModel;
   getOneClientByUserIdQuery: string;
   getLawyerByUserIdQuery: string;
 };

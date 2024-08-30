@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express';
+import express from 'express';
 
 import { asyncErrorCatch } from '../../utils/errors/asyncErrorCatch';
 import { createReviewSchema, getManyReviewsSchema, updateReviewSchema } from './reviewValidation';
@@ -8,19 +8,23 @@ import { protect } from '../../middleware/protect';
 import { restrictTo } from '../../middleware/restrictTo';
 import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { createReviewService } from './reviewService';
-import { LawyersProfile } from '../lawyers/lawyers.model';
+import { LawyerProfile } from '../lawyers/LawyerProfile';
 import { ReviewController } from './ReviewController';
+import { createControllerHandler } from '../../utils/createControllerHandler';
 
 export const reviewsRouter = express.Router();
 
 reviewsRouter.param('id', validateIdParameter);
 
-const reviewController = new ReviewController({ LawyersProfile, createReviewService });
-const createOneHandler = (req: Request, res: Response, next: NextFunction) => reviewController.create(req, res, next);
-const getOneHandler = (req: Request, res: Response, next: NextFunction) => reviewController.getOne(req, res, next);
-const getManyHandler = (req: Request, res: Response, next: NextFunction) => reviewController.getMany(req, res, next);
-const updateHandler = (req: Request, res: Response, next: NextFunction) => reviewController.update(req, res, next);
-const removeHandler = (req: Request, res: Response, next: NextFunction) => reviewController.remove(req, res, next);
+const reviewController = new ReviewController({ LawyerProfile, createReviewService });
+
+const createReviewHandler = createControllerHandler({ controller: reviewController });
+
+const createOneHandler = createReviewHandler({ method: 'create' });
+const getOneHandler = createReviewHandler({ method: 'getOne' });
+const getManyHandler = createReviewHandler({ method: 'getMany' });
+const updateHandler = createReviewHandler({ method: 'update' });
+const removeHandler = createReviewHandler({ method: 'remove' });
 
 reviewsRouter
   .route('/reviews')

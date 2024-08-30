@@ -4,17 +4,17 @@ import { buildGetManyReviewsQuery } from './helpers/buildGetManyReviewsQuery';
 import { Review } from './Review';
 import { getReviewQuery } from './sqlQueries';
 import { CreateReviewService } from './types/reviewsTypes';
-import { LawyersProfileModel } from '../lawyers/types/lawyersTypes';
+import { LawyerProfileModel } from '../lawyers/types/lawyersTypes';
 
 type ReviewControllerContructorProps = {
   createReviewService: CreateReviewService;
-  LawyersProfile: LawyersProfileModel;
+  LawyerProfile: LawyerProfileModel;
 };
 
 export class ReviewController extends BaseController {
   createReviewService: CreateReviewService;
-  LawyersProfile: LawyersProfileModel;
-  constructor({ createReviewService, LawyersProfile }: ReviewControllerContructorProps) {
+  LawyersProfile: LawyerProfileModel;
+  constructor({ createReviewService, LawyerProfile }: ReviewControllerContructorProps) {
     super({
       buildGetManyQuery: buildGetManyReviewsQuery,
       getOneQuery: getReviewQuery,
@@ -23,7 +23,7 @@ export class ReviewController extends BaseController {
     });
 
     this.createReviewService = createReviewService;
-    this.LawyersProfile = LawyersProfile;
+    this.LawyersProfile = LawyerProfile;
   }
 
   async create(req: Request, res: Response, _next: NextFunction) {

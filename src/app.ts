@@ -15,7 +15,7 @@ import { HTTP_STATUS_CODES } from './config/statusCodes';
 import { authRouter } from './entities/auth/auth.routes';
 import { limiter } from './config/rateLimit/rateLimit';
 import { logger } from './config/logger/logger';
-import { lawyersRouter } from './entities/lawyers/lawyers.route';
+import { lawyersRouter } from './entities/lawyers/lawyerRoutes';
 import { clientsRouter } from './entities/clients/clients.route';
 import { casesRouter } from './entities/cases/cases.route';
 import { messagesRoute } from './entities/messages/messageRoutes';

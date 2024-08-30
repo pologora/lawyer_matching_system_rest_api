@@ -27,7 +27,7 @@ import { comparePasswords } from '../../../utils/passwordManagement/comparePassw
 import { hashPassword } from '../../../utils/passwordManagement/hashPassword';
 import { ClientProfile } from '../../clients/clients.model';
 import { getOneClientByUserIdQuery } from '../../clients/slqQueries';
-import { LawyersProfile } from '../../lawyers/lawyers.model';
+import { LawyerProfile } from '../../lawyers/LawyerProfile';
 import { getLawyerByUserIdQuery } from '../../lawyers/sqlQueries';
 import { Auth } from '../auth.model';
 import { calculateEmailVerificationExpiraton } from './calculateEmailVerificationExpirationDate';
@@ -65,7 +65,7 @@ const injectedLoginService = loginService({
 
 const injectedGetMeService = getMeService({
   ClientProfile,
-  LawyersProfile,
+  LawyerProfile,
   getLawyerByUserIdQuery,
   getOneClientByUserIdQuery,
 });
