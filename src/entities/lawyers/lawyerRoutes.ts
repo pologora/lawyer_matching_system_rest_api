@@ -9,23 +9,27 @@ import { restrictTo } from '../../middleware/restrictTo';
 import { validateIdParameter } from '../../middleware/validateIdParameter';
 import { User } from '../users/User';
 import { createLawyerService, updateLawyerService } from './lawyerService';
-import { createLawyerSpecializationsQuery, deleteLawyerSpecializationsQuery } from './sqlQueries';
+import { createLawyerSpecializationsQuery, deleteLawyerSpecializationsQuery, getLawyerByIdQuery } from './sqlQueries';
 import { updateUserRoleQuery } from '../users/sqlQueries';
 import { LawyerController } from './LawyerController';
 import { createControllerHandler } from '../../utils/createControllerHandler';
+import { buildGetManyLawyersQuery } from './helpers/biuldGetManyLawyersQuery';
+import { Lawyer } from './Lawyer';
 
 export const lawyersRouter = express.Router();
 lawyersRouter.param('id', validateIdParameter);
 
 const lawyerController = new LawyerController({
+  Lawyer,
   User,
+  buildGetManyLawyersQuery,
   createLawyerService,
   createLawyerSpecializationsQuery,
   deleteLawyerSpecializationsQuery,
+  getLawyerByIdQuery,
   updateLawyerService,
   updateUserRoleQuery,
 });
-
 const createLawyerHandler = createControllerHandler({ controller: lawyerController });
 
 const createOneHandler = createLawyerHandler({ method: 'create' });
