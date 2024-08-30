@@ -12,12 +12,22 @@ import { Lawyer } from '../lawyers/Lawyer';
 import { ReviewController } from './ReviewController';
 import { createControllerHandler } from '../../utils/createControllerHandler';
 import { updateRatingQuery } from '../lawyers/sqlQueries';
+import { Review } from './Review';
+import { getReviewQuery } from './sqlQueries';
+import { buildGetManyReviewsQuery } from './helpers/buildGetManyReviewsQuery';
 
 export const reviewsRouter = Router();
 
 reviewsRouter.param('id', validateIdParameter);
 
-const reviewController = new ReviewController({ Lawyer, createReviewService, updateRatingQuery });
+const reviewController = new ReviewController({
+  Lawyer,
+  Review,
+  buildGetManyReviewsQuery,
+  createReviewService,
+  getReviewQuery,
+  updateRatingQuery,
+});
 
 const createReviewHandler = createControllerHandler({ controller: reviewController });
 

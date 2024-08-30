@@ -1,15 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 import { BaseController } from '../../core/BaseController';
-import { buildGetManyReviewsQuery } from './helpers/buildGetManyReviewsQuery';
-import { Review } from './Review';
-import { getReviewQuery } from './sqlQueries';
-import { CreateReviewService } from './types/reviewsTypes';
+import { BuildGetManyReviewsQuery, CreateReviewService, ReviewModel } from './types/reviewsTypes';
 import { LawyerModel } from '../lawyers/types/lawyersTypes';
 
 type ReviewControllerContructorProps = {
   createReviewService: CreateReviewService;
   Lawyer: LawyerModel;
+  Review: ReviewModel;
   updateRatingQuery: string;
+  getReviewQuery: string;
+  buildGetManyReviewsQuery: BuildGetManyReviewsQuery;
 };
 
 export class ReviewController extends BaseController {
@@ -17,7 +17,14 @@ export class ReviewController extends BaseController {
   Lawyer;
   updateRatingQuery;
 
-  constructor({ createReviewService, Lawyer, updateRatingQuery }: ReviewControllerContructorProps) {
+  constructor({
+    createReviewService,
+    Lawyer,
+    updateRatingQuery,
+    buildGetManyReviewsQuery,
+    getReviewQuery,
+    Review,
+  }: ReviewControllerContructorProps) {
     super({
       buildGetManyQuery: buildGetManyReviewsQuery,
       getOneQuery: getReviewQuery,
@@ -36,7 +43,7 @@ export class ReviewController extends BaseController {
       Review: this.model,
       buildInsertQuery: this.buildInsertQuery,
       data: req.body,
-      getReviewQuery,
+      getReviewQuery: this.getOneQuery,
       updateRatingQuery: this.updateRatingQuery,
     });
 
