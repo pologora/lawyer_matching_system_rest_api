@@ -17,7 +17,7 @@ import { limiter } from './config/rateLimit/rateLimit';
 import { logger } from './config/logger/logger';
 import { lawyersRouter } from './entities/lawyers/lawyerRoutes';
 import { clientsRouter } from './entities/clients/clientRoute';
-import { casesRouter } from './entities/cases/cases.route';
+import { casesRouter } from './entities/cases/caseRoutes';
 import { messagesRoute } from './entities/messages/messageRoutes';
 import { reviewsRouter } from './entities/reviews/reviewRoutes';
 import { regionsRouter } from './entities/regions/regionRoutes';
