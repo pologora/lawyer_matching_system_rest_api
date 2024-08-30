@@ -45,6 +45,13 @@ describe('verify token', () => {
     expect(verified.name).toBe(payload.name);
   });
 
+  test('should throw token consists from not 3 parts', () => {
+    const invalidToken = 'invalid';
+    const secret = 'secret';
+
+    expect(() => verify({ secret, token: invalidToken })).toThrow();
+  });
+
   test('should throw if the signature is invalid', () => {
     const secret = 'secret';
     const secretTwo = 'different';
