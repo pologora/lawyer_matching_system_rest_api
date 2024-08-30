@@ -1,11 +1,15 @@
 // import { HTTP_STATUS_CODES } from '../../config/statusCodes';
 import { BaseController } from '../../core/BaseController';
-import { buildGetManyMessagesQuery } from './helpers/buildGetManyMessagesQuery';
-import { Message } from './Message';
-import { getMessageQuery } from './sqlQueries';
+import { BuildGetManyMessagesQuery, MessagesModule } from './types/messagesTypes';
+
+type MessageControllerConstructorProps = {
+  buildGetManyMessagesQuery: BuildGetManyMessagesQuery;
+  getMessageQuery: string;
+  Message: MessagesModule;
+};
 
 export class MessageController extends BaseController {
-  constructor() {
+  constructor({ buildGetManyMessagesQuery, getMessageQuery, Message }: MessageControllerConstructorProps) {
     super({
       buildGetManyQuery: buildGetManyMessagesQuery,
       getOneQuery: getMessageQuery,
