@@ -62,9 +62,11 @@ export const updateLawyerService: UpdateLawyerService = async ({
     delete data.specializations;
   }
 
-  const { query, values } = buildUpdateQuery(data, 'LawyerProfile');
+  if (Object.keys(data).length) {
+    const { query, values } = buildUpdateQuery(data, 'LawyerProfile');
 
-  await LawyersProfile.update({ id, query, values });
+    await LawyersProfile.update({ id, query, values });
+  }
 
   return await LawyersProfile.getOne({ id, query: getLawyerByIdQuery });
 };
