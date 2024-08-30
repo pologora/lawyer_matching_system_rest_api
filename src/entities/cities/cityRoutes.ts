@@ -1,9 +1,9 @@
 import express from 'express';
 import { asyncErrorCatch } from '../../utils/errors/asyncErrorCatch';
-import { getCitiesByRegionController } from './cities.controller';
-import { getCitiesByRegionSchema } from './cities.validation';
+import { getCitiesByRegionController } from './cityController';
+import { getCitiesByRegionSchema } from './cityValidation';
 import { validateReqQuery } from '../../middleware/validateReqQuery';
-import { City } from './cities.model';
+import { City } from './City';
 import { getCitiesByRegionQuery } from './sqlQueries';
 
 export const citiesRouter = express.Router();

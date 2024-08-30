@@ -17,11 +17,11 @@ import { limiter } from './config/rateLimit/rateLimit';
 import { logger } from './config/logger/logger';
 import { lawyersRouter } from './entities/lawyers/lawyerRoutes';
 import { clientsRouter } from './entities/clients/clientRoute';
-import { casesRouter } from './entities/cases/cases.route';
+import { casesRouter } from './entities/cases/caseRoutes';
 import { messagesRoute } from './entities/messages/messageRoutes';
 import { reviewsRouter } from './entities/reviews/reviewRoutes';
 import { regionsRouter } from './entities/regions/regionRoutes';
-import { citiesRouter } from './entities/cities/cities.routes';
+import { citiesRouter } from './entities/cities/cityRoutes';
 import passport from './middleware/passport';
 import path from 'node:path/posix';
 
