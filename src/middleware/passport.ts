@@ -10,7 +10,7 @@ import { getUserByEmailQuery, registerByGoogleQuery } from '../entities/auth/sql
 passport.use(
   new GoogleStrategy(
     {
-      callbackURL: 'http://localhost:8000/api/v1/auth/google/callback',
+      callbackURL: `${process.env.BASE_URL}/auth/google/callback`,
       clientID: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       passReqToCallback: true,
