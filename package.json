@@ -2,13 +2,13 @@
   "name": "lawyer_matching_service",
   "version": "0.0.1",
   "description": "Platform to match clients with lawyers",
-  "main": "src/server.js",
+  "main": "server.js",
   "author": "Oleksandr Wojtyla",
   "license": "MIT",
   "scripts": {
     "start:dev": "cross-env NODE_ENV=development nodemon -L --files src/server.ts",
     "start:prod": "npm run build && cross-env NODE_ENV=production node build/server.js",
-    "build": "rimraf build && npx tsc",
+    "build": "rimraf build && npm run copy && npx tsc",
     "test": "cross-env NODE_ENV=test jest --testPathPattern=unit\\.test\\.ts$",
     "test:integration": "npm run setup:test || npm run jest:integration",
     "jest:integration": "cross-env NODE_ENV=test  jest  --testPathPattern=integration\\.test\\.ts$",
@@ -20,7 +20,9 @@
     "test:c": "npx jest --coverage",
     "docker:dev": "npm run setup:docker && docker-compose -f docker-compose.dev.yml up --build",
     "docker:prod": "npm run setup:docker && docker-compose -f docker-compose.prod.yml up --build",
-    "setup:docker": "ts-node src/config/setupDerictories.ts"
+    "setup:docker": "ts-node src/config/setupDerictories.ts",
+    "copy": "copyfiles -u 4 src/core/email/emailTemplates**/*  build/core/email/emailTemplates",
+    "lint": "npx eslint"
   },
   "overrides": {
     "eslint": "^9.6.0"
@@ -43,6 +45,7 @@
     "@types/pug": "^2.0.10",
     "@types/supertest": "^6.0.2",
     "babel-jest": "^29.7.0",
+    "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "eslint": "^9.6.0",
     "globals": "^15.8.0",
