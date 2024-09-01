@@ -46,4 +46,4 @@ usersRouter
   .patch(protect, restrictTo('admin'), validateReqBody(userUpdateSchema), asyncErrorCatch(updateHandler));
 usersRouter
   .route('/users/:id/upload-photo')
-  .patch(protect, uploadPhoto(), resizeUserPhoto, asyncErrorCatch(uploadPhotoHandler));
+  .patch(protect, uploadPhoto(), asyncErrorCatch(resizeUserPhoto), asyncErrorCatch(uploadPhotoHandler));
