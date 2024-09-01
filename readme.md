@@ -203,11 +203,15 @@ This script will set up the database with the credentials provided in .env.dev f
 npm run start:dev
 ```
 
+App will be availible at: http://localhost:8000/ (development)
+
 - to run the application in production mode:
 
 ```bash
 npm run start:prod
 ```
+
+App will be availible at: http://localhost:5000/ (production)
 
 This script will run the application with the credentials provided in .env.dev for development or .env.prod for production.
 
@@ -426,6 +430,8 @@ if (decoded) {
 ## Base URL
 
     https://lawyerapi.webdevolek.stronawcal.pl/
+    http://localhost:8000/ (development)
+    http://localhost:5000/ (production)
 
 ## API Documentation
 
