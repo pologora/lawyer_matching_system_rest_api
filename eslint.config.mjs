@@ -35,4 +35,7 @@ export default [
       'sort-keys': 'off',
     },
   },
+  {
+    ignores: ['build/**'],
+  },
 ];
