@@ -39,6 +39,9 @@ app.use('/public', express.static(path.join(__dirname, '..', 'public')));
 // security headers
 app.use('/api', helmet());
 
+// trust the proxy
+app.set('trust proxy', 1);
+
 // rate limiter
 app.use('/api', limiter);
 
