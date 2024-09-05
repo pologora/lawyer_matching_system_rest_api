@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { CreateLawyerService, UpdateLawyerService } from './types/lawyersTypes';
 
 export const createLawyerService: CreateLawyerService = async ({
@@ -9,7 +10,19 @@ export const createLawyerService: CreateLawyerService = async ({
   updateUserRoleQuery,
   data,
 }) => {
-  const { userId, licenseNumber, bio, experience, firstName, lastName, cityId, regionId, specializations } = data;
+  const {
+    userId,
+    hourlyRate,
+    initialConsultationFee,
+    licenseNumber,
+    bio,
+    experience,
+    firstName,
+    lastName,
+    cityId,
+    regionId,
+    specializations,
+  } = data;
 
   const { query, values } = buildInsertQuery(
     {
@@ -17,6 +30,8 @@ export const createLawyerService: CreateLawyerService = async ({
       cityId,
       experience,
       firstName,
+      hourlyRate,
+      initialConsultationFee,
       lastName,
       licenseNumber,
       regionId,
